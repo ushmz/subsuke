@@ -38,31 +38,32 @@ class ListPage extends StatelessWidget {
                 )),
           ),
           Expanded(
-              flex: 2,
-              child: ListView(
-                children: [
-                  ListTile(
-                    title: Text('サブスク名'),
-                    subtitle: Text('月額とか'),
-                  ),
-                  ListTile(
-                    title: Text('サブスク名'),
-                    subtitle: Text('月額とか'),
-                  ),
-                  ListTile(
-                    title: Text('サブスク名'),
-                    subtitle: Text('月額とか'),
-                  ),
-                  ListTile(
-                    title: Text('サブスク名'),
-                    subtitle: Text('月額とか'),
-                  ),
-                  ListTile(
-                    title: Text('サブスク名'),
-                    subtitle: Text('月額とか'),
-                  ),
-                ],
-              )),
+            flex: 2,
+            child: ListView(
+              children: [
+                ListTile(
+                  title: Text('サブスク名'),
+                  subtitle: Text('月額とか'),
+                ),
+                ListTile(
+                  title: Text('サブスク名'),
+                  subtitle: Text('月額とか'),
+                ),
+                ListTile(
+                  title: Text('サブスク名'),
+                  subtitle: Text('月額とか'),
+                ),
+                ListTile(
+                  title: Text('サブスク名'),
+                  subtitle: Text('月額とか'),
+                ),
+                ListTile(
+                  title: Text('サブスク名'),
+                  subtitle: Text('月額とか'),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
