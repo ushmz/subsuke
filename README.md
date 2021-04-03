@@ -1,6 +1,6 @@
 # subsuke
 
-A new Flutter project.
+Optimize your subsucription services.
 
 ## Getting Started
 
