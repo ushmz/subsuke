@@ -1,6 +1,6 @@
 # subsuke
 
-Optimize your subsucription services.
+Optimize your subscription services.
 
 ## Getting Started
 
