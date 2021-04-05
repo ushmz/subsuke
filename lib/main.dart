@@ -14,24 +14,46 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Subsuke',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.purple,
-      ),
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or simply save your changes to "hot reload" in a Flutter IDE).
+          // Notice that the counter didn't reset back to zero; the application
+          // is not restarted.
+          primarySwatch: Colors.purple,
+          scaffoldBackgroundColor: Colors.white,
+          bottomAppBarColor: Colors.white70,
+          hintColor: Colors.black,
+          iconTheme: IconThemeData(color: Colors.black),
+          textTheme: TextTheme(
+            bodyText1: TextStyle(color: Colors.black87),
+          )),
+      darkTheme: ThemeData(
+          primaryColor: Colors.deepPurple,
+          primarySwatch: Colors.deepPurple,
+          backgroundColor: Colors.black,
+          scaffoldBackgroundColor: Colors.black,
+          bottomAppBarColor: Colors.black87,
+          hintColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.white),
+          textTheme: TextTheme(
+            bodyText1: TextStyle(color: Colors.white),
+          )),
       home: Provider<PaginationBloc>(
-				create: (context) => PaginationBloc(),
-				dispose: (context, bloc) => bloc.dispose(),
-				child: HomeScreen(),
-			),
+        create: (context) => PaginationBloc(),
+        dispose: (context, bloc) => bloc.dispose(),
+        child: HomeScreen(),
+      ),
     );
   }
 }
 
+/// return ListTile(
+///                   title: Text(subscs[index]['title']),
+///                   subtitle: Text("次回お支払日 $subscs[index]['nextPayment']"),
+///                   trailing: Text("$subscs[index]['price']円"),
+///                 );
 

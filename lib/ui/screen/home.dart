@@ -13,6 +13,7 @@ class HomeScreen extends StatelessWidget {
       stream: pagination.currentPage,
       initialData: 0,
       builder: (context, snapshot) => Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           title: Text('subsuke'),
         ),
@@ -22,14 +23,13 @@ class HomeScreen extends StatelessWidget {
           ConfigPage(),
         ][snapshot.data],
         bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Theme.of(context).bottomAppBarColor,
+          unselectedItemColor: Theme.of(context).hintColor,
           type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.list,
-                  size: 32,
-                  color: Colors.black12,
-                ),
+                icon: Icon(Icons.list,
+                    size: 32, color: Theme.of(context).iconTheme.color),
                 activeIcon: Icon(
                   Icons.list,
                   size: 32,
@@ -37,11 +37,8 @@ class HomeScreen extends StatelessWidget {
                 ),
                 label: 'ホーム'),
             BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.link,
-                  size: 32,
-                  color: Colors.black12,
-                ),
+                icon: Icon(Icons.link,
+                    size: 32, color: Theme.of(context).iconTheme.color),
                 activeIcon: Icon(
                   Icons.link,
                   size: 32,
@@ -49,11 +46,8 @@ class HomeScreen extends StatelessWidget {
                 ),
                 label: 'リンク'),
             BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.settings,
-                  size: 32,
-                  color: Colors.black12,
-                ),
+                icon: Icon(Icons.settings,
+                    size: 32, color: Theme.of(context).iconTheme.color),
                 activeIcon: Icon(
                   Icons.settings,
                   size: 32,
