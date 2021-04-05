@@ -26,10 +26,11 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.purple,
           scaffoldBackgroundColor: Colors.white,
           bottomAppBarColor: Colors.white70,
-          hintColor: Colors.black,
+          hintColor: Colors.black54,
           iconTheme: IconThemeData(color: Colors.black),
           textTheme: TextTheme(
-            bodyText1: TextStyle(color: Colors.black87),
+            bodyText1: TextStyle(color: Colors.black),
+            bodyText2: TextStyle(color: Colors.black54),
           )),
       darkTheme: ThemeData(
           primaryColor: Colors.deepPurple,
@@ -37,10 +38,11 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.black,
           scaffoldBackgroundColor: Colors.black,
           bottomAppBarColor: Colors.black87,
-          hintColor: Colors.white,
+          hintColor: Colors.white54,
           iconTheme: IconThemeData(color: Colors.white),
           textTheme: TextTheme(
             bodyText1: TextStyle(color: Colors.white),
+            bodyText2: TextStyle(color: Colors.white54),
           )),
       home: Provider<PaginationBloc>(
         create: (context) => PaginationBloc(),
@@ -50,10 +52,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-/// return ListTile(
-///                   title: Text(subscs[index]['title']),
-///                   subtitle: Text("次回お支払日 $subscs[index]['nextPayment']"),
-///                   trailing: Text("$subscs[index]['price']円"),
-///                 );
-
