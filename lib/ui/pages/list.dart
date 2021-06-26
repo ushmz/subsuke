@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:subsuke/models/subsucription.dart';
 
 class ListPage extends StatelessWidget {
   static const prices = <Widget>[
     Center(
-      child: Text('56.61円 / 日', style: TextStyle(fontSize: 32)),
+      // child: Text('56.61円 / 日', style: TextStyle(fontSize: 32)),
+      child: Text('57円 / 日', style: TextStyle(fontSize: 32)),
     ),
     Center(
-      child: Text('424.56円 / 週', style: TextStyle(fontSize: 32)),
+      // child: Text('424.56円 / 週', style: TextStyle(fontSize: 32)),
+      child: Text('425円 / 週', style: TextStyle(fontSize: 32)),
     ),
     Center(
-      child: Text('1698.25円 / 月', style: TextStyle(fontSize: 32)),
+      // child: Text('1698.25円 / 月', style: TextStyle(fontSize: 32)),
+      child: Text('1,698円 / 月', style: TextStyle(fontSize: 32)),
     ),
     Center(
       child: Text('20,379円 / 年', style: TextStyle(fontSize: 32)),
@@ -17,9 +21,15 @@ class ListPage extends StatelessWidget {
   ];
 
   static var subscs = [
-    {'title': 'Youtube Premium', 'nextPayment': '2021-04-11', 'price': 680},
-    {'title': 'Inkdrop', 'nextPayment': '2022-04-01', 'price': 6219},
-    {'title': 'Niconico ch.', 'nextPayment': '2021-05-01', 'price': 500}
+    Subscription(
+        name: 'Youtube Premium',
+        billingAt: '2021-07-11',
+        price: 680,
+        cycle: ''),
+    Subscription(
+        name: 'Inkdrop', billingAt: '2021-05-01', price: 6219, cycle: ''),
+    Subscription(
+        name: 'Niconico ch.', billingAt: '2021-07-11', price: 500, cycle: '')
   ];
 
   @override
@@ -48,31 +58,51 @@ class ListPage extends StatelessWidget {
           Expanded(
             flex: 2,
             child: ListView.builder(
+                padding: EdgeInsets.only(bottom: 20, top: 20),
                 itemCount: subscs.length,
                 itemBuilder: (BuildContext context, int index) {
                   final subsc = subscs[index];
-                  return DefaultTextStyle(
-                    style: Theme.of(context).textTheme.bodyText1,
-                    child: SizedBox(
-                      height: 50,
-                      child: Row(
-                        children: [
-                          Expanded(
-                              flex: 5,
-                              child: Column(
+                  return InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/edit', arguments: subsc);
+                      },
+                      child: DefaultTextStyle(
+                        style: Theme.of(context).textTheme.bodyText1,
+                        child: SizedBox(
+                          height: 56,
+                          child: Padding(
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              child: Row(
                                 children: [
-                                  Text(subsc['title']),
-                                  Text("次回お支払日 ${subsc['nextPayment']}")
+                                  Expanded(
+                                    flex: 5,
+                                    child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Column(
+                                          children: [
+                                            Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(subsc.name)),
+                                            Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                    "次回お支払日 ${subsc.billingAt}",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText2))
+                                          ],
+                                        )),
+                                  ),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text("${subsc.price}円",
+                                              style: TextStyle(fontSize: 16))))
                                 ],
                               )),
-                          Expanded(
-                            flex: 1,
-                            child: Text("${subsc['price']}円"),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
+                        ),
+                      ));
                 }),
           ),
         ],
