@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:subsuke/blocs/pagination_bloc.dart';
-import 'package:subsuke/ui/pages/list.dart';
-import 'package:subsuke/ui/pages/config.dart';
+import 'package:subsuke/blocs/edit_screen_bloc.dart';
+import 'package:subsuke/ui/Home/Internal/list.dart';
+import 'package:subsuke/ui/Home/Internal/config.dart';
+import 'package:subsuke/ui/Home/Internal/add.dart';
 import 'package:provider/provider.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -18,7 +21,25 @@ class HomeScreen extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add, size: 32),
             backgroundColor: Theme.of(context).primaryColor,
-            onPressed: () {},
+            onPressed: () {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //       fullscreenDialog: true,
+              //       builder: (BuildContext context) => Provider<EditScreenBloc>(
+              //             create: (context) => EditScreenBloc(),
+              //             dispose: (context, bloc) => bloc.dispose(),
+              //             child: AddPage(),
+              //           )),
+              // );
+              showBarModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) => Provider<EditScreenBloc>(
+                        create: (context) => EditScreenBloc(),
+                        dispose: (context, bloc) => bloc.dispose(),
+                        child: AddPage(),
+                      ));
+            },
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,

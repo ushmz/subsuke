@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:subsuke/models/subsucription.dart';
+import 'package:subsuke/models/cycles.dart';
 
 class ListPage extends StatelessWidget {
   static const prices = <Widget>[
@@ -25,11 +26,17 @@ class ListPage extends StatelessWidget {
         name: 'Youtube Premium',
         billingAt: '2021-07-11',
         price: 680,
-        cycle: ''),
+        cycle: PaymentCycle.ONCE_MONTH),
     Subscription(
-        name: 'Inkdrop', billingAt: '2021-05-01', price: 6219, cycle: ''),
+        name: 'Inkdrop',
+        billingAt: '2021-05-01',
+        price: 6219,
+        cycle: PaymentCycle.ONCE_YEAR),
     Subscription(
-        name: 'Niconico ch.', billingAt: '2021-07-11', price: 500, cycle: '')
+        name: 'Niconico ch.',
+        billingAt: '2021-07-11',
+        price: 500,
+        cycle: PaymentCycle.ONCE_MONTH)
   ];
 
   @override
