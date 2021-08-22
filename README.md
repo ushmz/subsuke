@@ -2,15 +2,8 @@
 
 Optimize your subscription services.
 
-## Getting Started
+<img width="30%" src="https://user-images.githubusercontent.com/44394399/130262272-cea2ec62-a4e0-4562-bec2-e0e6fd7d78c4.PNG" />   <img width="30%" src="https://user-images.githubusercontent.com/44394399/130262517-c8f76cc7-1e99-48d8-ae6a-10e4cf85ec11.PNG" />
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This repository is moved from [here](https://github.com/ushmz/__subsuke).
