@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:subsuke/blocs/pagination_bloc.dart';
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
+import 'package:subsuke/blocs/subscriptions_bloc.dart';
 import 'package:subsuke/ui/Home/Internal/list.dart';
 import 'package:subsuke/ui/Home/Internal/config.dart';
 import 'package:subsuke/ui/Home/Internal/add.dart';
@@ -11,6 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pagination = Provider.of<PaginationBloc>(context);
+    final subscription = Provider.of<SubscriptionsBloc>(context);
     return StreamBuilder(
       stream: pagination.currentPage,
       initialData: 0,
@@ -37,7 +39,7 @@ class HomeScreen extends StatelessWidget {
                   builder: (BuildContext context) => Provider<EditScreenBloc>(
                         create: (context) => EditScreenBloc(),
                         dispose: (context, bloc) => bloc.dispose(),
-                        child: AddPage(),
+                        child: AddPage(subscription),
                       ));
             },
           ),

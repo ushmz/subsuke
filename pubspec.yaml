@@ -23,6 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   rxdart: ^0.26.0
   provider: ^4.3.3
   convex_bottom_bar:
@@ -32,6 +34,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   modal_bottom_sheet: ^2.0.0
+  sqflite: ^2.0.0+4
+  path: ^1.8.0
+  path_provider: ^2.0.3
 
 dev_dependencies:
   flutter_test:
