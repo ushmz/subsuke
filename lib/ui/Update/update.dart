@@ -9,7 +9,7 @@ class EditScreen extends StatelessWidget {
     final bloc = Provider.of<EditScreenBloc>(context);
     final Subscription item = ModalRoute.of(context).settings.arguments;
     bloc.setNameText(item.name);
-    bloc.setPriceNum(item.price);
+    bloc.setPriceNum(item.price.toString());
     bloc.setNextTime(item.billingAt);
     bloc.setCycle(item.cycle);
 
@@ -62,7 +62,7 @@ class EditScreen extends StatelessWidget {
                                           labelText: "価格",
                                           hintText: "価格"),
                                       onChanged: (number) =>
-                                          bloc.setPriceNum(int.parse(number)),
+                                          bloc.setPriceNum(number),
                                     ))),
                             Expanded(
                                 flex: 1,

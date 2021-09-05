@@ -1,11 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/pagination_bloc.dart';
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
+import 'package:subsuke/blocs/subscriptions_bloc.dart';
 import 'package:subsuke/ui/Home/home.dart';
 import 'package:subsuke/ui/Update/update.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -14,6 +19,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      supportedLocales: [Locale('en', ''), Locale('ja', 'JP')],
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate,
+      ],
       title: 'Subsuke',
       theme: ThemeData(
           brightness: Brightness.light,
@@ -43,9 +55,17 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/home',
       routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => Provider<PaginationBloc>(
-              create: (context) => PaginationBloc(),
-              dispose: (context, bloc) => bloc.dispose(),
+        '/home': (BuildContext context) => MultiProvider(
+              providers: [
+                Provider<PaginationBloc>(
+                  create: (context) => PaginationBloc(),
+                  dispose: (context, bloc) => bloc.dispose(),
+                ),
+                Provider<SubscriptionsBloc>(
+                  create: (context) => SubscriptionsBloc(),
+                  dispose: (context, bloc) => bloc.dispose(),
+                )
+              ],
               child: HomeScreen(),
             ),
         '/edit': (BuildContext context) => Provider<EditScreenBloc>(
