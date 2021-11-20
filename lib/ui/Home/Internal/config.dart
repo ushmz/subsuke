@@ -6,6 +6,7 @@ class ConfigPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var isToggled = false;
     return SettingsList(
+      backgroundColor: Theme.of(context).backgroundColor,
       sections: [
         SettingsSection(
           title: 'Section1',

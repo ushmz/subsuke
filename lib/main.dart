@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       title: 'Subsuke',
       theme: ThemeData(
           brightness: Brightness.light,
-          primaryColor: Colors.purple,
+          primaryColor: Color(0xFF8B4492),
           primarySwatch: Colors.purple,
           scaffoldBackgroundColor: Colors.white,
           bottomAppBarColor: Colors.white54,
@@ -41,10 +41,10 @@ class MyApp extends StatelessWidget {
           )),
       darkTheme: ThemeData(
           brightness: Brightness.dark,
-          primaryColor: Colors.deepPurple,
+          primaryColor: Color(0xFF9A57A2),
           primarySwatch: Colors.deepPurple,
-          backgroundColor: Colors.black,
-          scaffoldBackgroundColor: Colors.black,
+          backgroundColor: Color(0xFF252428),
+          scaffoldBackgroundColor: Color(0xFF252428),
           bottomAppBarColor: Colors.black54,
           hintColor: Colors.white54,
           iconTheme: IconThemeData(color: Colors.white),
