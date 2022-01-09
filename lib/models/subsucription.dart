@@ -1,11 +1,13 @@
 import 'package:flutter/foundation.dart';
 
+enum Cycle { Daily, Weekly, Monthly, Yearly }
+
 class Subscription {
   final int id;
   final String name;
   final String billingAt;
   final int price;
-  final String cycle;
+  final Cycle cycle;
 
   const Subscription({
     @required this.id,
@@ -39,25 +41,60 @@ class Subscription {
 }
 
 class Subscriptions {
-  final List<Subscription> subscriptions;
-  const Subscriptions({@required this.subscriptions})
-      : assert(subscriptions != null);
+  List<Subscription> subscriptions;
+
+  int daily;
+  int weekly;
+  int monthly;
+  int yearly;
+
+  Subscriptions(List<Subscription> subscriptions) {
+    this.subscriptions = subscriptions;
+    this.subscriptions.forEach((s) {
+      switch (s.cycle) {
+        case Cycle.Daily:
+          daily += s.price;
+          weekly += s.price * 7;
+          monthly += s.price * 30;
+          yearly += s.price * 365;
+          break;
+        case Cycle.Weekly:
+          daily += s.price ~/ 7;
+          weekly += s.price;
+          monthly += s.price * 4;
+          yearly += s.price * 4 * 12;
+          break;
+        case Cycle.Monthly:
+          daily += s.price ~/ 30;
+          weekly += s.price ~/ 4;
+          monthly += s.price;
+          yearly += s.price * 12;
+          break;
+        case Cycle.Yearly:
+          daily += s.price ~/ 365;
+          weekly += s.price ~/ (4 * 12);
+          monthly += s.price ~/ 12;
+          yearly += s.price;
+          break;
+      }
+    });
+  }
 
   List<Subscription> get getSubscriptions => subscriptions;
 
   int dailyPrice() {
-    return 0;
+    return daily;
   }
 
   int weeklyPrice() {
-    return 0;
+    return weekly;
   }
 
   int monthlyPrice() {
-    return 0;
+    return monthly;
   }
 
   int yearlyPrice() {
-    return 0;
+    return yearly;
   }
 }
