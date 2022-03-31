@@ -1,14 +1,15 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:subsuke/db/subscription_repository.dart';
+import 'package:subsuke/db/subsc.dart';
+import 'package:subsuke/models/subsc.dart';
 import 'package:subsuke/models/subsucription.dart';
 
 class SubscriptionsBloc {
-  final _subscriptionsController = BehaviorSubject<List<Subscription>>();
+  final _subscriptionsController = BehaviorSubject<List<SubscriptionItem>>();
   final _fetchRequest = BehaviorSubject<Object>();
 
-  Function(List<Subscription>) get setSubscriptions =>
+  Function(List<SubscriptionItem>) get setSubscriptions =>
       _subscriptionsController.sink.add;
-  Stream<List<Subscription>> get onChangeSubscriptions =>
+  Stream<List<SubscriptionItem>> get onChangeSubscriptions =>
       _subscriptionsController.stream;
 
   Function() get fetchRequest => () => _fetchRequest.sink.add('');
@@ -20,13 +21,14 @@ class SubscriptionsBloc {
   }
 
   Future<void> fetchSubscriptions() async {
-    final subscriptions = await SubscriptionRepository.getAll();
+    final subscriptions = await SubscRepository.getAll();
     _subscriptionsController.sink.add(subscriptions);
   }
 
   Future<void> addSubscription(
-      String name, String billingAt, int price, String cycle) async {
-    await SubscriptionRepository.create(name, billingAt, price, cycle);
+      String name, int price, Duration duration, DateTime next) async {
+    final item = SubscriptionItem(name, price, duration, next);
+    await SubscRepository.create(item);
     await fetchSubscriptions();
   }
 

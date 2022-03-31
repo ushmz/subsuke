@@ -6,33 +6,34 @@ class ConfigPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var isToggled = false;
     return SettingsList(
-      backgroundColor: Theme.of(context).backgroundColor,
+      // backgroundColor: Theme.of(context).backgroundColor,
       sections: [
         SettingsSection(
-          title: 'Section1',
+          title: Text('Section1'),
           tiles: [
             SettingsTile(
-              title: 'Tile1',
-              subtitle: 'Subtitle1',
+              title: Text('Tile1'),
+              description: Text('Subtitle1'),
               leading: Icon(Icons.settings),
               onPressed: (BuildContext context) {},
             ),
             SettingsTile.switchTile(
-                switchActiveColor: Theme.of(context).primaryColor,
-                title: 'Switch',
-                subtitle: 'Switch1',
+                initialValue: true,
+                activeSwitchColor: Theme.of(context).primaryColor,
+                title: Text('Switch'),
                 onToggle: (bool value) => isToggled = value,
-                switchValue: isToggled)
+                enabled: isToggled)
           ],
         ),
         SettingsSection(
-          title: 'Notification',
+          title: Text('Notification'),
           tiles: [
             SettingsTile.switchTile(
-                switchActiveColor: Theme.of(context).primaryColor,
-                title: 'Payment reminder',
+                initialValue: true,
+                activeSwitchColor: Theme.of(context).primaryColor,
+                title: Text('Payment reminder'),
                 onToggle: (bool value) => isToggled = value,
-                switchValue: isToggled)
+                enabled: isToggled)
           ],
         )
       ],

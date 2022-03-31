@@ -1,13 +1,15 @@
 import 'package:flutter/foundation.dart';
+import 'package:subsuke/models/cycles.dart';
 
-enum Cycle { Daily, Weekly, Monthly, Yearly }
+// enum Cycle { Daily, Weekly, Monthly, Yearly }
 
 class Subscription {
+  @required
   final int id;
   final String name;
   final String billingAt;
   final int price;
-  final Cycle cycle;
+  final String cycle;
 
   const Subscription({
     @required this.id,
@@ -15,12 +17,7 @@ class Subscription {
     @required this.billingAt,
     @required this.price,
     @required this.cycle,
-  })  : assert(id != null),
-        assert(name != null),
-        assert(billingAt != null),
-        assert(price != null),
-        assert(cycle != null);
-
+  });
   int get getId => id;
 
   Map<String, dynamic> toMap() => {
@@ -42,59 +39,57 @@ class Subscription {
 
 class Subscriptions {
   List<Subscription> subscriptions;
-
-  int daily;
-  int weekly;
-  int monthly;
-  int yearly;
-
+  double _daily = 0;
+  double _weekly = 0;
+  double _monthly = 0;
+  double _yearly = 9;
   Subscriptions(List<Subscription> subscriptions) {
     this.subscriptions = subscriptions;
-    this.subscriptions.forEach((s) {
+    for (Subscription s in subscriptions) {
       switch (s.cycle) {
-        case Cycle.Daily:
-          daily += s.price;
-          weekly += s.price * 7;
-          monthly += s.price * 30;
-          yearly += s.price * 365;
+        case PaymentCycle.ONCE_DAY:
+          this._daily += s.price;
+          this._weekly += s.price * 7;
+          this._monthly += s.price * 31;
+          this._yearly += s.price * 365;
           break;
-        case Cycle.Weekly:
-          daily += s.price ~/ 7;
-          weekly += s.price;
-          monthly += s.price * 4;
-          yearly += s.price * 4 * 12;
+        case PaymentCycle.ONCE_WEEK:
+          this._daily += s.price / 7;
+          this._weekly += s.price;
+          this._monthly += s.price * 4;
+          this._yearly += s.price * 4 * 12;
           break;
-        case Cycle.Monthly:
-          daily += s.price ~/ 30;
-          weekly += s.price ~/ 4;
-          monthly += s.price;
-          yearly += s.price * 12;
+        case PaymentCycle.ONCE_MONTH:
+          this._daily += s.price / 31;
+          this._weekly += s.price / 4;
+          this._monthly += s.price;
+          this._yearly += s.price * 12;
           break;
-        case Cycle.Yearly:
-          daily += s.price ~/ 365;
-          weekly += s.price ~/ (4 * 12);
-          monthly += s.price ~/ 12;
-          yearly += s.price;
+        case PaymentCycle.ONCE_YEAR:
+          this._daily += s.price / 365;
+          this._weekly += s.price / 12 / 4;
+          this._monthly += s.price / 12;
+          this._yearly += s.price;
           break;
       }
-    });
+    }
   }
 
   List<Subscription> get getSubscriptions => subscriptions;
 
-  int dailyPrice() {
-    return daily;
+  int getDailyPrice() {
+    return this._daily.round();
   }
 
-  int weeklyPrice() {
-    return weekly;
+  int getWeeklyPrice() {
+    return this._weekly.round();
   }
 
-  int monthlyPrice() {
-    return monthly;
+  int getMonthlyPrice() {
+    return this._monthly.round();
   }
 
-  int yearlyPrice() {
-    return yearly;
+  int getYearlyPrice() {
+    return this._yearly.round();
   }
 }

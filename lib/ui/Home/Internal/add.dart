@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
 import 'package:subsuke/blocs/subscriptions_bloc.dart';
-import 'package:subsuke/db/subscription_repository.dart';
 
 class AddPage extends StatelessWidget {
   final SubscriptionsBloc subscriptions;
@@ -56,8 +55,7 @@ class AddPage extends StatelessWidget {
                             assert(next != null);
                             assert(price != null && price != 0);
                             assert(cycle != null);
-                            await subscriptions.addSubscription(
-                                name, next, price, cycle);
+                            /* await subscriptions.addSubscription( name, next, price, cycle); */
                             Navigator.pop(context);
                           })))
             ],
