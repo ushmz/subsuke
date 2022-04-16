@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/pagination_bloc.dart';
-import 'package:subsuke/blocs/edit_screen_bloc.dart';
+import 'package:subsuke/blocs/settings_bloc.dart';
 import 'package:subsuke/blocs/subscriptions_bloc.dart';
-import 'package:subsuke/ui/Home/home.dart';
-import 'package:subsuke/ui/Update/update.dart';
+import 'package:subsuke/ui/entrypoints/home.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +30,7 @@ class MyApp extends StatelessWidget {
           primaryColor: Color(0xFF8B4492),
           primarySwatch: Colors.purple,
           scaffoldBackgroundColor: Colors.white,
-          bottomAppBarColor: Colors.white54,
+          bottomAppBarColor: Color(0xFF8B4492),
           hintColor: Colors.black54,
           iconTheme: IconThemeData(color: Colors.black),
           textTheme: TextTheme(
@@ -45,7 +43,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.deepPurple,
           backgroundColor: Color(0xFF252428),
           scaffoldBackgroundColor: Color(0xFF252428),
-          bottomAppBarColor: Colors.black54,
+          bottomAppBarColor: Color(0xFF8B4492),
           hintColor: Colors.white54,
           iconTheme: IconThemeData(color: Colors.white),
           textTheme: TextTheme(
@@ -64,15 +62,19 @@ class MyApp extends StatelessWidget {
                 Provider<SubscriptionsBloc>(
                   create: (context) => SubscriptionsBloc(),
                   dispose: (context, bloc) => bloc.dispose(),
+                ),
+                Provider<SettingsBloc>(
+                  create: (context) => SettingsBloc(),
+                  dispose: (context, bloc) => bloc.dispose(),
                 )
               ],
               child: HomeScreen(),
             ),
-        '/edit': (BuildContext context) => Provider<EditScreenBloc>(
-              create: (context) => EditScreenBloc(),
-              dispose: (context, bloc) => bloc.dispose(),
-              child: EditScreen(),
-            ),
+        /* '/edit': (BuildContext context) => Provider<EditScreenBloc>( */
+        /*       create: (context) => EditScreenBloc(), */
+        /*       dispose: (context, bloc) => bloc.dispose(), */
+        /*       child: EditScreen(), */
+        /*     ), */
       },
     );
   }

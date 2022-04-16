@@ -1,5 +1,4 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:subsuke/db/subscription_repository.dart';
 import 'package:subsuke/models/subsucription.dart';
 
 class SubscriptionsBloc {
@@ -20,13 +19,17 @@ class SubscriptionsBloc {
   }
 
   Future<void> fetchSubscriptions() async {
-    final subscriptions = await SubscriptionRepository.getAll();
+    /* final subscriptions = await SubscriptionRepository.getAll(); */
+        final subscriptions = [
+            Subscription(1, "Youtube Premium", "", 1100, Cycle.Monthly),
+            Subscription(2, "Youtube Premium", "", 1100, Cycle.Monthly),
+            Subscription(3, "Youtube Premium", "", 1100, Cycle.Monthly),
+        ];
     _subscriptionsController.sink.add(subscriptions);
   }
 
   Future<void> addSubscription(
-      String name, String billingAt, int price, String cycle) async {
-    await SubscriptionRepository.create(name, billingAt, price, cycle);
+      String name, String billingAt, int price, Cycle cycle) async {
     await fetchSubscriptions();
   }
 

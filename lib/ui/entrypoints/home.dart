@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:subsuke/blocs/pagination_bloc.dart';
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
 import 'package:subsuke/blocs/subscriptions_bloc.dart';
-import 'package:subsuke/ui/Home/Internal/list.dart';
-import 'package:subsuke/ui/Home/Internal/config.dart';
-import 'package:subsuke/ui/Home/Internal/add.dart';
+import 'package:subsuke/ui/components/pages/list.dart';
+import 'package:subsuke/ui/components/pages/config.dart';
+import 'package:subsuke/ui/components/pages/add.dart';
 import 'package:provider/provider.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -16,25 +16,16 @@ class HomeScreen extends StatelessWidget {
     return StreamBuilder(
       stream: pagination.currentPage,
       initialData: 0,
-      builder: (context, snapshot) => Scaffold(
+      builder: (BuildContext context, AsyncSnapshot<int> snapshot) => Scaffold(
           appBar: AppBar(
             title: Text('subsuke'),
           ),
           floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add, size: 32),
-            backgroundColor: Theme.of(context).primaryColor,
+            child: Icon(Icons.add,
+                size: 32, color: Theme.of(context).primaryColor),
+            backgroundColor: Colors.white,
             onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //       fullscreenDialog: true,
-              //       builder: (BuildContext context) => Provider<EditScreenBloc>(
-              //             create: (context) => EditScreenBloc(),
-              //             dispose: (context, bloc) => bloc.dispose(),
-              //             child: AddPage(),
-              //           )),
-              // );
-              showBarModalBottomSheet(
+              showCupertinoModalBottomSheet(
                   context: context,
                   builder: (BuildContext context) => Provider<EditScreenBloc>(
                         create: (context) => EditScreenBloc(),
@@ -44,37 +35,30 @@ class HomeScreen extends StatelessWidget {
             },
           ),
           floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+              FloatingActionButtonLocation.miniCenterDocked,
           body: [
             ListPage(),
-            // LinkPage(),
             ConfigPage(),
-          ][snapshot.data],
+          ][snapshot.data!],
           bottomNavigationBar: BottomNavigationBar(
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
+            selectedItemColor: Theme.of(context).iconTheme.color,
+            unselectedItemColor: Theme.of(context).hintColor,
+            selectedFontSize: 12,
+            backgroundColor: Theme.of(context).bottomAppBarColor,
             items: [
               BottomNavigationBarItem(
-                  label: 'リスト',
-                  icon: Icon(
-                    Icons.list,
-                    size: 36,
-                  ),
-                  activeIcon: Icon(
-                    Icons.list,
-                    size: 36,
-                    color: Theme.of(context).primaryColor,
-                  )),
+                label: 'リスト',
+                tooltip: 'リスト',
+                icon: Icon(Icons.list, size: 36),
+                activeIcon: Icon(Icons.list, size: 36),
+              ),
               BottomNavigationBarItem(
-                  label: '設定',
-                  icon: Icon(Icons.settings, size: 36),
-                  activeIcon: Icon(
-                    Icons.list,
-                    size: 36,
-                    color: Theme.of(context).primaryColor,
-                  ))
+                label: '設定',
+                icon: Icon(Icons.settings, size: 36),
+                activeIcon: Icon(Icons.settings, size: 36),
+              )
             ],
-            currentIndex: snapshot.data,
+            currentIndex: snapshot.data!,
             onTap: (int index) {
               if (index == snapshot.data) return;
               switch (index) {

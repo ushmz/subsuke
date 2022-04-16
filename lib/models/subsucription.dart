@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 enum Cycle { Daily, Weekly, Monthly, Yearly }
 
 class Subscription {
@@ -9,17 +7,13 @@ class Subscription {
   final int price;
   final Cycle cycle;
 
-  const Subscription({
-    @required this.id,
-    @required this.name,
-    @required this.billingAt,
-    @required this.price,
-    @required this.cycle,
-  })  : assert(id != null),
-        assert(name != null),
-        assert(billingAt != null),
-        assert(price != null),
-        assert(cycle != null);
+  const Subscription(
+    this.id,
+    this.name,
+    this.billingAt,
+    this.price,
+    this.cycle,
+  );
 
   int get getId => id;
 
@@ -32,11 +26,11 @@ class Subscription {
       };
 
   factory Subscription.fromMap(Map<String, dynamic> json) => Subscription(
-        id: json['id'],
-        name: json['name'],
-        billingAt: json['billingAt'],
-        price: json['price'],
-        cycle: json['cycle'],
+        json['id'],
+        json['name'],
+        json['billingAt'],
+        json['price'],
+        json['cycle'],
       );
 }
 
@@ -48,8 +42,8 @@ class Subscriptions {
   int monthly;
   int yearly;
 
-  Subscriptions(List<Subscription> subscriptions) {
-    this.subscriptions = subscriptions;
+  Subscriptions(List<Subscription> subscriptions) : subscriptions=subscriptions, daily=0, weekly=0, monthly=0, yearly=0 {
+    /* this.subscriptions = subscriptions; */
     this.subscriptions.forEach((s) {
       switch (s.cycle) {
         case Cycle.Daily:
