@@ -41,8 +41,8 @@ class HomeScreen extends StatelessWidget {
             ConfigPage(),
           ][snapshot.data!],
           bottomNavigationBar: BottomNavigationBar(
-            selectedItemColor: Theme.of(context).iconTheme.color,
-            unselectedItemColor: Theme.of(context).hintColor,
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Colors.white54,
             selectedFontSize: 12,
             backgroundColor: Theme.of(context).bottomAppBarColor,
             items: [
