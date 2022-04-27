@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
+import 'package:subsuke/models/subsc.dart';
 import 'package:subsuke/ui/components/ui_parts/icon_header.dart';
 
+import '../../../blocs/subscription_item_bloc.dart';
+
 typedef TextFieldBuilder<T> = Widget Function(
-    BuildContext ctx, AsyncSnapshot<T> ss);
+  BuildContext ctx,
+  AsyncSnapshot<T> ss,
+);
 
 class SubscriptionEditFormGroup extends StatelessWidget {
-  final Function() actionClicked;
+  final Function(SubscriptionItem) actionClicked;
+  final SubscriptionItem? item;
 
-  SubscriptionEditFormGroup(
-    this.actionClicked,
-  );
+  SubscriptionEditFormGroup({required this.actionClicked, this.item});
 
   TextFieldBuilder<String> textInputBuilder(
     TextEditingController ctrl,
@@ -71,9 +76,50 @@ class SubscriptionEditFormGroup extends StatelessWidget {
     };
   }
 
+  TextFieldBuilder<DateTime> datetimeInputBuilder(
+    TextEditingController ctrl,
+    Function(DateTime) onChanged,
+    String labelText,
+  ) {
+    return (BuildContext ctx, AsyncSnapshot<DateTime> ss) {
+      DateTime initial;
+      switch (ss.connectionState) {
+        case ConnectionState.waiting:
+          initial = DateTime.now();
+          break;
+        default:
+          initial = ss.data!;
+          break;
+      }
+      return TextField(
+        keyboardType: TextInputType.datetime,
+        /* inputFormatters: [FilteringTextInputFormatter.digitsOnly], */
+        controller: ctrl,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          hintText: "${DateFormat('yyyy-MM-dd').format(initial)}",
+        ),
+        onTap: () async {
+          FocusScope.of(ctx).requestFocus(new FocusNode());
+          final date = await showDatePicker(
+            context: ctx,
+            initialDate: initial,
+            firstDate: DateTime(1900),
+            lastDate: DateTime(2100),
+          );
+          if (date != null) {
+            onChanged(date);
+          }
+        },
+      );
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<EditScreenBloc>(context);
+    final itemBloc = Provider.of<SubscriptionItemBloc>(context);
+
     final _nameEditingController = TextEditingController();
     final _priceEditingController = TextEditingController();
     final _nextEditingController = TextEditingController();
@@ -92,7 +138,17 @@ class SubscriptionEditFormGroup extends StatelessWidget {
                   color: Theme.of(context).hintColor,
                 ),
               ),
-              onPressed: this.actionClicked,
+              onPressed: () => {
+                this.actionClicked(
+                  SubscriptionItem(
+                    0,
+                    bloc.getName,
+                    bloc.getPrice,
+                    bloc.getNextTime,
+                    PaymentInterval.Monthly,
+                  ),
+                )
+              },
             ),
           ],
         ),
@@ -112,8 +168,11 @@ class SubscriptionEditFormGroup extends StatelessWidget {
                         ),
                         StreamBuilder(
                           stream: bloc.onChangeNameText,
-                          builder: textInputBuilder(_nameEditingController,
-                              (text) => bloc.setNameText(text), "サブスクリプション名"),
+                          builder: textInputBuilder(
+                            _nameEditingController,
+                            (text) => bloc.setNameText(text),
+                            "サブスクリプション名",
+                          ),
                         ),
                       ],
                     ),
@@ -125,9 +184,10 @@ class SubscriptionEditFormGroup extends StatelessWidget {
                       StreamBuilder(
                         stream: bloc.onChangePriceNum,
                         builder: numberInputBuilder(
-                            _priceEditingController,
-                            (text) => bloc.setPriceNum(int.tryParse(text) ?? 0),
-                            "価格"),
+                          _priceEditingController,
+                          (text) => bloc.setPriceNum(int.tryParse(text) ?? 0),
+                          "価格",
+                        ),
                       ),
                     ]),
                   ),
@@ -137,8 +197,11 @@ class SubscriptionEditFormGroup extends StatelessWidget {
                       IconHeader(Icons.event_repeat, "支払日"),
                       StreamBuilder(
                         stream: bloc.onChangeNextTime,
-                        builder: textInputBuilder(_nextEditingController,
-                            (text) => bloc.setNextTime(text), "支払日"),
+                        builder: datetimeInputBuilder(
+                          _nextEditingController,
+                          (picked) => bloc.setNextTime(picked),
+                          "支払日",
+                        ),
                       ),
                     ]),
                   ),
@@ -158,8 +221,11 @@ class SubscriptionEditFormGroup extends StatelessWidget {
                       ),
                       StreamBuilder(
                         stream: bloc.onChangeNote,
-                        builder: textInputBuilder(_noteEditController,
-                            (text) => bloc.setNote(text), "何か書く"),
+                        builder: textInputBuilder(
+                          _noteEditController,
+                          (text) => bloc.setNote(text),
+                          "何か書く",
+                        ),
                       ),
                     ]),
                   )

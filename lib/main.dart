@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:subsuke/blocs/edit_screen_bloc.dart';
 import 'package:subsuke/blocs/pagination_bloc.dart';
 import 'package:subsuke/blocs/settings_bloc.dart';
-import 'package:subsuke/blocs/subscriptions_bloc.dart';
+import 'package:subsuke/blocs/subscription_item_bloc.dart';
 import 'package:subsuke/ui/entrypoints/home.dart';
 
 void main() {
@@ -59,8 +60,8 @@ class MyApp extends StatelessWidget {
                   create: (context) => PaginationBloc(),
                   dispose: (context, bloc) => bloc.dispose(),
                 ),
-                Provider<SubscriptionsBloc>(
-                  create: (context) => SubscriptionsBloc(),
+                Provider<SubscriptionItemBloc>(
+                  create: (context) => SubscriptionItemBloc(),
                   dispose: (context, bloc) => bloc.dispose(),
                 ),
                 Provider<SettingsBloc>(

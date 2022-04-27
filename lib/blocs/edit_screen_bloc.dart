@@ -1,10 +1,11 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:subsuke/models/subsc.dart';
 import 'package:subsuke/models/subsucription.dart';
 
 class EditScreenBloc {
   final _nameTextController = BehaviorSubject.seeded('');
   final _priceNumberController = BehaviorSubject.seeded(0);
-  final _nextTimeController = BehaviorSubject.seeded('');
+  final _nextTimeController = BehaviorSubject.seeded(DateTime.now());
   final _cycleController = BehaviorSubject.seeded(Cycle.Monthly);
   final _noteController = BehaviorSubject.seeded('');
 
@@ -16,9 +17,9 @@ class EditScreenBloc {
   Stream<int> get onChangePriceNum => _priceNumberController.stream;
   int get getPrice => _priceNumberController.value;
 
-  Function(String) get setNextTime => _nextTimeController.sink.add;
-  Stream<String> get onChangeNextTime => _nextTimeController.stream;
-  String get getNextTime => _nextTimeController.value;
+  Function(DateTime) get setNextTime => _nextTimeController.sink.add;
+  Stream<DateTime> get onChangeNextTime => _nextTimeController.stream;
+  DateTime get getNextTime => _nextTimeController.value;
 
   Function(Cycle) get setCycle => _cycleController.sink.add;
   Stream<Cycle> get onChangeCycle => _cycleController.stream;
@@ -27,6 +28,12 @@ class EditScreenBloc {
   Function(String) get setNote => _noteController.sink.add;
   Stream<String> get onChangeNote => _noteController.stream;
   String get getNote => _noteController.value;
+
+  void setValues(SubscriptionItem item) {
+    setNameText(item.name);
+    setPriceNum(item.price);
+    setNextTime(item.next);
+  }
 
   void dispose() {
     _nameTextController.close();

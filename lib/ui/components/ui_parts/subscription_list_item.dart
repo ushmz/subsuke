@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:subsuke/models/subsucription.dart';
+import 'package:intl/intl.dart';
+import 'package:subsuke/models/subsc.dart';
 
 class SubscriptionListItem extends StatelessWidget {
-  final Subscription subscription;
-  SubscriptionListItem(this.subscription);
+  final SubscriptionItem item;
+  SubscriptionListItem(this.item);
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +26,12 @@ class SubscriptionListItem extends StatelessWidget {
                     children: [
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(subscription.name),
+                        child: Text(item.name),
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "次回お支払日 ${subscription.billingAt}",
+                          "次回お支払日 ${DateFormat('yyyy-MM-dd').format(item.next)}",
                           style: Theme.of(context).textTheme.bodyText2,
                         ),
                       ),
@@ -43,7 +44,7 @@ class SubscriptionListItem extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    "${subscription.price}円",
+                    "${item.price}円",
                     style: TextStyle(
                       fontSize: 16,
                     ),
