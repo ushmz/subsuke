@@ -124,14 +124,15 @@ class EditPage extends StatelessWidget {
     bloc.setValues(item);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).backgroundColor,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          iconTheme: IconThemeData(color: Theme.of(context).hintColor),
           actions: [
             TextButton(
               child: Text(
                 "保存する",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).hintColor,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
               onPressed: () {

@@ -45,6 +45,7 @@ class ListPage extends StatelessWidget {
                           return Slidable(
                             key: ValueKey(item.id),
                             endActionPane: ActionPane(
+                              extentRatio: 0.2,
                               motion: BehindMotion(),
                               children: [
                                 SlidableAction(

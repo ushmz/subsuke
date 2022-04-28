@@ -19,11 +19,24 @@ class HomeScreen extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<int> snapshot) => Scaffold(
           appBar: AppBar(
             title: Text('subsuke'),
+            backgroundColor: Theme.of(context).primaryColor,
           ),
           floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add,
-                size: 32, color: Theme.of(context).primaryColor),
+            child: Icon(
+              Icons.add,
+              size: 32,
+              color: Theme.of(context).primaryColor,
+            ),
             backgroundColor: Colors.white,
+            hoverColor: Theme.of(context).hintColor,
+            hoverElevation: 1.5,
+            shape: StadiumBorder(
+              side: BorderSide(
+                color: Theme.of(context).primaryColor,
+                width: 2,
+              ),
+            ),
+            elevation: 12,
             onPressed: () {
               showCupertinoModalBottomSheet(
                 context: context,

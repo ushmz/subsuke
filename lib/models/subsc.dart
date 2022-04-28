@@ -4,16 +4,18 @@ class SubscriptionItem {
   final int price;
   final DateTime next;
   final PaymentInterval interval;
-  /* final String note; */
+  final String? note;
+  final String? paymentMethod;
 
   const SubscriptionItem(
     this.id,
     this.name,
     this.price,
     this.next,
-    this.interval,
-    /* this.note, */
-  );
+    this.interval, {
+    this.note,
+    this.paymentMethod,
+  });
 
   int get getID => id;
 
