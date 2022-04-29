@@ -26,13 +26,16 @@ class SubscriptionListItem extends StatelessWidget {
                     children: [
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(item.name),
+                        child: Text(
+                          item.name,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           "次回お支払日 ${DateFormat('yyyy-MM-dd').format(item.next)}",
-                          style: Theme.of(context).textTheme.bodyText2,
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ),
                     ],
@@ -45,9 +48,7 @@ class SubscriptionListItem extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: Text(
                     "${item.price}円",
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
               )
