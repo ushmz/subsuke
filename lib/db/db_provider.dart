@@ -48,7 +48,7 @@ class DBProvider {
                 name TEXT NOT NULL,
                 price INTEGER NOT NULL,
                 next TEXT NOT NULL,
-                interval INTEGER NOT NULL,
+                interval INTEGER NOT NULL
           )
         ''');
         await batch.commit();
