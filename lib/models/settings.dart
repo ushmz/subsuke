@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class SettingStates {
+class Preferences {
   final bool isNotificationEnabled;
   final TimeOfDay notificationSchedule;
 
-  SettingStates(this.isNotificationEnabled, this.notificationSchedule);
+  Preferences(this.isNotificationEnabled, this.notificationSchedule);
 }

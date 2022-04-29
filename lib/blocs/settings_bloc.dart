@@ -1,40 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:subsuke/models/settings.dart';
 
 class SettingsBloc {
-  final _settingsController = BehaviorSubject<SettingStates>();
+  final _preferenceController = BehaviorSubject();
+  final _notificationScheduleController =
+      BehaviorSubject<TimeOfDay>.seeded(TimeOfDay.now());
+  final _notificationScheduleEnabled = BehaviorSubject<bool>.seeded(false);
 
-  Function(SettingStates) get setSettings => _settingsController.sink.add;
-  Stream<SettingStates> get onSettingsChanged => _settingsController.stream;
+  Stream<void> get onPreferenceUpdated => _preferenceController.stream;
+  Stream<TimeOfDay> get onScheduleChanged =>
+      _notificationScheduleController.stream;
+  Stream<bool> get onNoticationToggled => _notificationScheduleEnabled.stream;
 
   SettingsBloc() {
-    // Get from "PreferedStatement" or somewhere.
-    final settings = SettingStates(true, TimeOfDay.now());
-    setSettings(settings);
+    () async {
+      final prefs = await SharedPreferences.getInstance();
+
+      _notificationScheduleEnabled.sink
+          .add(prefs.getBool("notification") ?? false);
+
+      final timeStr = prefs.getString("schedule");
+      if (timeStr != null) {
+        final time = TimeOfDay(
+            hour: int.parse(timeStr.split(":")[0]),
+            minute: int.parse(timeStr.split(":")[1]));
+        _notificationScheduleController.sink.add(time);
+      } else {
+        _notificationScheduleController.sink.add(TimeOfDay.now());
+      }
+      _preferenceController.sink.add(null);
+    }();
   }
 
-  bool getNotificationEnabled() {
-    final enabled = _settingsController.value.isNotificationEnabled;
-    return enabled;
+  Preferences get _getPreferences => _preferenceController.value;
+
+  bool isNotificationEnabled() {
+    return _notificationScheduleEnabled.stream.value;
   }
 
-  void setNotificationEnabled(SettingStates current, bool val) {
-    // Write value to "PreferedStatement" or somewhere.
-    final settings = SettingStates(val, current.notificationSchedule);
-    setSettings(settings);
+  Future<void> setNotificationEnabled(bool val) async {
+    final prefs = await SharedPreferences.getInstance();
+    final success = await prefs.setBool("notification", val);
+    if (success) {
+      _notificationScheduleEnabled.sink.add(val);
+      _preferenceController.sink.add(null);
+    } else {
+      _notificationScheduleEnabled.sink.addError("Failed to save preference");
+    }
   }
 
   TimeOfDay getNotificationSchedule() {
-    return _settingsController.value.notificationSchedule;
+    return _notificationScheduleController.stream.value;
   }
 
-  void setNotificationSchedule(SettingStates current, TimeOfDay schedule) {
-    final settings = SettingStates(current.isNotificationEnabled, schedule);
-    setSettings(settings);
+  Future<void> setNotificationSchedule(TimeOfDay val) async {
+    final prefs = await SharedPreferences.getInstance();
+    final success =
+        await prefs.setString("schedule", "${val.hour}:${val.minute}");
+    if (success) {
+      _notificationScheduleController.sink.add(val);
+      _preferenceController.sink.add(null);
+    } else {
+      _notificationScheduleController.sink
+          .addError("Failed to save preference");
+    }
   }
 
   void dispose() {
-    _settingsController.close();
+    _preferenceController.close();
+    _notificationScheduleEnabled.close();
+    _notificationScheduleController.close();
   }
 }
