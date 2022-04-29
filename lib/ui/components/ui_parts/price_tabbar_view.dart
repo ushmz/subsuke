@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/ui/components/ui_parts/price_card.dart';
 
 class PriceInfoTabView extends StatelessWidget {
   final List<SubscriptionItem> items;
@@ -53,17 +54,21 @@ class PriceInfoTabView extends StatelessWidget {
     });
 
     return [
-      Center(
-        child: Text('$daily円 / 日', style: TextStyle(fontSize: 32)),
+      Padding(
+        padding: EdgeInsets.all(12),
+        child: PriceCard(daily, PaymentInterval.Daily),
       ),
-      Center(
-        child: Text('$weekly円 / 週', style: TextStyle(fontSize: 32)),
+      Padding(
+        padding: EdgeInsets.all(12),
+        child: PriceCard(weekly, PaymentInterval.Weekly),
       ),
-      Center(
-        child: Text('$monthly円 / 月', style: TextStyle(fontSize: 32)),
+      Padding(
+        padding: EdgeInsets.all(12),
+        child: PriceCard(monthly, PaymentInterval.Monthly),
       ),
-      Center(
-        child: Text('$yearly円 / 年', style: TextStyle(fontSize: 32)),
+      Padding(
+        padding: EdgeInsets.all(12),
+        child: PriceCard(yearly, PaymentInterval.Yearly),
       ),
     ];
   }

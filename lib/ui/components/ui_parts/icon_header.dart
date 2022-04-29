@@ -9,11 +9,12 @@ class IconHeader extends StatelessWidget {
   @override
   Widget build(BuildContext ctx) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Icon(icon),
         Padding(
-          padding: EdgeInsets.only(left: 5),
+          padding: EdgeInsets.only(left: 7),
           child: Text(
             title,
             style: TextStyle(fontWeight: FontWeight.bold),
