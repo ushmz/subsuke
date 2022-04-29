@@ -13,26 +13,32 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final pagination = Provider.of<PaginationBloc>(context);
     final item = Provider.of<SubscriptionItemBloc>(context);
+    final resolvedTheme = Theme.of(context);
     return StreamBuilder(
       stream: pagination.currentPage,
       initialData: 0,
       builder: (BuildContext context, AsyncSnapshot<int> snapshot) => Scaffold(
           appBar: AppBar(
-            title: Text('subsuke'),
-            backgroundColor: Theme.of(context).primaryColor,
+            title: Text(
+              'Subsuke',
+              style: TextStyle(
+                color: resolvedTheme.appBarTheme.foregroundColor,
+              ),
+            ),
+            backgroundColor: resolvedTheme.appBarTheme.backgroundColor,
           ),
           floatingActionButton: FloatingActionButton(
             child: Icon(
               Icons.add,
               size: 32,
-              color: Theme.of(context).primaryColor,
+              color: resolvedTheme.primaryColor,
             ),
-            backgroundColor: Colors.white,
-            hoverColor: Theme.of(context).hintColor,
+            backgroundColor: resolvedTheme.backgroundColor,
+            hoverColor: resolvedTheme.hoverColor,
             hoverElevation: 1.5,
             shape: StadiumBorder(
               side: BorderSide(
-                color: Theme.of(context).primaryColor,
+                color: resolvedTheme.primaryColor,
                 width: 2,
               ),
             ),
@@ -55,21 +61,37 @@ class HomeScreen extends StatelessWidget {
             ConfigPage(),
           ][snapshot.data!],
           bottomNavigationBar: BottomNavigationBar(
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.white54,
+            selectedItemColor: resolvedTheme.primaryColor,
+            unselectedItemColor: resolvedTheme.hintColor,
             selectedFontSize: 12,
             backgroundColor: Theme.of(context).bottomAppBarColor,
             items: [
               BottomNavigationBarItem(
                 label: 'リスト',
                 tooltip: 'リスト',
-                icon: Icon(Icons.list, size: 36),
-                activeIcon: Icon(Icons.list, size: 36),
+                icon: Icon(
+                  Icons.list,
+                  size: 36,
+                  color: resolvedTheme.iconTheme.color,
+                ),
+                activeIcon: Icon(
+                  Icons.list,
+                  size: 36,
+                  color: resolvedTheme.primaryColor,
+                ),
               ),
               BottomNavigationBarItem(
                 label: '設定',
-                icon: Icon(Icons.settings, size: 36),
-                activeIcon: Icon(Icons.settings, size: 36),
+                icon: Icon(
+                  Icons.settings,
+                  size: 36,
+                  color: resolvedTheme.iconTheme.color,
+                ),
+                activeIcon: Icon(
+                  Icons.settings,
+                  size: 36,
+                  color: resolvedTheme.primaryColor,
+                ),
               )
             ],
             currentIndex: snapshot.data!,

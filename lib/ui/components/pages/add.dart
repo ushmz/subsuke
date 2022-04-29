@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -97,14 +100,32 @@ class AddPage extends StatelessWidget {
         ),
         onTap: () async {
           FocusScope.of(ctx).requestFocus(new FocusNode());
-          final date = await showDatePicker(
-            context: ctx,
-            initialDate: initial,
-            firstDate: DateTime(1900),
-            lastDate: DateTime(2100),
-          );
-          if (date != null) {
-            onChanged(date);
+          if (Platform.isIOS) {
+            showCupertinoModalPopup(
+              context: ctx,
+              builder: (BuildContext c) => Container(
+                color: Theme.of(c).scaffoldBackgroundColor,
+                height: MediaQuery.of(c).size.height / 3,
+                child: CupertinoTheme(
+                    data:
+                        CupertinoThemeData(brightness: Theme.of(c).brightness),
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.date,
+                      initialDateTime: initial,
+                      onDateTimeChanged: onChanged,
+                    )),
+              ),
+            );
+          } else {
+            final date = await showDatePicker(
+              context: ctx,
+              initialDate: initial,
+              firstDate: DateTime(1900),
+              lastDate: DateTime(2100),
+            );
+            if (date != null) {
+              onChanged(date);
+            }
           }
         },
       );
@@ -198,6 +219,19 @@ class AddPage extends StatelessWidget {
                           (picked) => bloc.setNextTime(picked),
                           "支払日",
                         ),
+                      ),
+                    ]),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Column(children: [
+                      IconHeader(Icons.event_repeat, "支払い周期"),
+                      StreamBuilder(
+                        stream: bloc.onChangeInterval,
+                        builder: (BuildContext c,
+                            AsyncSnapshot<PaymentInterval> ss) {
+                          return Center();
+                        },
                       ),
                     ]),
                   ),
