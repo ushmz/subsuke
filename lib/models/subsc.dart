@@ -111,7 +111,7 @@ enum PaymentInterval {
   Yearly,
 }
 
-extension PaymentIntervalExt on PaymentInterval {
+extension PaymentIntervalIDExt on PaymentInterval {
   int get intervalID {
     switch (this) {
       case PaymentInterval.Daily:
@@ -143,4 +143,21 @@ PaymentInterval getPaymentInterval(int id) {
     default:
       return PaymentInterval.Monthly;
   }
+}
+
+extension PaymentIntervalUnitTimeTextExt on PaymentInterval {
+    String get intervalText {
+    switch (this) {
+      case PaymentInterval.Daily:
+        return "1日";
+      case PaymentInterval.Weekly:
+        return "1週間";
+      case PaymentInterval.Fortnightly:
+        return "2週間";
+      case PaymentInterval.Monthly:
+        return "1ヶ月";
+      case PaymentInterval.Yearly:
+        return "1年";
+    }
+}
 }
