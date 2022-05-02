@@ -26,6 +26,12 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             backgroundColor: resolvedTheme.appBarTheme.backgroundColor,
+            elevation: 0,
+            actions: [
+              Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Icon(Icons.notifications_none, size: 28,))
+            ],
           ),
           floatingActionButton: FloatingActionButton(
             child: Icon(
@@ -36,12 +42,12 @@ class HomeScreen extends StatelessWidget {
             backgroundColor: resolvedTheme.backgroundColor,
             hoverColor: resolvedTheme.hoverColor,
             hoverElevation: 1.5,
-            shape: StadiumBorder(
-              side: BorderSide(
-                color: resolvedTheme.primaryColor,
-                width: 2,
-              ),
-            ),
+            /* shape: StadiumBorder( */
+            /*   side: BorderSide( */
+            /*     color: resolvedTheme.primaryColor, */
+            /*     width: 2, */
+            /*   ), */
+            /* ), */
             elevation: 12,
             onPressed: () {
               showCupertinoModalBottomSheet(

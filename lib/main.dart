@@ -33,14 +33,14 @@ class MyApp extends StatelessWidget {
           backgroundColor: Color(0xFFFFFFFF),
           scaffoldBackgroundColor: Color(0xFFF2F2F6),
           appBarTheme: AppBarTheme(
-              backgroundColor: Color(0xFFFFFFFF),
+              backgroundColor: Color(0xFFF2F2F6),
               foregroundColor: Color(0xFF000000)),
           bottomAppBarColor: Color(0xFFFFFFFF),
           iconTheme: IconThemeData(color: Colors.black),
           cardTheme: CardTheme(
               color: Color(0xFFFFFFFF),
               clipBehavior: Clip.antiAlias,
-              shadowColor: Colors.white10,
+              shadowColor: Colors.black12,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12))),
           textTheme: TextTheme(
@@ -53,17 +53,17 @@ class MyApp extends StatelessWidget {
           primaryColor: Color(0xFF9A57A2),
           hintColor: Colors.white54,
           hoverColor: Colors.white54,
-          backgroundColor: Color(0xFF1C1C1E),
+          backgroundColor: Color(0xFF212121),
           scaffoldBackgroundColor: Color(0xFF000000),
           appBarTheme: AppBarTheme(
-              backgroundColor: Color(0xFF212121),
+              backgroundColor: Color(0xFF000000),
               foregroundColor: Color(0xFFFFFFFF)),
           bottomAppBarColor: Color(0xFF212121),
           iconTheme: IconThemeData(color: Colors.white),
           cardTheme: CardTheme(
               color: Color(0xFF1C1C1E),
               clipBehavior: Clip.antiAlias,
-              shadowColor: Colors.white10,
+              shadowColor: Colors.transparent,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12))),
           textTheme: TextTheme(

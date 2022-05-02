@@ -7,7 +7,8 @@ class PriceInfoTabView extends StatelessWidget {
 
   PriceInfoTabView(this.items);
 
-  List<Widget> priceInfoBuilder(List<SubscriptionItem> items) {
+  List<Widget> priceInfoBuilder(
+      BuildContext context, List<SubscriptionItem> items) {
     int daily = 0;
     int weekly = 0;
     int monthly = 0;
@@ -54,38 +55,44 @@ class PriceInfoTabView extends StatelessWidget {
     });
 
     return [
-      Padding(
-        padding: EdgeInsets.all(12),
-        child: PriceCard(daily, PaymentInterval.Daily),
-      ),
-      Padding(
-        padding: EdgeInsets.all(12),
-        child: PriceCard(weekly, PaymentInterval.Weekly),
-      ),
-      Padding(
-        padding: EdgeInsets.all(12),
-        child: PriceCard(monthly, PaymentInterval.Monthly),
-      ),
-      Padding(
-        padding: EdgeInsets.all(12),
-        child: PriceCard(yearly, PaymentInterval.Yearly),
-      ),
-    ];
+      PriceCard(daily, PaymentInterval.Daily),
+      PriceCard(weekly, PaymentInterval.Weekly),
+      PriceCard(monthly, PaymentInterval.Monthly),
+      PriceCard(yearly, PaymentInterval.Yearly),
+    ]
+        .map(
+          (w) => Padding(
+            padding: EdgeInsets.all(12),
+            child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).cardTheme.shadowColor!,
+                      spreadRadius: 0.1,
+                      blurRadius: 7.0,
+                      offset: Offset(0, 5.0),
+                    )
+                  ],
+                ),
+                child: w),
+          ),
+        )
+        .toList();
   }
 
   @override
-  Widget build(BuildContext ctx) {
+  Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
-      child: Builder(
-        builder: (BuildContext context) => Padding(
+      child: Container(
+        child: Padding(
           padding: EdgeInsets.all(8.0),
           child: Column(
             children: [
               Expanded(
                 flex: 5,
                 child: TabBarView(
-                  children: priceInfoBuilder(items),
+                  children: priceInfoBuilder(context, items),
                 ),
               ),
               Expanded(

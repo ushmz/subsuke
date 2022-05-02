@@ -4,10 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
+import 'package:subsuke/blocs/subscription_item_bloc.dart';
 import 'package:subsuke/models/subsc.dart';
 import 'package:subsuke/ui/components/ui_parts/icon_header.dart';
 
-import '../../../blocs/subscription_item_bloc.dart';
 
 typedef TextFieldBuilder<T> = Widget Function(
   BuildContext ctx,

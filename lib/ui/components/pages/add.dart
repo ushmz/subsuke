@@ -145,27 +145,31 @@ class AddPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          elevation: 0,
           iconTheme: IconThemeData(color: Theme.of(context).hintColor),
           actions: [
-            TextButton(
-              child: Text(
-                "保存する",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: TextButton(
+                child: Text(
+                  "保存する",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
+                onPressed: () {
+                  DBProvider.instance?.createSubscriptionItem(SubscriptionItem(
+                    0,
+                    bloc.getName,
+                    bloc.getPrice,
+                    bloc.getNextTime,
+                    PaymentInterval.Monthly,
+                  ));
+                  updateItems();
+                  Navigator.pop(context);
+                },
               ),
-              onPressed: () {
-                DBProvider.instance?.createSubscriptionItem(SubscriptionItem(
-                  0,
-                  bloc.getName,
-                  bloc.getPrice,
-                  bloc.getNextTime,
-                  PaymentInterval.Monthly,
-                ));
-                updateItems();
-                Navigator.pop(context);
-              },
             ),
           ],
         ),
