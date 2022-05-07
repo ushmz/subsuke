@@ -15,49 +15,52 @@ class PriceCard extends StatelessWidget {
       shape: resolvedTheme.cardTheme.shape,
       shadowColor: resolvedTheme.cardTheme.shadowColor,
       clipBehavior: resolvedTheme.cardTheme.clipBehavior,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+      child: Container(
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+            child: Column(
+              /* mainAxisAlignment: MainAxisAlignment.spaceBetween, */
               children: [
-                Text("合計金額", style: resolvedTheme.textTheme.bodyMedium)
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${interval.intervalText}あたり',
-                  style: resolvedTheme.textTheme.bodyMedium,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text("合計金額", style: resolvedTheme.textTheme.bodyMedium)
+                  ],
                 ),
-                Center(),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "$price",
-                        style: resolvedTheme.textTheme.bodyLarge,
+                Spacer(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${interval.intervalText}あたり',
+                      style: resolvedTheme.textTheme.bodyMedium,
+                    ),
+                    Center(),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "$price",
+                            style: resolvedTheme.textTheme.bodyLarge,
+                          ),
+                          TextSpan(
+                            text: " ",
+                            style: resolvedTheme.textTheme.bodyMedium,
+                          ),
+                          TextSpan(
+                            text: "円",
+                            style: resolvedTheme.textTheme.bodyMedium,
+                          ),
+                        ],
                       ),
-                      TextSpan(
-                        text: " ",
-                        style: resolvedTheme.textTheme.bodyMedium,
-                      ),
-                      TextSpan(
-                        text: "円",
-                        style: resolvedTheme.textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
+                    )
+                  ],
                 )
               ],
-            )
-          ],
-        ),
-      ),
+            ),
+          )),
     );
   }
 }
