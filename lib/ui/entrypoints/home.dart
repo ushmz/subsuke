@@ -6,6 +6,7 @@ import 'package:subsuke/blocs/subscription_item_bloc.dart';
 import 'package:subsuke/ui/components/pages/list.dart';
 import 'package:subsuke/ui/components/pages/config.dart';
 import 'package:subsuke/ui/components/pages/add.dart';
+import 'package:subsuke/ui/components/pages/notifications.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -30,7 +31,14 @@ class HomeScreen extends StatelessWidget {
             actions: [
               Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Icon(Icons.notifications_none, size: 28,))
+                  child: IconButton(
+                    icon: Icon(Icons.notifications_none, size: 28),
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (ctx) => NotificationsList()),
+                                ),
+                  ))
             ],
           ),
           floatingActionButton: FloatingActionButton(

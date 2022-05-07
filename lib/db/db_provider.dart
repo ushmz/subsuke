@@ -3,12 +3,28 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:subsuke/models/notification.dart';
 import 'package:subsuke/models/subsc.dart';
 
 class DBProvider {
-  final _name = 'subscriptions.db';
+  final _filename = 'subscriptions.db';
   final _version = 1;
-  final _tablename = 'subscriptions';
+
+  final _subscriptionsTablename = 'subscriptions';
+  final _subscriptionsIDColumnName = 'id';
+  final _subscriptionsNameColumnName = 'name';
+  final _subscriptionsPriceColumnName = 'price';
+  final _subscriptionsNextColumnName = 'next';
+  final _subscriptionsIntervalColumnName = 'interval';
+  final _subscriptionsPaymentColumnName = 'payment_method';
+  final _subscriptionsNoteColumnName = 'note';
+
+  final _notificationsTableName = 'notifications';
+  final _notificationsIDColumnName = 'id';
+  final _notificationsTitleColumnName = 'title';
+  final _notificationsBodyColumnName = 'body';
+  final _notificationsReceivedAtColumnName = 'received_at';
+  final _notificationsIsUnreadColumnName = 'unread';
 
   DBProvider._();
   static final DBProvider? instance = DBProvider._();
@@ -31,7 +47,7 @@ class DBProvider {
     } else {
       throw Exception("Unknown platform");
     }
-    return join(dbDirPath, _name);
+    return join(dbDirPath, _filename);
   }
 
   _initDB() async {
@@ -41,14 +57,24 @@ class DBProvider {
       version: _version,
       onCreate: (db, version) async {
         var batch = db.batch();
-        // [TODO] Add note
         batch.execute('''
-            CREATE TABLE subscriptions(
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                price INTEGER NOT NULL,
-                next TEXT NOT NULL,
-                interval INTEGER NOT NULL
+            CREATE TABLE $_subscriptionsTablename(
+                $_subscriptionsIDColumnName INTEGER PRIMARY KEY AUTOINCREMENT,
+                $_subscriptionsNameColumnName TEXT NOT NULL,
+                $_subscriptionsPriceColumnName INTEGER NOT NULL,
+                $_subscriptionsNextColumnName TEXT NOT NULL,
+                $_subscriptionsIntervalColumnName INTEGER NOT NULL,
+                $_subscriptionsPaymentColumnName TEXT,
+                $_subscriptionsNoteColumnName TEXT
+          )
+        ''');
+        batch.execute('''
+            CREATE TABLE $_notificationsTableName(
+                $_notificationsIDColumnName INTEGER PRIMARY KEY AUTOINCREMENT,
+                $_notificationsTitleColumnName TEXT NOT NULL,
+                $_notificationsBodyColumnName TEXT NOT NULL,
+                $_notificationsReceivedAtColumnName TEXT NOT NULL,
+                $_notificationsIsUnreadColumnName INTEGER NOT NULL
           )
         ''');
         await batch.commit();
@@ -60,19 +86,23 @@ class DBProvider {
 
   Future<void> dropTable() async {
     final db = await database;
-    final _ = await db?.execute("DROP TABLE $_tablename");
-    return;
+    final _ = await db?.execute("DROP TABLE $_subscriptionsTablename");
+  }
+
+  Future<void> deleteDatabaseFile() async {
+    final path = await getDBPath();
+    await deleteDatabase(path);
   }
 
   Future<void> createSubscriptionItem(SubscriptionItem item) async {
     final db = await database;
-    final _ = await db?.insert(_tablename, item.toInsertMap());
+    final _ = await db?.insert(_subscriptionsTablename, item.toInsertMap());
     return;
   }
 
   Future<List<SubscriptionItem>> getAllSubscriptions() async {
     final db = await database;
-    final res = await db?.query(_tablename);
+    final res = await db?.query(_subscriptionsTablename);
     if (res == null) {
       return [];
     }
@@ -82,24 +112,49 @@ class DBProvider {
     return list;
   }
 
-  Future<void> updateSubscriptionItem(SubscriptionItem item) async {
-    final db = await database;
-    final _ = await db?.update(
-      _tablename,
+  Future<int> updateSubscriptionItem(SubscriptionItem item) async { final db = await database;
+    final rowAffected = await db?.update(
+      _subscriptionsTablename,
       item.toInsertMap(),
-      where: "id = ?",
+      where: "$_subscriptionsIDColumnName = ?",
       whereArgs: [item.id],
     );
+    return rowAffected ?? 0;
+  }
+
+  Future<void> upsertSubscriptionItem(SubscriptionItem item) async {
+    final ra = await updateSubscriptionItem(item);
+    if (ra == 0) {
+      await createSubscriptionItem(item);
+    }
     return;
   }
 
   Future<void> deleteSubscriptionItem(int id) async {
     final db = await database;
     final _ = await db?.delete(
-      _tablename,
-      where: "id = ?",
+      _subscriptionsTablename,
+      where: "$_subscriptionsIDColumnName = ?",
       whereArgs: [id],
     );
     return;
+  }
+
+  Future<void> insertNewNotification(Notification item) async {
+    final db = await database;
+    final _ = await db?.insert(_notificationsTableName, item.toInsertMap());
+    return;
+  }
+
+  Future<List<Notification>> getAllNotifications() async {
+    final db = await database;
+    final res = await db?.query(_notificationsTableName);
+    if (res == null) {
+      return [];
+    }
+    List<Notification> list = res.isNotEmpty
+        ? res.map((e) => Notification.fromMap(e)).toList()
+        : [];
+    return list;
   }
 }
