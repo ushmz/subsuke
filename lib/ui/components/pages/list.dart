@@ -29,12 +29,11 @@ class ListPage extends StatelessWidget {
             return Container(
               child: Column(
                 children: [
-                  Expanded(
-                    flex: 1,
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.25,
                     child: PriceInfoTabView(snapshot.data!),
                   ),
                   Expanded(
-                    flex: 2,
                     child: ListView.builder(
                       padding: EdgeInsets.only(bottom: 20, top: 20),
                       itemCount: snapshot.data?.length,

@@ -6,6 +6,7 @@ class EditScreenBloc {
   final _priceNumberController = BehaviorSubject.seeded(0);
   final _nextTimeController = BehaviorSubject.seeded(DateTime.now());
   final _intervalController = BehaviorSubject.seeded(PaymentInterval.Monthly);
+  final _paymentController = BehaviorSubject.seeded('');
   final _noteController = BehaviorSubject.seeded('');
 
   Function(String) get setNameText => _nameTextController.sink.add;
@@ -24,6 +25,10 @@ class EditScreenBloc {
   Stream<PaymentInterval> get onChangeInterval => _intervalController.stream;
   PaymentInterval get getInterval => _intervalController.value;
 
+  Function(String) get setPaymentMethod => _paymentController.sink.add;
+  Stream<String> get onChangePayment => _paymentController.stream;
+  String get getPaymentMethod => _paymentController.value;
+
   Function(String) get setNote => _noteController.sink.add;
   Stream<String> get onChangeNote => _noteController.stream;
   String get getNote => _noteController.value;
@@ -40,6 +45,7 @@ class EditScreenBloc {
     _priceNumberController.close();
     _nextTimeController.close();
     _intervalController.close();
+    _paymentController.close();
     _noteController.close();
   }
 }

@@ -4,18 +4,18 @@ class SubscriptionItem {
   final int price;
   final DateTime next;
   final PaymentInterval interval;
-  final String? note;
-  final String? paymentMethod;
+  final String paymentMethod;
+  final String note;
 
   const SubscriptionItem(
     this.id,
     this.name,
     this.price,
     this.next,
-    this.interval, {
+    this.interval,
     this.note,
     this.paymentMethod,
-  });
+  );
 
   int get getID => id;
 
@@ -31,7 +31,8 @@ class SubscriptionItem {
         "price": price,
         "next": next.toUtc().toIso8601String(),
         "interval": interval.intervalID,
-        /* "note": note */
+        "payment_method": paymentMethod,
+        "note": note
       };
 
   Map<String, dynamic> toInsertMap() => {
@@ -39,7 +40,8 @@ class SubscriptionItem {
         "price": price,
         "next": next.toUtc().toIso8601String(),
         "interval": interval.intervalID,
-        /* "note": note, */
+        "payment_method": paymentMethod,
+        "note": note,
       };
 
   factory SubscriptionItem.fromMap(Map<String, dynamic> json) =>
@@ -49,7 +51,8 @@ class SubscriptionItem {
         json['price'],
         DateTime.parse(json['next']).toLocal(),
         getPaymentInterval(json['interval']),
-        /* json['note'], */
+        json['payment_method'],
+        json['note'],
       );
 
   SubscriptionItem updateNextPayment() {
@@ -61,7 +64,8 @@ class SubscriptionItem {
           price,
           DateTime(next.year, next.month, next.day + 1),
           interval,
-          /* note, */
+          paymentMethod,
+          note,
         );
       case PaymentInterval.Weekly:
         return SubscriptionItem(
@@ -70,7 +74,8 @@ class SubscriptionItem {
           price,
           DateTime(next.year, next.month, next.day + 7),
           interval,
-          /* note, */
+          paymentMethod,
+          note,
         );
       case PaymentInterval.Fortnightly:
         return SubscriptionItem(
@@ -79,7 +84,8 @@ class SubscriptionItem {
           price,
           DateTime(next.year, next.month, next.day + 14),
           interval,
-          /* note, */
+          paymentMethod,
+          note,
         );
       case PaymentInterval.Monthly:
         return SubscriptionItem(
@@ -88,7 +94,8 @@ class SubscriptionItem {
           price,
           DateTime(next.year, next.month + 1, next.day),
           interval,
-          /* note, */
+          paymentMethod,
+          note,
         );
       case PaymentInterval.Yearly:
         return SubscriptionItem(
@@ -97,7 +104,8 @@ class SubscriptionItem {
           price,
           DateTime(next.year + 1, next.month, next.day),
           interval,
-          /* note, */
+          paymentMethod,
+          note,
         );
     }
   }
@@ -146,7 +154,7 @@ PaymentInterval getPaymentInterval(int id) {
 }
 
 extension PaymentIntervalUnitTimeTextExt on PaymentInterval {
-    String get intervalText {
+  String get intervalText {
     switch (this) {
       case PaymentInterval.Daily:
         return "1日";
@@ -159,5 +167,5 @@ extension PaymentIntervalUnitTimeTextExt on PaymentInterval {
       case PaymentInterval.Yearly:
         return "1年";
     }
-}
+  }
 }
