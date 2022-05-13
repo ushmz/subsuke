@@ -1,5 +1,5 @@
 name: subsuke
-description: A new Flutter project.
+description: Subscription service manager.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -41,6 +41,7 @@ dependencies:
   shared_preferences: ^2.0.13
   share_plus: ^4.0.4
   url_launcher: ^6.1.0
+  flutter_svg: ^1.0.3
 
 dev_dependencies:
   flutter_test:
@@ -57,6 +58,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/
+    - assets/icons/
+
 
 flutter_icons:
   android: "launcher_icon"

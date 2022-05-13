@@ -84,9 +84,14 @@ class DBProvider {
     );
   }
 
-  Future<void> dropTable() async {
+  Future<void> dropSubscriptionTable() async {
     final db = await database;
-    final _ = await db?.execute("DROP TABLE $_subscriptionsTablename");
+    await db?.execute("DROP TABLE $_subscriptionsTablename");
+  }
+
+  Future<void> dropNotificationTable() async {
+    final db = await database;
+    await db?.execute("DROP TABLE $_notificationsTableName");
   }
 
   Future<void> deleteDatabaseFile() async {
@@ -97,7 +102,6 @@ class DBProvider {
   Future<void> createSubscriptionItem(SubscriptionItem item) async {
     final db = await database;
     final _ = await db?.insert(_subscriptionsTablename, item.toInsertMap());
-    return;
   }
 
   Future<List<SubscriptionItem>> getAllSubscriptions() async {
@@ -112,7 +116,8 @@ class DBProvider {
     return list;
   }
 
-  Future<int> updateSubscriptionItem(SubscriptionItem item) async { final db = await database;
+  Future<int> updateSubscriptionItem(SubscriptionItem item) async {
+    final db = await database;
     final rowAffected = await db?.update(
       _subscriptionsTablename,
       item.toInsertMap(),
@@ -127,7 +132,6 @@ class DBProvider {
     if (ra == 0) {
       await createSubscriptionItem(item);
     }
-    return;
   }
 
   Future<void> deleteSubscriptionItem(int id) async {
@@ -137,24 +141,70 @@ class DBProvider {
       where: "$_subscriptionsIDColumnName = ?",
       whereArgs: [id],
     );
-    return;
   }
 
-  Future<void> insertNewNotification(Notification item) async {
+  Future<void> insertNewNotification(NotificationMessage item) async {
     final db = await database;
     final _ = await db?.insert(_notificationsTableName, item.toInsertMap());
-    return;
   }
 
-  Future<List<Notification>> getAllNotifications() async {
+  Future<List<NotificationMessage>> getAllNotifications() async {
     final db = await database;
-    final res = await db?.query(_notificationsTableName);
+    final res = await db?.query(_notificationsTableName, limit: 10);
     if (res == null) {
       return [];
     }
-    List<Notification> list = res.isNotEmpty
-        ? res.map((e) => Notification.fromMap(e)).toList()
+    List<NotificationMessage> list = res.isNotEmpty
+        ? res.map((e) => NotificationMessage.fromMap(e)).toList()
         : [];
     return list;
+  }
+
+  Future<void> readAllNotification() async {
+    final db = await database;
+    if (db == null) {
+      return;
+    }
+
+    await db.execute('''
+            UPDATE
+                $_notificationsTableName
+            SET
+                $_notificationsIsUnreadColumnName = false
+        ''');
+  }
+
+  Future<void> readNotifications(List<int> ids) async {
+    final db = await database;
+    final batch = db?.batch();
+    if (batch == null) {
+      return;
+    }
+
+    ids.forEach((id) {
+      batch.execute('''
+        UPDATE
+            $_notificationsTableName
+        SET
+            $_notificationsIsUnreadColumnName = false
+        WHERE
+            id = $id
+        ''');
+    });
+    await batch.commit();
+  }
+
+  Future<void> archiveNotification(int id) async {
+    final db = await database;
+    final _ = await db?.delete(
+      _notificationsTableName,
+      where: "$_notificationsIDColumnName = ?",
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> archiveAllNotification() async {
+    final db = await database;
+    final _ = await db?.delete(_notificationsTableName);
   }
 }

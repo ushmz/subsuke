@@ -34,7 +34,14 @@ class AboutAppPaeg extends StatelessWidget {
               SettingsTile.navigation(
                 title: Text("Attributions & Licenses"),
                 onPressed: (BuildContext c) {
-                  showAboutDialog(context: c);
+                  showAboutDialog(
+                    context: c,
+                    applicationVersion: "1.0.0",
+                    applicationIcon: Image(
+                      image: AssetImage("assets/icons/subsuke.png"),
+                      width: MediaQuery.of(c).size.width * 0.15,
+                    ),
+                  );
                 },
               )
             ]),

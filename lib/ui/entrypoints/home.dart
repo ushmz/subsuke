@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:subsuke/blocs/notifications_bloc.dart';
 import 'package:subsuke/blocs/pagination_bloc.dart';
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
 import 'package:subsuke/blocs/subscription_item_bloc.dart';
@@ -30,15 +31,23 @@ class HomeScreen extends StatelessWidget {
             elevation: 0,
             actions: [
               Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: IconButton(
-                    icon: Icon(Icons.notifications_none, size: 28),
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (ctx) => NotificationsList()),
-                                ),
-                  ))
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: IconButton(
+                  icon: Icon(Icons.notifications_none, size: 28),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          Provider<NotificationsBloc>(
+                        create: (BuildContext ctx) => NotificationsBloc(),
+                        dispose: (BuildContext ctx, NotificationsBloc bloc) =>
+                            bloc.dispose(),
+                        child: NotificationsList(),
+                      ),
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
           floatingActionButton: FloatingActionButton(

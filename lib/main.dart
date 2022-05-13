@@ -26,28 +26,29 @@ class MyApp extends StatelessWidget {
       ],
       title: 'Subsuke',
       theme: ThemeData(
-          brightness: Brightness.light,
-          primaryColor: Color(0xFF8B4492),
-          hintColor: Colors.black54,
-          hoverColor: Colors.black54,
-          backgroundColor: Color(0xFFFFFFFF),
-          scaffoldBackgroundColor: Color(0xFFF2F2F6),
-          appBarTheme: AppBarTheme(
-              backgroundColor: Color(0xFFF2F2F6),
-              foregroundColor: Color(0xFF000000)),
-          bottomAppBarColor: Color(0xFFFFFFFF),
-          iconTheme: IconThemeData(color: Colors.black),
-          cardTheme: CardTheme(
-              color: Color(0xFFFFFFFF),
-              clipBehavior: Clip.antiAlias,
-              shadowColor: Colors.black12,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12))),
-          textTheme: TextTheme(
-            bodyLarge: TextStyle(color: Colors.black, fontSize: 32),
-            bodyMedium: TextStyle(color: Colors.black, fontSize: 24),
-            bodySmall: TextStyle(color: Colors.black, fontSize: 18),
-          )),
+        brightness: Brightness.light,
+        primaryColor: Color(0xFF8B4492),
+        hintColor: Colors.black54,
+        hoverColor: Colors.black54,
+        backgroundColor: Color(0xFFFFFFFF),
+        scaffoldBackgroundColor: Color(0xFFF2F2F6),
+        appBarTheme: AppBarTheme(
+            backgroundColor: Color(0xFFF2F2F6),
+            foregroundColor: Color(0xFF000000)),
+        bottomAppBarColor: Color(0xFFFFFFFF),
+        iconTheme: IconThemeData(color: Colors.black),
+        cardTheme: CardTheme(
+            color: Color(0xFFFFFFFF),
+            clipBehavior: Clip.antiAlias,
+            shadowColor: Colors.black12,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12))),
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(color: Colors.black, fontSize: 32),
+          bodyMedium: TextStyle(color: Colors.black, fontSize: 24),
+          bodySmall: TextStyle(color: Colors.black, fontSize: 18),
+        ),
+      ),
       darkTheme: ThemeData(
           brightness: Brightness.dark,
           primaryColor: Color(0xFF9A57A2),
