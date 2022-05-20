@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
 import 'package:subsuke/db/db_provider.dart';
 import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/notifications/notifications.dart';
 import 'package:subsuke/ui/components/ui_parts/icon_header.dart';
 
 typedef TextFieldBuilder<T> = Widget Function(
@@ -244,7 +245,7 @@ class AddPage extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                DBProvider.instance?.createSubscriptionItem(SubscriptionItem(
+                DBProvider.instance.createSubscriptionItem(SubscriptionItem(
                   0,
                   bloc.getName,
                   bloc.getPrice,
@@ -254,6 +255,7 @@ class AddPage extends StatelessWidget {
                   bloc.getPaymentMethod,
                 ));
                 updateItems();
+                NotificationRepository().testNotification();
                 Navigator.pop(context);
               },
             ),
