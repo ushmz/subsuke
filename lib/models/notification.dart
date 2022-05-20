@@ -45,3 +45,4 @@ class NotificationMessage {
         json['unread'] == 1,
       );
 }
+

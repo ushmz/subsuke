@@ -256,7 +256,7 @@ class SubscriptionFormGroup extends StatelessWidget {
                   bloc.getNote,
                   bloc.getPaymentMethod,
                 );
-                DBProvider.instance?.upsertSubscriptionItem(i);
+                DBProvider.instance.upsertSubscriptionItem(i);
                 refreshItems();
                 Navigator.pop(context);
               },

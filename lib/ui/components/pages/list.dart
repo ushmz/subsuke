@@ -12,7 +12,7 @@ import 'package:subsuke/ui/components/ui_parts/subscription_list_item.dart';
 
 class ListPage extends StatelessWidget {
   Future<void> onPressDelete(int id) async {
-    await DBProvider.instance?.deleteSubscriptionItem(id);
+    await DBProvider.instance.deleteSubscriptionItem(id);
   }
 
   @override

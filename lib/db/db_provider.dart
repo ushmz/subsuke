@@ -26,8 +26,11 @@ class DBProvider {
   final _notificationsReceivedAtColumnName = 'received_at';
   final _notificationsIsUnreadColumnName = 'unread';
 
+  static final DBProvider instance = DBProvider._();
+  factory DBProvider() {
+    return instance;
+  }
   DBProvider._();
-  static final DBProvider? instance = DBProvider._();
 
   static Database? _database;
   Future<Database?> get database async {

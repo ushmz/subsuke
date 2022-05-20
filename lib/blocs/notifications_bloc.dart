@@ -27,22 +27,22 @@ class NotificationsBloc {
   }
 
   getMessages() async {
-    final messages = await DBProvider.instance?.getAllNotifications();
-    _messagesController.sink.add(messages != null ? messages : []);
+    final messages = await DBProvider.instance.getAllNotifications();
+    _messagesController.sink.add(messages);
   }
 
   updateAll() async {
-    DBProvider.instance?.readAllNotification();
+    DBProvider.instance.readAllNotification();
     getMessages();
   }
 
   update(List<int> ids) async {
-    DBProvider.instance?.readNotifications(ids);
+    DBProvider.instance.readNotifications(ids);
     getMessages();
   }
 
   deleteAll() async {
-    DBProvider.instance?.archiveAllNotification();
+    DBProvider.instance.archiveAllNotification();
     getMessages();
   }
 

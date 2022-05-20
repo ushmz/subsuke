@@ -12,8 +12,8 @@ class SubscriptionItemBloc {
       _itemController.stream;
 
   getItems() async {
-    final items = await DBProvider.instance?.getAllSubscriptions();
-    _itemController.sink.add(items != null ? items : []);
+    final items = await DBProvider.instance.getAllSubscriptions();
+    _itemController.sink.add(items);
   }
 
   SubscriptionItemBloc() {
@@ -21,17 +21,17 @@ class SubscriptionItemBloc {
   }
 
   create(SubscriptionItem item) {
-    DBProvider.instance?.createSubscriptionItem(item);
+    DBProvider.instance.createSubscriptionItem(item);
     getItems();
   }
 
   update(SubscriptionItem item) {
-    DBProvider.instance?.updateSubscriptionItem(item);
+    DBProvider.instance.updateSubscriptionItem(item);
     getItems();
   }
 
   delete(int id) {
-    DBProvider.instance?.deleteSubscriptionItem(id);
+    DBProvider.instance.deleteSubscriptionItem(id);
     getItems();
   }
 
