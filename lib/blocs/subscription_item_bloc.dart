@@ -16,10 +16,6 @@ class SubscriptionItemBloc {
     _itemController.sink.add(items);
   }
 
-  SubscriptionItemBloc() {
-    getItems();
-  }
-
   create(SubscriptionItem item) {
     DBProvider.instance.createSubscriptionItem(item);
     getItems();
@@ -35,7 +31,31 @@ class SubscriptionItemBloc {
     getItems();
   }
 
+  final _selectedIntervals = BehaviorSubject<List<int>>.seeded(<int>[]);
+  Stream<List<int>> get selectedIntervalsStream => _selectedIntervals.stream;
+  Function(List<int>) get setSelectedIntervals => _selectedIntervals.sink.add;
+
+  toggleSelectedIntervals(int intervalID) {
+    final ids = _selectedIntervals.value;
+    if (intervalID == 0) {
+      _selectedIntervals.sink.add(<int>[]);
+      return;
+    }
+
+    if (ids.contains(intervalID)) {
+      ids.remove(intervalID);
+      _selectedIntervals.sink.add(ids);
+    } else {
+      ids.add(intervalID);
+      _selectedIntervals.sink.add(ids);
+    }
+  }
+
+  SubscriptionItemBloc() {
+    getItems();
+  }
   void dispose() {
     _itemController.close();
+    _selectedIntervals.close();
   }
 }
