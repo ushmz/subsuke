@@ -21,7 +21,7 @@ class SettingsBloc {
       _notificationScheduleEnabled.sink
           .add(prefs.getBool("notification") ?? false);
 
-      final timeStr = prefs.getString("schedule");
+      final timeStr = prefs.getString("schedule.hour");
       if (timeStr != null) {
         final time = TimeOfDay(
             hour: int.parse(timeStr.split(":")[0]),
@@ -58,7 +58,7 @@ class SettingsBloc {
   Future<void> setNotificationSchedule(TimeOfDay val) async {
     final prefs = await SharedPreferences.getInstance();
     final success =
-        await prefs.setString("schedule", "${val.hour}:${val.minute}");
+        await prefs.setString("schedule.hour", "${val.hour}:${val.minute}");
     if (success) {
       _notificationScheduleController.sink.add(val);
       _preferenceController.sink.add(null);
