@@ -11,7 +11,6 @@ class SubscriptionListItem extends StatelessWidget {
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.bodyText1!,
       child: SizedBox(
-        height: 56,
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: 10,

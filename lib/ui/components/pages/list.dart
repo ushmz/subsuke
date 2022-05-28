@@ -5,25 +5,175 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
 import 'package:subsuke/blocs/subscription_item_bloc.dart';
-import 'package:subsuke/db/db_provider.dart';
 import 'package:subsuke/models/subsc.dart';
 import 'package:subsuke/ui/components/pages/edit.dart';
 import 'package:subsuke/ui/components/templates/price_tabbar_view.dart';
 import 'package:subsuke/ui/components/ui_parts/subscription_list_item.dart';
 
-class ListPage extends StatelessWidget {
-  Future<void> onPressDelete(int id) async {
-    await DBProvider.instance.deleteSubscriptionItem(id);
-  }
+class SortConditionOption extends StatelessWidget {
+  final String option;
+  final Function() onTap;
+  final bool? selected;
 
+  SortConditionOption({
+    required this.option,
+    required this.onTap,
+    required this.selected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  option,
+                  textAlign: TextAlign.justify,
+                  style: TextStyle(fontSize: 18),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 16),
+                  child: Icon(
+                    Icons.check,
+                    color: selected != null && selected!
+                        ? Theme.of(context).primaryColor
+                        : Colors.transparent,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SortConditionBottomSheet extends StatelessWidget {
+  final List<SortConditionOption> children;
+  final Function() onPressClear;
+  SortConditionBottomSheet(
+      {required this.children, required this.onPressClear});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 300,
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Container(
+              height: 40,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("並び替え順序", style: TextStyle(fontSize: 16)),
+                  InkWell(
+                    onTap: onPressClear,
+                    child: Text("クリア", style: TextStyle(fontSize: 16)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Divider(
+            color: Theme.of(context).hintColor,
+            height: 1,
+          ),
+          ...children
+        ],
+      ),
+    );
+  }
+}
+
+class SortIconButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<SubscriptionItemBloc>(context);
+    final sortCondition = bloc.getSortCondition();
+    bloc.sortConditionStream.listen((cond) => bloc.getItems());
+    return IconButton(
+      constraints: BoxConstraints(minWidth: 20, minHeight: 20),
+      splashRadius: 24,
+      icon: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          Icon(Icons.sort),
+          Icon(Icons.south, size: 12),
+          /* Container( */
+          /*     margin: EdgeInsets.only(left: 13, top: 10), */
+          /*     child: Icon(Icons.south, size: 12)) */
+        ],
+      ),
+      onPressed: (() {
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext ctx) {
+            return SortConditionBottomSheet(
+              onPressClear: () {
+                bloc.setSortCondition(ItemSortCondition.None);
+                Navigator.pop(ctx);
+              },
+              children: [
+                SortConditionOption(
+                  selected: sortCondition == ItemSortCondition.PriceASC,
+                  option: ItemSortCondition.PriceASC.sortConditionName,
+                  onTap: () {
+                    bloc.setSortCondition(ItemSortCondition.PriceASC);
+                    Navigator.pop(ctx);
+                  },
+                ),
+                SortConditionOption(
+                  selected: sortCondition == ItemSortCondition.PriceDESC,
+                  option: ItemSortCondition.PriceDESC.sortConditionName,
+                  onTap: () {
+                    bloc.setSortCondition(ItemSortCondition.PriceDESC);
+                    Navigator.pop(ctx);
+                  },
+                ),
+                SortConditionOption(
+                  selected: sortCondition == ItemSortCondition.NextASC,
+                  option: ItemSortCondition.NextASC.sortConditionName,
+                  onTap: () {
+                    bloc.setSortCondition(ItemSortCondition.NextASC);
+                    Navigator.pop(ctx);
+                  },
+                ),
+                SortConditionOption(
+                  selected: sortCondition == ItemSortCondition.NextDESC,
+                  option: ItemSortCondition.NextDESC.sortConditionName,
+                  onTap: () {
+                    bloc.setSortCondition(ItemSortCondition.NextDESC);
+                    Navigator.pop(ctx);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }),
+    );
+  }
+}
+
+class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<SubscriptionItemBloc>(context);
     return StreamBuilder(
-      stream: bloc.onChangeSubscriptionItems,
-      builder: (BuildContext context,
-          AsyncSnapshot<List<SubscriptionItem>> snapshot) {
-        switch (snapshot.connectionState) {
+      stream: bloc.itemStream,
+      builder: (BuildContext ctx, AsyncSnapshot<List<SubscriptionItem>> ss) {
+        switch (ss.connectionState) {
           case ConnectionState.waiting:
             return Center(child: CircularProgressIndicator());
           default:
@@ -31,164 +181,42 @@ class ListPage extends StatelessWidget {
               child: Column(
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.25,
-                    child: PriceInfoTabView(snapshot.data!),
+                    height: MediaQuery.of(ctx).size.height * 0.25,
+                    child: PriceInfoTabView(ss.data!),
                   ),
                   Container(
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text(
+                        Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
                                   "登録中のサービス一覧",
                                   style: TextStyle(fontSize: 18),
-                                )),
-                            Padding(
-                                padding: EdgeInsets.only(right: 10),
-                                child: IconButton(
-                                  constraints: BoxConstraints(
-                                      minWidth: 20, minHeight: 20),
-                                  splashRadius: 24,
-                                  icon: Stack(
-                                    alignment: Alignment.bottomRight,
-                                    children: [
-                                      Icon(Icons.sort),
-                                      Icon(Icons.south, size: 12),
-                                      /* Container( */
-                                      /*     margin: EdgeInsets.only(left: 13, top: 10), */
-                                      /*     child: Icon(Icons.south, size: 12)) */
-                                    ],
-                                  ),
-                                  onPressed: (() {
-                                    showModalBottomSheet(
-                                        context: context,
-                                        builder: (context) {
-                                          return Container(
-                                            height: 250,
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  height: 50,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      print("price lower");
-                                                    },
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 8),
-                                                      child: Align(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Text(
-                                                          "お支払い金額が小さい順",
-                                                          textAlign:
-                                                              TextAlign.justify,
-                                                          style: TextStyle(
-                                                              fontSize: 18),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 50,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      print("price lower");
-                                                    },
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 8),
-                                                      child: Align(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Text(
-                                                          "お支払い金額が大きい順",
-                                                          textAlign:
-                                                              TextAlign.justify,
-                                                          style: TextStyle(
-                                                              fontSize: 18),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 50,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      print("price lower");
-                                                    },
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 8),
-                                                      child: Align(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Text(
-                                                          "お支払日が近い順",
-                                                          textAlign:
-                                                              TextAlign.justify,
-                                                          style: TextStyle(
-                                                              fontSize: 18),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 50,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      print("price lower");
-                                                    },
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 8),
-                                                      child: Align(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Text(
-                                                          "お支払日が遠い順",
-                                                          textAlign:
-                                                              TextAlign.justify,
-                                                          style: TextStyle(
-                                                              fontSize: 18),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        });
-                                  }),
-                                ))
-                          ],
-                        ),
+                                ),
+                                SortIconButton()
+                              ],
+                            )),
                         StreamBuilder(
                           stream: bloc.selectedIntervalsStream,
-                          builder: (BuildContext ctx,
-                              AsyncSnapshot<List<int>> snapshot) {
+                          builder:
+                              (BuildContext c, AsyncSnapshot<List<int>> s) {
                             return MultiSelectChipDisplay(
                               colorator: (p0) {
-                                final d = snapshot.data;
+                                final d = s.data;
                                 if (d == null || d.isEmpty) {
                                   return p0 == 0
-                                      ? Theme.of(ctx).primaryColor
-                                      : Colors.transparent;
+                                      ? Theme.of(c).primaryColor
+                                      : Color(0xFFDCCFEC);
                                 }
-
                                 return d.contains(p0)
-                                    ? Theme.of(context).primaryColor
-                                    : Colors.transparent;
+                                    ? Theme.of(c).primaryColor
+                                    : Color(0xFFDCCFEC);
                               },
-                              chipColor: Theme.of(ctx).primaryColor,
+                              chipColor: Theme.of(c).primaryColor,
                               onTap: (value) {
                                 if (value == null) {
                                   return;
@@ -196,18 +224,32 @@ class ListPage extends StatelessWidget {
                                 final val = value as int;
                                 bloc.toggleSelectedIntervals(val);
                               },
-                              textStyle:
-                                  TextStyle(fontSize: 14, color: Colors.white),
+                              textStyle: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                               items: [
-                                MultiSelectItem(0, "すべて"),
                                 MultiSelectItem(
-                                    PaymentInterval.Daily.intervalID, "日払い"),
+                                  0,
+                                  "すべて",
+                                ),
                                 MultiSelectItem(
-                                    PaymentInterval.Weekly.intervalID, "週払い"),
+                                  PaymentInterval.Daily.intervalID,
+                                  "日払い",
+                                ),
                                 MultiSelectItem(
-                                    PaymentInterval.Monthly.intervalID, "月払い"),
+                                  PaymentInterval.Weekly.intervalID,
+                                  "週払い",
+                                ),
                                 MultiSelectItem(
-                                    PaymentInterval.Yearly.intervalID, "年払い"),
+                                  PaymentInterval.Monthly.intervalID,
+                                  "月払い",
+                                ),
+                                MultiSelectItem(
+                                  PaymentInterval.Yearly.intervalID,
+                                  "年払い",
+                                ),
                               ],
                             );
                           },
@@ -215,13 +257,12 @@ class ListPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Divider(color: Theme.of(context).hintColor),
+                  Divider(color: Theme.of(ctx).hintColor, height: 1),
                   Expanded(
                     child: ListView.builder(
-                      padding: EdgeInsets.only(bottom: 20, top: 20),
-                      itemCount: snapshot.data?.length,
+                      itemCount: ss.data?.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final item = snapshot.data![index];
+                        final item = ss.data![index];
                         return Slidable(
                           key: ValueKey(item.id),
                           endActionPane: ActionPane(
@@ -242,15 +283,19 @@ class ListPage extends StatelessWidget {
                             onTap: () {
                               showCupertinoModalBottomSheet(
                                 context: context,
-                                builder: (BuildContext ctx) =>
-                                    Provider<EditScreenBloc>(
-                                  create: (ctx) => EditScreenBloc(),
-                                  dispose: (ctx, bloc) => bloc.dispose(),
-                                  child: EditPage(item, () => bloc.getItems()),
-                                ),
+                                builder: (BuildContext ctx) {
+                                  return Provider<EditScreenBloc>(
+                                    create: (ctx) => EditScreenBloc(),
+                                    dispose: (ctx, bloc) => bloc.dispose(),
+                                    child:
+                                        EditPage(item, () => bloc.getItems()),
+                                  );
+                                },
                               );
                             },
-                            child: SubscriptionListItem(item),
+                            child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 2),
+                                child: SubscriptionListItem(item)),
                           ),
                         );
                       },
