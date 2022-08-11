@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:subsuke/models/subsc.dart';
 import 'package:subsuke/ui/components/ui_parts/price_card.dart';
 
-class PriceInfoTabView extends StatelessWidget {
+class PriceCarousel extends StatelessWidget {
   final List<SubscriptionItem> items;
 
-  PriceInfoTabView(this.items);
+  PriceCarousel(this.items);
 
   List<Widget> priceInfoBuilder(
       BuildContext context, List<SubscriptionItem> items) {

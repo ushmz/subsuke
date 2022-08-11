@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:subsuke/models/subsc.dart';
+import 'package:intl/intl.dart';
 
 class PriceCard extends StatelessWidget {
   final int price;
@@ -9,6 +10,8 @@ class PriceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /* final locale = Localizations.localeOf(context); */
+    final ccy = new NumberFormat("#,###");
     final resolvedTheme = Theme.of(context);
     return Card(
       color: resolvedTheme.cardTheme.color,
@@ -20,12 +23,12 @@ class PriceCard extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
             child: Column(
-              /* mainAxisAlignment: MainAxisAlignment.spaceBetween, */
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text("合計金額", style: resolvedTheme.textTheme.bodyMedium)
+                    Text('${interval.intervalText}あたり',
+                        style: resolvedTheme.textTheme.headlineMedium)
                   ],
                 ),
                 Spacer(),
@@ -34,24 +37,20 @@ class PriceCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${interval.intervalText}あたり',
-                      style: resolvedTheme.textTheme.bodyMedium,
+                      '合計金額',
+                      style: resolvedTheme.textTheme.headlineSmall,
                     ),
                     Center(),
                     RichText(
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: "$price",
-                            style: resolvedTheme.textTheme.bodyLarge,
+                            text: ccy.format(price),
+                            style: resolvedTheme.textTheme.headlineMedium,
                           ),
                           TextSpan(
-                            text: " ",
-                            style: resolvedTheme.textTheme.bodyMedium,
-                          ),
-                          TextSpan(
-                            text: "円",
-                            style: resolvedTheme.textTheme.bodyMedium,
+                            text: " 円",
+                            style: resolvedTheme.textTheme.headlineSmall,
                           ),
                         ],
                       ),

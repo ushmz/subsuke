@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:subsuke/blocs/settings_bloc.dart';
-import 'package:subsuke/ui/components/pages/config/about_author.dart';
-import 'package:subsuke/ui/components/pages/config/about_app.dart';
+import 'package:subsuke/ui/pages/config/about_author.dart';
+import 'package:subsuke/ui/pages/config/about_app.dart';
 
 extension DateTimeExtention on DateTime {
   DateTime applied(TimeOfDay time) {
@@ -15,10 +15,10 @@ extension DateTimeExtention on DateTime {
   }
 }
 
-class ConfigPage extends StatelessWidget {
+class ConfigPageAndroid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<SettingsBloc>(context);
+    final bloc = Provider.of<SettingsBLoC>(context);
     return StreamBuilder(
       stream: bloc.onPreferenceUpdated,
       builder: (BuildContext ctx, AsyncSnapshot<void> ss) {

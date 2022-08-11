@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/notifications_bloc.dart';
 import 'package:subsuke/models/notification.dart';
@@ -11,7 +10,7 @@ import 'package:subsuke/ui/components/ui_parts/notification_message.dart';
 class NotificationsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<NotificationsBloc>(context);
+    final bloc = Provider.of<NotificationsBLoC>(context);
     final resolvedTheme = Theme.of(context);
 
     /* Widget readAllConfirmationDialogBuilder(BuildContext context) { */

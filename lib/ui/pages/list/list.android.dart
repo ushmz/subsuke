@@ -6,170 +6,15 @@ import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
 import 'package:subsuke/blocs/subscription_item_bloc.dart';
 import 'package:subsuke/models/subsc.dart';
-import 'package:subsuke/ui/components/pages/edit.dart';
-import 'package:subsuke/ui/components/templates/price_tabbar_view.dart';
 import 'package:subsuke/ui/components/ui_parts/subscription_list_item.dart';
+import 'package:subsuke/ui/pages/edit.dart';
+import 'package:subsuke/ui/pages/list/sort_icon_button.dart';
 
-class SortConditionOption extends StatelessWidget {
-  final String option;
-  final Function() onTap;
-  final bool? selected;
 
-  SortConditionOption({
-    required this.option,
-    required this.onTap,
-    required this.selected,
-  });
-
+class ListPageAndroid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  option,
-                  textAlign: TextAlign.justify,
-                  style: TextStyle(fontSize: 18),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: 16),
-                  child: Icon(
-                    Icons.check,
-                    color: selected != null && selected!
-                        ? Theme.of(context).primaryColor
-                        : Colors.transparent,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class SortConditionBottomSheet extends StatelessWidget {
-  final List<SortConditionOption> children;
-  final Function() onPressClear;
-  SortConditionBottomSheet(
-      {required this.children, required this.onPressClear});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 300,
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: Container(
-              height: 40,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("並び替え順序", style: TextStyle(fontSize: 16)),
-                  InkWell(
-                    onTap: onPressClear,
-                    child: Text("クリア", style: TextStyle(fontSize: 16)),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Divider(
-            color: Theme.of(context).hintColor,
-            height: 1,
-          ),
-          ...children
-        ],
-      ),
-    );
-  }
-}
-
-class SortIconButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final bloc = Provider.of<SubscriptionItemBloc>(context);
-    final sortCondition = bloc.getSortCondition();
-    bloc.sortConditionStream.listen((cond) => bloc.getItems());
-    return IconButton(
-      constraints: BoxConstraints(minWidth: 20, minHeight: 20),
-      splashRadius: 24,
-      icon: Stack(
-        alignment: Alignment.bottomRight,
-        children: [
-          Icon(Icons.sort),
-          Icon(Icons.south, size: 12),
-          /* Container( */
-          /*     margin: EdgeInsets.only(left: 13, top: 10), */
-          /*     child: Icon(Icons.south, size: 12)) */
-        ],
-      ),
-      onPressed: (() {
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext ctx) {
-            return SortConditionBottomSheet(
-              onPressClear: () {
-                bloc.setSortCondition(ItemSortCondition.None);
-                Navigator.pop(ctx);
-              },
-              children: [
-                SortConditionOption(
-                  selected: sortCondition == ItemSortCondition.PriceASC,
-                  option: ItemSortCondition.PriceASC.sortConditionName,
-                  onTap: () {
-                    bloc.setSortCondition(ItemSortCondition.PriceASC);
-                    Navigator.pop(ctx);
-                  },
-                ),
-                SortConditionOption(
-                  selected: sortCondition == ItemSortCondition.PriceDESC,
-                  option: ItemSortCondition.PriceDESC.sortConditionName,
-                  onTap: () {
-                    bloc.setSortCondition(ItemSortCondition.PriceDESC);
-                    Navigator.pop(ctx);
-                  },
-                ),
-                SortConditionOption(
-                  selected: sortCondition == ItemSortCondition.NextASC,
-                  option: ItemSortCondition.NextASC.sortConditionName,
-                  onTap: () {
-                    bloc.setSortCondition(ItemSortCondition.NextASC);
-                    Navigator.pop(ctx);
-                  },
-                ),
-                SortConditionOption(
-                  selected: sortCondition == ItemSortCondition.NextDESC,
-                  option: ItemSortCondition.NextDESC.sortConditionName,
-                  onTap: () {
-                    bloc.setSortCondition(ItemSortCondition.NextDESC);
-                    Navigator.pop(ctx);
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }),
-    );
-  }
-}
-
-class ListPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final bloc = Provider.of<SubscriptionItemBloc>(context);
+    final bloc = Provider.of<SubscriptionItemBLoC>(context);
     return StreamBuilder(
       stream: bloc.itemStream,
       builder: (BuildContext ctx, AsyncSnapshot<List<SubscriptionItem>> ss) {
@@ -180,10 +25,10 @@ class ListPage extends StatelessWidget {
             return Container(
               child: Column(
                 children: [
-                  Container(
-                    height: MediaQuery.of(ctx).size.height * 0.25,
-                    child: PriceInfoTabView(ss.data!),
-                  ),
+                  /* Container( */
+                  /*   height: MediaQuery.of(ctx).size.height * 0.25, */
+                  /*   child: PriceInfoTabView(ss.data!), */
+                  /* ), */
                   Container(
                     child: Column(
                       children: [
@@ -284,8 +129,8 @@ class ListPage extends StatelessWidget {
                               showCupertinoModalBottomSheet(
                                 context: context,
                                 builder: (BuildContext ctx) {
-                                  return Provider<EditScreenBloc>(
-                                    create: (ctx) => EditScreenBloc(),
+                                  return Provider<EditScreenBLoC>(
+                                    create: (ctx) => EditScreenBLoC(),
                                     dispose: (ctx, bloc) => bloc.dispose(),
                                     child:
                                         EditPage(item, () => bloc.getItems()),

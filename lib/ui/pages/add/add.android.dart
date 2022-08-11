@@ -16,9 +16,9 @@ typedef TextFieldBuilder<T> = Widget Function(
   AsyncSnapshot<T> ss,
 );
 
-class AddPage extends StatelessWidget {
-  final Function() updateItems;
-  AddPage(this.updateItems);
+class AddPageAndroid extends StatelessWidget {
+  final Function updateItems;
+  AddPageAndroid(this.updateItems);
 
   TextFieldBuilder<String> textInputBuilder(
     TextEditingController ctrl,
@@ -42,7 +42,7 @@ class AddPage extends StatelessWidget {
         controller: ctrl,
         decoration:
             InputDecoration(border: OutlineInputBorder(), hintText: labelText),
-        onChanged: onChanged,
+        onSubmitted: onChanged,
       );
     };
   }
@@ -71,7 +71,7 @@ class AddPage extends StatelessWidget {
         controller: ctrl,
         decoration:
             InputDecoration(border: OutlineInputBorder(), hintText: labelText),
-        onChanged: onChanged,
+        onSubmitted: onChanged,
       );
     };
   }
@@ -219,7 +219,7 @@ class AddPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<EditScreenBloc>(context);
+    final bloc = Provider.of<EditScreenBLoC>(context);
 
     final _nameFormCtrl = TextEditingController();
     final _priceFormCtrl = TextEditingController();
@@ -252,7 +252,7 @@ class AddPage extends StatelessWidget {
                   bloc.getNextTime,
                   bloc.getInterval,
                   bloc.getNote,
-                  bloc.getPaymentMethod,
+                  PaymentMethod(0, "Visa *1234"),
                 ));
                 updateItems();
                 NotificationRepository().testNotification();

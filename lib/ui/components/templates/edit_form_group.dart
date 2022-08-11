@@ -218,7 +218,7 @@ class SubscriptionFormGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<EditScreenBloc>(context);
+    final bloc = Provider.of<EditScreenBLoC>(context);
     if (item != null) {
       bloc.setValues(item!);
     }
@@ -254,7 +254,7 @@ class SubscriptionFormGroup extends StatelessWidget {
                   bloc.getNextTime,
                   bloc.getInterval,
                   bloc.getNote,
-                  bloc.getPaymentMethod,
+                  PaymentMethod(0, "Visa *1234"),
                 );
                 DBProvider.instance.upsertSubscriptionItem(i);
                 refreshItems();
