@@ -33,8 +33,9 @@ class MyApp extends StatelessWidget {
         primaryColor: Color(0xFF8B4492),
         hintColor: Colors.black54,
         hoverColor: Colors.black54,
-        backgroundColor: Color(0xFFFFFFFF),
+        backgroundColor: Color(0xFFF2F2F6),
         scaffoldBackgroundColor: Color(0xFFF2F2F6),
+        dialogBackgroundColor: Color(0xFFFFFFFF),
         appBarTheme: AppBarTheme(
             backgroundColor: Color(0xFFF2F2F6),
             foregroundColor: Color(0xFF000000)),
@@ -54,8 +55,9 @@ class MyApp extends StatelessWidget {
         primaryColor: Color(0xFF9A57A2),
         hintColor: Colors.white54,
         hoverColor: Colors.white54,
-        backgroundColor: Color(0xFF212121),
         scaffoldBackgroundColor: Color(0xFF000000),
+        backgroundColor: Color(0xFF1C1C1E),
+        dialogBackgroundColor: Color(0xFF2C2C2E),
         appBarTheme: AppBarTheme(
             backgroundColor: Color(0xFF000000),
             foregroundColor: Color(0xFFFFFFFF)),

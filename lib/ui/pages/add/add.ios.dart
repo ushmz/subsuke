@@ -16,7 +16,8 @@ class AddPageIOS extends StatelessWidget {
         margin: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        color: CupertinoColors.systemBackground.resolveFrom(context),
+        /* color: CupertinoColors.systemBackground.resolveFrom(context), */
+      color: Theme.of(context).backgroundColor,
         child: SafeArea(
           top: false,
           child: child,
@@ -32,11 +33,12 @@ class AddPageIOS extends StatelessWidget {
     final pm = Provider.of<PaymentMethodBLoC>(context);
 
     return CupertinoPageScaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       child: CustomScrollView(
         slivers: [
           CupertinoSliverNavigationBar(
             border: null,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: Theme.of(context).backgroundColor,
             largeTitle: Center(),
             leading: CupertinoNavigationBarBackButton(
                 color: Theme.of(context).primaryColor),
@@ -56,6 +58,11 @@ class AddPageIOS extends StatelessWidget {
             delegate: SliverChildListDelegate(
               [
                 CupertinoFormSection.insetGrouped(
+                  backgroundColor: Theme.of(context).backgroundColor,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).dialogBackgroundColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   children: [
                     NormarizeFormItem(
                       child: CupertinoTextFormFieldRow(
@@ -115,6 +122,7 @@ class AddPageIOS extends StatelessWidget {
                                     },
                                     children: pms.map((m) {
                                       return Container(
+                                      // [TODO]
                                         height: 36,
                                         child: Center(
                                           child: Text(
@@ -237,7 +245,7 @@ class AddPageIOS extends StatelessWidget {
                                     context: ctx,
                                     builder: (BuildContext c) => Container(
                                       color:
-                                          Theme.of(c).scaffoldBackgroundColor,
+                                          Theme.of(c).backgroundColor,
                                       height: MediaQuery.of(c).size.height / 3,
                                       child: CupertinoTheme(
                                         data: CupertinoThemeData(
@@ -304,7 +312,7 @@ class AddPageIOS extends StatelessWidget {
                                     builder: (BuildContext c) {
                                       return Container(
                                         color:
-                                            Theme.of(c).scaffoldBackgroundColor,
+                                            Theme.of(c).backgroundColor,
                                         height:
                                             MediaQuery.of(c).size.height / 3,
                                         child: CupertinoTheme(
@@ -376,6 +384,7 @@ class NormarizeFormItem extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Container(
+          /* color: Color(0xFF2C2C2E), */
           height: 48,
           child: Column(
             mainAxisSize: MainAxisSize.max,
