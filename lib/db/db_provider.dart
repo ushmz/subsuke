@@ -5,27 +5,9 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:subsuke/models/notification.dart';
 import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/db/consts.dart';
 
 class DBProvider {
-  final _filename = 'subscriptions.db';
-  final _version = 1;
-
-  final _subscriptionsTablename = 'subscriptions';
-  final _subscriptionsIDColumnName = 'id';
-  final _subscriptionsNameColumnName = 'name';
-  final _subscriptionsPriceColumnName = 'price';
-  final _subscriptionsNextColumnName = 'next';
-  final _subscriptionsIntervalColumnName = 'interval';
-  final _subscriptionsPaymentColumnName = 'payment_method';
-  final _subscriptionsNoteColumnName = 'note';
-
-  final _notificationsTableName = 'notifications';
-  final _notificationsIDColumnName = 'id';
-  final _notificationsTitleColumnName = 'title';
-  final _notificationsBodyColumnName = 'body';
-  final _notificationsReceivedAtColumnName = 'received_at';
-  final _notificationsIsUnreadColumnName = 'unread';
-
   static final DBProvider instance = DBProvider._();
   factory DBProvider() {
     return instance;
@@ -50,37 +32,85 @@ class DBProvider {
     } else {
       throw Exception("Unknown platform");
     }
-    return join(dbDirPath, _filename);
+    return join(dbDirPath, DBConsts.filename);
   }
 
   _initDB() async {
     final path = await getDBPath();
     return await openDatabase(
       path,
-      version: _version,
+      version: DBConsts.version,
       onCreate: (db, version) async {
         var batch = db.batch();
         batch.execute('''
-            CREATE TABLE $_subscriptionsTablename(
-                $_subscriptionsIDColumnName INTEGER PRIMARY KEY AUTOINCREMENT,
-                $_subscriptionsNameColumnName TEXT NOT NULL,
-                $_subscriptionsPriceColumnName INTEGER NOT NULL,
-                $_subscriptionsNextColumnName TEXT NOT NULL,
-                $_subscriptionsIntervalColumnName INTEGER NOT NULL,
-                $_subscriptionsPaymentColumnName TEXT,
-                $_subscriptionsNoteColumnName TEXT
-          )
+            CREATE TABLE ${DBConsts.subscriptionsTablename}(
+                ${DBConsts.subscriptionsIDColumnName} INTEGER PRIMARY KEY AUTOINCREMENT,
+                ${DBConsts.subscriptionsNameColumnName} TEXT NOT NULL,
+                ${DBConsts.subscriptionsPriceColumnName} INTEGER NOT NULL,
+                ${DBConsts.subscriptionsNextColumnName} TEXT NOT NULL,
+                ${DBConsts.subscriptionsIntervalColumnName} INTEGER NOT NULL,
+                ${DBConsts.subscriptionsPaymentColumnName} INTEGER,
+                ${DBConsts.subscriptionsNoteColumnName} TEXT
+            )
         ''');
         batch.execute('''
-            CREATE TABLE $_notificationsTableName(
-                $_notificationsIDColumnName INTEGER PRIMARY KEY AUTOINCREMENT,
-                $_notificationsTitleColumnName TEXT NOT NULL,
-                $_notificationsBodyColumnName TEXT NOT NULL,
-                $_notificationsReceivedAtColumnName TEXT NOT NULL,
-                $_notificationsIsUnreadColumnName INTEGER NOT NULL
-          )
+            CREATE TABLE ${DBConsts.notificationsTableName}(
+                ${DBConsts.notificationsIDColumnName} INTEGER PRIMARY KEY AUTOINCREMENT,
+                ${DBConsts.notificationsTitleColumnName} TEXT NOT NULL,
+                ${DBConsts.notificationsBodyColumnName} TEXT NOT NULL,
+                ${DBConsts.notificationsReceivedAtColumnName} TEXT NOT NULL,
+                ${DBConsts.notificationsIsUnreadColumnName} INTEGER NOT NULL
+            )
+        ''');
+        batch.execute('''
+            CREATE TABLE ${DBConsts.paymentMethodTableName}(
+                ${DBConsts.paymentMethodIDColumnName} INTEGER PRIMARY KEY AUTOINCREMENT,
+                ${DBConsts.paymentMethodNameColumnName} TEXT NOT NULL
+            );
         ''');
         await batch.commit();
+
+        batch = db.batch();
+        batch.insert(DBConsts.paymentMethodTableName, {DBConsts.paymentMethodNameColumnName: "Visa *1234"});
+        batch.insert(
+            DBConsts.paymentMethodTableName, {DBConsts.paymentMethodNameColumnName: "MasterCard *1234"});
+        // Test data
+        batch.insert(
+            DBConsts.subscriptionsTablename,
+            SubscriptionItem(
+              0,
+              "Youtube premium",
+              1180,
+              DateTime(2022, 6, 11),
+              PaymentInterval.Monthly,
+              "",
+              PaymentMethod(1, "MasterCard *1234"),
+            ).toInsertMap());
+        batch.insert(
+            DBConsts.subscriptionsTablename,
+            SubscriptionItem(
+              0,
+              "Daylio",
+              1180,
+              DateTime(2023, 3, 11),
+              PaymentInterval.Yearly,
+              "",
+              PaymentMethod(1, "MasterCard *1234"),
+            ).toInsertMap());
+        await batch.commit();
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        for (var i = oldVersion + 1; i <= newVersion; i++) {
+          var queries = DBConsts.scripts[i.toString()];
+          if (queries == null) {
+            print("No query specified. Skip.");
+            continue;
+          }
+          print("$oldVersion => $newVersion");
+          for (String query in queries) {
+            await db.execute(query);
+          }
+        }
       },
       onDowngrade: onDatabaseDowngradeDelete,
       singleInstance: true,
@@ -89,12 +119,12 @@ class DBProvider {
 
   Future<void> dropSubscriptionTable() async {
     final db = await database;
-    await db?.execute("DROP TABLE $_subscriptionsTablename");
+    await db?.execute("DROP TABLE ${DBConsts.subscriptionsTablename}");
   }
 
   Future<void> dropNotificationTable() async {
     final db = await database;
-    await db?.execute("DROP TABLE $_notificationsTableName");
+    await db?.execute("DROP TABLE ${DBConsts.notificationsTableName}");
   }
 
   Future<void> deleteDatabaseFile() async {
@@ -104,12 +134,31 @@ class DBProvider {
 
   Future<void> createSubscriptionItem(SubscriptionItem item) async {
     final db = await database;
-    final _ = await db?.insert(_subscriptionsTablename, item.toInsertMap());
+    final _ =
+        await db?.insert(DBConsts.subscriptionsTablename, item.toInsertMap());
   }
 
   Future<List<SubscriptionItem>> getAllSubscriptions() async {
     final db = await database;
-    final res = await db?.query(_subscriptionsTablename);
+    /* final res = await db?.query(DBConsts.subscriptionsTablename); */
+    final res = await db?.rawQuery("""
+      SELECT
+        ${DBConsts.subscriptionsTablename}.${DBConsts.subscriptionsIDColumnName},
+        ${DBConsts.subscriptionsTablename}.${DBConsts.subscriptionsNameColumnName},
+        ${DBConsts.subscriptionsTablename}.${DBConsts.subscriptionsPriceColumnName},
+        ${DBConsts.subscriptionsTablename}.${DBConsts.subscriptionsNextColumnName},
+        ${DBConsts.subscriptionsTablename}.${DBConsts.subscriptionsIntervalColumnName},
+        ${DBConsts.paymentMethodTableName}.${DBConsts.paymentMethodIDColumnName},
+        ${DBConsts.paymentMethodTableName}.${DBConsts.paymentMethodNameColumnName},
+        ${DBConsts.subscriptionsTablename}.${DBConsts.subscriptionsNoteColumnName}
+      FROM
+        ${DBConsts.subscriptionsTablename}
+      LEFT JOIN
+        ${DBConsts.paymentMethodTableName}
+      ON
+        ${DBConsts.subscriptionsTablename}.${DBConsts.subscriptionsPaymentColumnName} = 
+        ${DBConsts.paymentMethodTableName}.${DBConsts.paymentMethodIDColumnName}
+      """);
     if (res == null) {
       return [];
     }
@@ -122,9 +171,9 @@ class DBProvider {
   Future<int> updateSubscriptionItem(SubscriptionItem item) async {
     final db = await database;
     final rowAffected = await db?.update(
-      _subscriptionsTablename,
+      DBConsts.subscriptionsTablename,
       item.toInsertMap(),
-      where: "$_subscriptionsIDColumnName = ?",
+      where: "${DBConsts.subscriptionsIDColumnName} = ?",
       whereArgs: [item.id],
     );
     return rowAffected ?? 0;
@@ -140,20 +189,21 @@ class DBProvider {
   Future<void> deleteSubscriptionItem(int id) async {
     final db = await database;
     final _ = await db?.delete(
-      _subscriptionsTablename,
-      where: "$_subscriptionsIDColumnName = ?",
+      DBConsts.subscriptionsTablename,
+      where: "${DBConsts.subscriptionsIDColumnName} = ?",
       whereArgs: [id],
     );
   }
 
   Future<void> insertNewNotification(NotificationMessage item) async {
     final db = await database;
-    final _ = await db?.insert(_notificationsTableName, item.toInsertMap());
+    final _ =
+        await db?.insert(DBConsts.notificationsTableName, item.toInsertMap());
   }
 
   Future<List<NotificationMessage>> getAllNotifications() async {
     final db = await database;
-    final res = await db?.query(_notificationsTableName, limit: 10);
+    final res = await db?.query(DBConsts.notificationsTableName, limit: 10);
     if (res == null) {
       return [];
     }
@@ -171,9 +221,9 @@ class DBProvider {
 
     await db.execute('''
             UPDATE
-                $_notificationsTableName
+                ${DBConsts.notificationsTableName}
             SET
-                $_notificationsIsUnreadColumnName = false
+                ${DBConsts.notificationsIsUnreadColumnName} = false
         ''');
   }
 
@@ -187,9 +237,9 @@ class DBProvider {
     ids.forEach((id) {
       batch.execute('''
         UPDATE
-            $_notificationsTableName
+            ${DBConsts.notificationsTableName}
         SET
-            $_notificationsIsUnreadColumnName = false
+            ${DBConsts.notificationsIsUnreadColumnName} = false
         WHERE
             id = $id
         ''');
@@ -200,14 +250,26 @@ class DBProvider {
   Future<void> archiveNotification(int id) async {
     final db = await database;
     final _ = await db?.delete(
-      _notificationsTableName,
-      where: "$_notificationsIDColumnName = ?",
+      DBConsts.notificationsTableName,
+      where: "${DBConsts.notificationsIDColumnName} = ?",
       whereArgs: [id],
     );
   }
 
   Future<void> archiveAllNotification() async {
     final db = await database;
-    final _ = await db?.delete(_notificationsTableName);
+    final _ = await db?.delete(DBConsts.notificationsTableName);
+  }
+
+  Future<List<PaymentMethod>> getAllPaymentMethods() async {
+    final db = await database;
+    final res = await db?.query(DBConsts.paymentMethodTableName);
+    if (res == null) {
+      return [];
+    }
+    List<PaymentMethod> list = res.isNotEmpty
+        ? res.map((e) => PaymentMethod.fromMap(e)).toList()
+        : [PaymentMethod(0, "koko")];
+    return list;
   }
 }

@@ -2,7 +2,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:subsuke/db/db_provider.dart';
 import 'package:subsuke/models/notification.dart';
 
-class NotificationsBloc {
+class NotificationsBLoC {
   final _messagesController = BehaviorSubject<List<NotificationMessage>>();
 
   Stream<List<NotificationMessage>> get messageStream =>
@@ -12,7 +12,7 @@ class NotificationsBloc {
 
     int get messagesCount => _messagesController.value.length;
 
-  NotificationsBloc() {
+  NotificationsBLoC() {
     /* [ */
     /*   NotificationMessage(1, "通知タイトル", "通知本文", DateTime.now(), true), */
     /*   NotificationMessage(2, "通知タイトル", "通知本文", DateTime.now(), true), */

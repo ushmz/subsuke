@@ -4,7 +4,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:subsuke/db/db_provider.dart';
 import 'package:subsuke/models/subsc.dart';
 
-class SubscriptionItemBloc {
+class SubscriptionItemBLoC {
   final _selectedIntervals = BehaviorSubject<List<int>>.seeded(<int>[]);
   Stream<List<int>> get selectedIntervalsStream => _selectedIntervals.stream;
   Function(List<int>) get setSelectedIntervals => _selectedIntervals.sink.add;
@@ -103,7 +103,7 @@ class SubscriptionItemBloc {
     getItems();
   }
 
-  SubscriptionItemBloc() {
+  SubscriptionItemBLoC() {
     getItems();
   }
 

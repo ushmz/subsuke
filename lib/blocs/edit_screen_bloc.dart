@@ -1,12 +1,13 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:subsuke/models/subsc.dart';
 
-class EditScreenBloc {
+class EditScreenBLoC {
   final _nameTextController = BehaviorSubject.seeded('');
   final _priceNumberController = BehaviorSubject.seeded(0);
   final _nextTimeController = BehaviorSubject.seeded(DateTime.now());
   final _intervalController = BehaviorSubject.seeded(PaymentInterval.Monthly);
   final _paymentController = BehaviorSubject.seeded('');
+  final _nofiticationBeforeController = BehaviorSubject.seeded(NotificationBefore.NONE);
   final _noteController = BehaviorSubject.seeded('');
 
   Function(String) get setNameText => _nameTextController.sink.add;
@@ -29,6 +30,10 @@ class EditScreenBloc {
   Stream<String> get onChangePayment => _paymentController.stream;
   String get getPaymentMethod => _paymentController.value;
 
+  Function(NotificationBefore) get setNotificationBefore => _nofiticationBeforeController.sink.add;
+  Stream<NotificationBefore> get onChangeNotificationBefore => _nofiticationBeforeController.stream;
+  NotificationBefore get getNotificationBefore => _nofiticationBeforeController.value;
+
   Function(String) get setNote => _noteController.sink.add;
   Stream<String> get onChangeNote => _noteController.stream;
   String get getNote => _noteController.value;
@@ -40,12 +45,24 @@ class EditScreenBloc {
     setInterval(item.interval);
   }
 
+  SubscriptionItem getValues() {
+    return SubscriptionItem.fromMap({
+      'name': _nameTextController.value,
+      'price': _priceNumberController.value,
+      'next': _nextTimeController.value,
+      'interval': _intervalController.value,
+      'payment_methods': _paymentController.value,
+      '_noteController': _noteController.value,
+    });
+  }
+
   void dispose() {
     _nameTextController.close();
     _priceNumberController.close();
     _nextTimeController.close();
     _intervalController.close();
     _paymentController.close();
+    _nofiticationBeforeController.close();
     _noteController.close();
   }
 }

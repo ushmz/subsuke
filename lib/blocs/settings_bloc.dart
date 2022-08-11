@@ -3,7 +3,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:subsuke/models/settings.dart';
 
-class SettingsBloc {
+class SettingsBLoC {
   final _preferenceController = BehaviorSubject();
   final _notificationScheduleController =
       BehaviorSubject<TimeOfDay>.seeded(TimeOfDay.now());
@@ -14,7 +14,7 @@ class SettingsBloc {
       _notificationScheduleController.stream;
   Stream<bool> get onNoticationToggled => _notificationScheduleEnabled.stream;
 
-  SettingsBloc() {
+  SettingsBLoC() {
     () async {
       final prefs = await SharedPreferences.getInstance();
 

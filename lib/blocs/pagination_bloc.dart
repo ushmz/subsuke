@@ -1,12 +1,12 @@
 import 'package:rxdart/rxdart.dart';
 
-class PaginationBloc {
+class PaginationBLoC {
   final _pagenationController = BehaviorSubject<int>();
 
   Function(int) get go => _pagenationController.sink.add;
   Stream<int> get currentPage => _pagenationController.stream;
 
-  PaginationBloc() {
+  PaginationBLoC() {
     go(0);
   }
 

@@ -1,7 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:subsuke/models/subsucription.dart';
 
-class SubscriptionsBloc {
+class SubscriptionsBLoC {
   final _subscriptionsController = BehaviorSubject<List<Subscription>>();
   final _fetchRequest = BehaviorSubject<Object>();
 
@@ -13,7 +13,7 @@ class SubscriptionsBloc {
   Function() get fetchRequest => () => _fetchRequest.sink.add('');
   Stream<void> get onFetchRequested => _fetchRequest.stream;
 
-  SubscriptionsBloc() {
+  SubscriptionsBLoC() {
     fetchSubscriptions();
     _fetchRequest.listen((v) => fetchSubscriptions());
   }

@@ -1,10 +1,33 @@
+import 'package:subsuke/db/consts.dart';
+
+class PaymentMethod {
+  final int id;
+  final String name;
+
+  const PaymentMethod(this.id, this.name);
+
+  Map<String, dynamic> toMap() => {
+        "id": id,
+        "name": name,
+      };
+
+  Map<String, dynamic> toInsertMap() => {
+        "name": name,
+      };
+
+  factory PaymentMethod.fromMap(Map<String, dynamic> json) => PaymentMethod(
+        json[DBConsts.paymentMethodIDColumnName],
+        json[DBConsts.paymentMethodNameColumnName],
+      );
+}
+
 class SubscriptionItem {
   final int id;
   final String name;
   final int price;
   final DateTime next;
   final PaymentInterval interval;
-  final String paymentMethod;
+  final PaymentMethod paymentMethod;
   final String note;
 
   const SubscriptionItem(
@@ -26,33 +49,34 @@ class SubscriptionItem {
   /* } */
 
   Map<String, dynamic> toMap() => {
-        "id": id,
-        "name": name,
-        "price": price,
-        "next": next.toUtc().toIso8601String(),
-        "interval": interval.intervalID,
-        "payment_method": paymentMethod,
-        "note": note
+        DBConsts.subscriptionsIDColumnName: id,
+        DBConsts.subscriptionsNameColumnName: name,
+        DBConsts.subscriptionsPriceColumnName: price,
+        DBConsts.subscriptionsNextColumnName: next.toUtc().toIso8601String(),
+        DBConsts.subscriptionsIntervalColumnName: interval.intervalID,
+        DBConsts.subscriptionsNoteColumnName: note,
+        DBConsts.subscriptionsPaymentColumnName: paymentMethod.name,
       };
 
   Map<String, dynamic> toInsertMap() => {
-        "name": name,
-        "price": price,
-        "next": next.toUtc().toIso8601String(),
-        "interval": interval.intervalID,
-        "payment_method": paymentMethod,
-        "note": note,
+        DBConsts.subscriptionsNameColumnName: name,
+        DBConsts.subscriptionsPriceColumnName: price,
+        DBConsts.subscriptionsNextColumnName: next.toUtc().toIso8601String(),
+        DBConsts.subscriptionsIntervalColumnName: interval.intervalID,
+        DBConsts.subscriptionsPaymentColumnName: paymentMethod.id,
+        DBConsts.subscriptionsNoteColumnName: note,
       };
 
   factory SubscriptionItem.fromMap(Map<String, dynamic> json) =>
       SubscriptionItem(
-        json['id'],
-        json['name'],
-        json['price'],
-        DateTime.parse(json['next']).toLocal(),
-        getPaymentInterval(json['interval']),
-        json['payment_method'],
-        json['note'],
+        json[DBConsts.subscriptionsIDColumnName],
+        json[DBConsts.subscriptionsNameColumnName],
+        json[DBConsts.subscriptionsPriceColumnName],
+        DateTime.parse(json[DBConsts.subscriptionsNextColumnName]).toLocal(),
+        getPaymentInterval(json[DBConsts.subscriptionsIntervalColumnName]),
+        json[DBConsts.subscriptionsNoteColumnName],
+        PaymentMethod(json[DBConsts.paymentMethodIDColumnName],
+            json[DBConsts.paymentMethodNameColumnName]),
       );
 
   SubscriptionItem updateNextPayment() {
@@ -64,8 +88,8 @@ class SubscriptionItem {
           price,
           DateTime(next.year, next.month, next.day + 1),
           interval,
-          paymentMethod,
           note,
+          paymentMethod,
         );
       case PaymentInterval.Weekly:
         return SubscriptionItem(
@@ -74,8 +98,8 @@ class SubscriptionItem {
           price,
           DateTime(next.year, next.month, next.day + 7),
           interval,
-          paymentMethod,
           note,
+          paymentMethod,
         );
       case PaymentInterval.Fortnightly:
         return SubscriptionItem(
@@ -84,8 +108,8 @@ class SubscriptionItem {
           price,
           DateTime(next.year, next.month, next.day + 14),
           interval,
-          paymentMethod,
           note,
+          paymentMethod,
         );
       case PaymentInterval.Monthly:
         return SubscriptionItem(
@@ -94,8 +118,8 @@ class SubscriptionItem {
           price,
           DateTime(next.year, next.month + 1, next.day),
           interval,
-          paymentMethod,
           note,
+          paymentMethod,
         );
       case PaymentInterval.Yearly:
         return SubscriptionItem(
@@ -104,8 +128,8 @@ class SubscriptionItem {
           price,
           DateTime(next.year + 1, next.month, next.day),
           interval,
-          paymentMethod,
           note,
+          paymentMethod,
         );
     }
   }
@@ -165,30 +189,30 @@ extension PaymentIntervalIDExt on PaymentInterval {
   int get intervalID {
     switch (this) {
       case PaymentInterval.Daily:
-        return 1;
+        return 0;
       case PaymentInterval.Weekly:
-        return 2;
+        return 1;
       case PaymentInterval.Fortnightly:
-        return 3;
+        return 2;
       case PaymentInterval.Monthly:
-        return 4;
+        return 3;
       case PaymentInterval.Yearly:
-        return 5;
+        return 4;
     }
   }
 }
 
 PaymentInterval getPaymentInterval(int id) {
   switch (id) {
-    case 1:
+    case 0:
       return PaymentInterval.Daily;
-    case 2:
+    case 1:
       return PaymentInterval.Weekly;
-    case 3:
+    case 2:
       return PaymentInterval.Fortnightly;
-    case 4:
+    case 3:
       return PaymentInterval.Monthly;
-    case 5:
+    case 4:
       return PaymentInterval.Yearly;
     default:
       return PaymentInterval.Monthly;
@@ -208,6 +232,55 @@ extension PaymentIntervalUnitTimeTextExt on PaymentInterval {
         return "1ヶ月";
       case PaymentInterval.Yearly:
         return "1年";
+    }
+  }
+}
+
+enum NotificationBefore {
+  NONE,
+  SAMEDAY,
+  BEFORE1DAY,
+  BEFORE2DAY,
+  BEFORE3DAY,
+  BEFORE4DAY,
+  BEFORE5DAY,
+  BEFORE6DAY,
+  BEFORE7DAY,
+  BEFORE8DAY,
+  BEFORE9DAY,
+  BEFORE10DAY,
+  BEFORE14DAY,
+}
+
+extension NotificationBeforeText on NotificationBefore {
+  String get text {
+    switch (this) {
+      case NotificationBefore.NONE:
+        return "通知オフ";
+      case NotificationBefore.SAMEDAY:
+        return "当日";
+      case NotificationBefore.BEFORE1DAY:
+        return "1日前";
+      case NotificationBefore.BEFORE2DAY:
+        return "2日前";
+      case NotificationBefore.BEFORE3DAY:
+        return "3日前";
+      case NotificationBefore.BEFORE4DAY:
+        return "4日前";
+      case NotificationBefore.BEFORE5DAY:
+        return "5日前";
+      case NotificationBefore.BEFORE6DAY:
+        return "6日前";
+      case NotificationBefore.BEFORE7DAY:
+        return "7日前";
+      case NotificationBefore.BEFORE8DAY:
+        return "8日前";
+      case NotificationBefore.BEFORE9DAY:
+        return "9日前";
+      case NotificationBefore.BEFORE10DAY:
+        return "10日前";
+      case NotificationBefore.BEFORE14DAY:
+        return "14日前";
     }
   }
 }
