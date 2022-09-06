@@ -4,9 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
 import 'package:subsuke/blocs/notifications_bloc.dart';
 import 'package:subsuke/blocs/pagination_bloc.dart';
-import 'package:subsuke/blocs/subscription_item_bloc.dart';
 import 'package:subsuke/ui/pages/add/add.dart';
-import 'package:subsuke/ui/pages/analytics.dart';
 import 'package:subsuke/ui/pages/config/config.dart';
 import 'package:subsuke/ui/pages/list/list.dart';
 import 'package:subsuke/ui/pages/notifications.dart';
@@ -15,7 +13,6 @@ class HomeScreenAndroid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pagination = Provider.of<PaginationBLoC>(context);
-    final item = Provider.of<SubscriptionItemBLoC>(context);
     final resolvedTheme = Theme.of(context);
 
     return StreamBuilder(
@@ -75,7 +72,7 @@ class HomeScreenAndroid extends StatelessWidget {
                   builder: (BuildContext context) => Provider<EditScreenBLoC>(
                     create: (context) => EditScreenBLoC(),
                     dispose: (context, bloc) => bloc.dispose(),
-                    child: AddPage(() => item.getItems()),
+                    child: AddPage(),
                   ),
                 );
               },
@@ -84,7 +81,6 @@ class HomeScreenAndroid extends StatelessWidget {
                 FloatingActionButtonLocation.miniCenterDocked,
             body: [
               ListPage(),
-              AnalyticsPage(),
               ConfigPage(),
             ][snapshot.data!],
             bottomNavigationBar: BottomNavigationBar(
