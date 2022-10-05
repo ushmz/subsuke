@@ -29,8 +29,8 @@ class ListPageAndroid extends StatelessWidget {
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     leading: SortIconButton(
                       stream: bloc.sortConditionStream,
-                      onChange: (val) {
-                        bloc.setSortCondition(val);
+                      onChange: (cond) {
+                        bloc.setSortCondition(cond);
                         bloc.getItems();
                       },
                     ),

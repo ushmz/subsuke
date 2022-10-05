@@ -30,9 +30,12 @@ class ListPageIOS extends StatelessWidget {
                     border: null,
                     brightness: Theme.of(context).brightness,
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    leading: SortIconButtonIOS(
+                    leading: SortIconButton(
                       stream: bloc.sortConditionStream,
-                      onPressed: (cond) => bloc.setSortCondition(cond),
+                      onChange: (cond) {
+                        bloc.setSortCondition(cond);
+                        bloc.getItems();
+                      },
                     ),
                     largeTitle: Text(
                       "subsuke",

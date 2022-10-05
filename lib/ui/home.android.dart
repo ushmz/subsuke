@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:subsuke/blocs/edit_screen_bloc.dart';
+import 'package:subsuke/blocs/notifications_bloc.dart';
 import 'package:subsuke/blocs/pagination_bloc.dart';
 import 'package:subsuke/ui/pages/add/add.dart';
 import 'package:subsuke/ui/pages/config/config.dart';
 import 'package:subsuke/ui/pages/list/list.dart';
+import 'package:subsuke/ui/pages/notifications.dart';
 
 class HomeScreenAndroid extends StatelessWidget {
   @override

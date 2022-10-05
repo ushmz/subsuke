@@ -1,32 +1,11 @@
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
-import 'package:subsuke/blocs/payment_methods_bloc.dart';
-import 'package:subsuke/models/subsc.dart';
 
 class AddPageAndroid extends StatelessWidget {
-  void _showDialog(BuildContext context, Widget child) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) => Container(
-        height: 216,
-        padding: EdgeInsets.only(top: 6.0),
-        margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        /* color: CupertinoColors.systemBackground.resolveFrom(context), */
-        color: Theme.of(context).backgroundColor,
-        child: SafeArea(top: false, child: child),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<EditScreenBLoC>(context);
-    // [TODO]
-    final pm = Provider.of<PaymentMethodBLoC>(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
