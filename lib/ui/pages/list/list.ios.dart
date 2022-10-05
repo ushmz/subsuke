@@ -32,16 +32,22 @@ class ListPageIOS extends StatelessWidget {
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     leading: Material(
                       type: MaterialType.transparency,
-                      child: SortIconButtonIOS(),
+                      child: SortIconButton(
+                        stream: bloc.sortConditionStream,
+                        onChange: (val) {
+                          bloc.setSortCondition(val);
+                          bloc.getItems();
+                        },
+                      ),
                     ),
                     largeTitle: Text(
                       "subsuke",
                       style: TextStyle(
                           color: Theme.of(context).textTheme.titleLarge!.color),
                     ),
-                    trailing: Material(
-                      type: MaterialType.transparency,
-                      child: AddModelButtonIOS(),
+                    trailing: GestureDetector(
+                      onTap: () {},
+                      child: AddModelButton(),
                     ),
                   ),
                   SliverGrid.count(

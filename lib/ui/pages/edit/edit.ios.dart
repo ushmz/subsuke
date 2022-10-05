@@ -18,8 +18,17 @@ class EditPageIOS extends StatelessWidget {
             border: null,
             backgroundColor: Theme.of(context).backgroundColor,
             largeTitle: Center(),
-            leading: CupertinoNavigationBarBackButton(
-                color: Theme.of(context).primaryColor),
+            // [INFO] Following code is ideal, but raise error while animation.
+            // Error : CupertinoNavigationBarBackButton should only be used in routes that can be popped
+            // leading: CupertinoNavigationBarBackButton(color: Theme.of(context).primaryColor),
+            leading: GestureDetector(
+              child: Icon(
+                CupertinoIcons.left_chevron,
+                color: Theme.of(context).primaryColor,
+                size: 24,
+              ),
+              onTap: () => Navigator.pop(context),
+            ),
             trailing: CupertinoButton(
               padding: EdgeInsets.zero,
               child: Text(

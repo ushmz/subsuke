@@ -24,13 +24,25 @@ class PaymentMethodPageIOS extends StatelessWidget {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        // [INFO] Following code is ideal, but raise error while animation.
+        // Error : CupertinoNavigationBarBackButton should only be used in routes that can be popped
+        // leading: CupertinoNavigationBarBackButton(color: Theme.of(context).primaryColor),
+        leading: GestureDetector(
+          child: Icon(
+            CupertinoIcons.left_chevron,
+            color: Theme.of(context).primaryColor,
+            size: 24,
+          ),
+          onTap: () => Navigator.pop(context),
+        ),
         middle: Text(
           "支払い方法",
           style: TextStyle(
             color: Theme.of(context).textTheme.titleLarge!.color,
           ),
         ),
-        trailing: Icon(CupertinoIcons.plus),
+        trailing:
+            GestureDetector(onTap: () {}, child: Icon(CupertinoIcons.plus)),
       ),
       child: StreamBuilder(
         stream: bloc.methodsStream,
