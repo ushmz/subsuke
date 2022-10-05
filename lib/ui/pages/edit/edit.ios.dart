@@ -34,11 +34,11 @@ class EditPageIOS extends StatelessWidget {
               child: Text(
                 "保存",
                 style: TextStyle(
-                    fontSize: 16, color: Theme.of(context).primaryColor),
+                  fontSize: 16,
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+              onPressed: () => Navigator.pop(context),
             ),
           ),
           SliverList(

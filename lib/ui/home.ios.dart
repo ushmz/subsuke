@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-/* import 'package:subsuke/ui/pages/analytics.dart'; */
 import 'package:subsuke/ui/pages/config/config.dart';
 import 'package:subsuke/ui/pages/list/list.dart';
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:subsuke/models/subsc.dart';
 
+@Deprecated('Move to internal components directory of each pages widget')
 class SubscriptionListItem extends StatelessWidget {
   final SubscriptionItem item;
   SubscriptionListItem(this.item);
@@ -16,7 +17,7 @@ class SubscriptionListItem extends StatelessWidget {
             horizontal: 10,
           ),
           child: Container(
-            height: MediaQuery.of(context).size.height*0.075,
+            height: MediaQuery.of(context).size.height * 0.075,
             child: Row(
               children: [
                 Expanded(
