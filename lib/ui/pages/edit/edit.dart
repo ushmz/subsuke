@@ -6,8 +6,8 @@ import 'package:subsuke/ui/pages/edit/edit.ios.dart';
 
 class EditPage extends StatelessWidget {
   final SubscriptionItem item;
-  final Function() refreshListItems;
-  EditPage(this.item, this.refreshListItems);
+  // final Function() refreshListItems;
+  EditPage(this.item);
 
   @override
   Widget build(BuildContext context) {

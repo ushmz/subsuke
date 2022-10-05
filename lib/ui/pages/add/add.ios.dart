@@ -32,8 +32,7 @@ class AddPageIOS extends StatelessWidget {
               padding: EdgeInsets.zero,
               child: Text(
                 "保存",
-                style: TextStyle(
-                    fontSize: 16, color: Theme.of(context).primaryColor),
+                style: TextStyle(color: Theme.of(context).primaryColor),
               ),
               onPressed: () {
                 print(bloc.getValues());

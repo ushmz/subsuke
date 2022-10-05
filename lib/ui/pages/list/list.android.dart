@@ -8,8 +8,6 @@ import 'package:subsuke/blocs/subscription_item_bloc.dart';
 import 'package:subsuke/models/subsc.dart';
 import 'package:subsuke/ui/components/ui_parts/subscription_list_item.dart';
 import 'package:subsuke/ui/pages/edit.dart';
-import 'package:subsuke/ui/pages/list/sort_icon_button.dart';
-
 
 class ListPageAndroid extends StatelessWidget {
   @override
@@ -25,10 +23,6 @@ class ListPageAndroid extends StatelessWidget {
             return Container(
               child: Column(
                 children: [
-                  /* Container( */
-                  /*   height: MediaQuery.of(ctx).size.height * 0.25, */
-                  /*   child: PriceInfoTabView(ss.data!), */
-                  /* ), */
                   Container(
                     child: Column(
                       children: [
@@ -42,7 +36,7 @@ class ListPageAndroid extends StatelessWidget {
                                   "登録中のサービス一覧",
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                SortIconButton()
+                                // SortIconButton()
                               ],
                             )),
                         StreamBuilder(

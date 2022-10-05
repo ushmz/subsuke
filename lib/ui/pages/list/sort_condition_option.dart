@@ -46,4 +46,3 @@ class SortConditionOption extends StatelessWidget {
     );
   }
 }
-
