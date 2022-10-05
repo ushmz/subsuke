@@ -47,7 +47,7 @@ class ListPageIOS extends StatelessWidget {
                   SliverGrid.count(
                     childAspectRatio: 1.6,
                     crossAxisCount: 1,
-                    children: [PriceCarousel(ss.data ?? [])],
+                    children: [PriceCarousel(items: ss.data ?? [])],
                   ),
                   SliverFixedExtentList(
                     itemExtent: 180,
