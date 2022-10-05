@@ -8,7 +8,6 @@ class AddPageIOS extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<EditScreenBLoC>(context);
-
     return CupertinoPageScaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       child: CustomScrollView(

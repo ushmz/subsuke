@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
-import 'package:subsuke/blocs/edit_screen_bloc.dart';
-import 'package:subsuke/blocs/notifications_bloc.dart';
 import 'package:subsuke/blocs/pagination_bloc.dart';
 import 'package:subsuke/ui/pages/add/add.dart';
 import 'package:subsuke/ui/pages/config/config.dart';
 import 'package:subsuke/ui/pages/list/list.dart';
-import 'package:subsuke/ui/pages/notifications.dart';
 
 class HomeScreenAndroid extends StatelessWidget {
   @override
@@ -89,47 +85,8 @@ class HomeScreenAndroid extends StatelessWidget {
               selectedFontSize: 12,
               backgroundColor: Theme.of(context).bottomAppBarColor,
               items: [
-                BottomNavigationBarItem(
-                  label: 'リスト',
-                  tooltip: 'リスト',
-                  icon: Icon(
-                    Icons.list,
-                    size: 36,
-                    color: resolvedTheme.iconTheme.color,
-                  ),
-                  activeIcon: Icon(
-                    Icons.list,
-                    size: 36,
-                    color: resolvedTheme.primaryColor,
-                  ),
-                ),
-                BottomNavigationBarItem(
-                  label: '分析',
-                  tooltip: '分析',
-                  icon: Icon(
-                    Icons.analytics,
-                    size: 36,
-                    color: resolvedTheme.iconTheme.color,
-                  ),
-                  activeIcon: Icon(
-                    Icons.analytics,
-                    size: 36,
-                    color: resolvedTheme.primaryColor,
-                  ),
-                ),
-                BottomNavigationBarItem(
-                  label: '設定',
-                  icon: Icon(
-                    Icons.settings,
-                    size: 36,
-                    color: resolvedTheme.iconTheme.color,
-                  ),
-                  activeIcon: Icon(
-                    Icons.settings,
-                    size: 36,
-                    color: resolvedTheme.primaryColor,
-                  ),
-                )
+                BottomNavigationBarItem(label: 'リスト', icon: Icon(Icons.list)),
+                BottomNavigationBarItem(label: '設定', icon: Icon(Icons.settings))
               ],
               currentIndex: snapshot.data!,
               onTap: (int index) {
@@ -137,7 +94,6 @@ class HomeScreenAndroid extends StatelessWidget {
                 switch (index) {
                   case 0:
                   case 1:
-                  case 2:
                     pagination.go(index);
                     break;
                   default:
