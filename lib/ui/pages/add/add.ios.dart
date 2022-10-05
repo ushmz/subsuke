@@ -8,7 +8,6 @@ class AddPageIOS extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<EditScreenBLoC>(context);
-
     return CupertinoPageScaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       child: CustomScrollView(
@@ -18,13 +17,16 @@ class AddPageIOS extends StatelessWidget {
             backgroundColor: Theme.of(context).backgroundColor,
             largeTitle: Center(),
             leading: CupertinoNavigationBarBackButton(
-                color: Theme.of(context).primaryColor),
+              color: Theme.of(context).primaryColor,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
             trailing: CupertinoButton(
               padding: EdgeInsets.zero,
               child: Text(
                 "保存",
-                style: TextStyle(
-                    fontSize: 16, color: Theme.of(context).primaryColor),
+                style: TextStyle(color: Theme.of(context).primaryColor),
               ),
               onPressed: () {
                 print(bloc.getValues());

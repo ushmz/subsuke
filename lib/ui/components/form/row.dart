@@ -57,13 +57,13 @@ class _NormarizeFormItem extends StatelessWidget {
 }
 
 class ServiceNameInputRow extends StatelessWidget {
-  final String name;
+  final String initialValue;
+  final Function(String) onChange;
 
-  ServiceNameInputRow({this.name = ""});
+  ServiceNameInputRow({required this.onChange, this.initialValue = ""});
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<EditScreenBLoC>(context);
     return _NormarizeFormItem(
       child: CupertinoTextFormFieldRow(
         prefix: Text(
@@ -74,23 +74,21 @@ class ServiceNameInputRow extends StatelessWidget {
         ),
         textAlign: TextAlign.end,
         style: Theme.of(context).textTheme.bodyLarge,
-        initialValue: name,
-        onChanged: (value) {
-          bloc.setNameText(value);
-        },
+        initialValue: initialValue,
+        onChanged: onChange,
       ),
     );
   }
 }
 
 class ServicePriceInputRow extends StatelessWidget {
-  final String price;
+  final String initialValue;
+  final Function(String) onChange;
 
-  ServicePriceInputRow({this.price = ""});
+  ServicePriceInputRow({required this.onChange, this.initialValue = ""});
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<EditScreenBLoC>(context);
     return _NormarizeFormItem(
       child: CupertinoTextFormFieldRow(
         prefix: Text(
@@ -102,22 +100,28 @@ class ServicePriceInputRow extends StatelessWidget {
         keyboardType: TextInputType.number,
         textAlign: TextAlign.end,
         style: Theme.of(context).textTheme.bodyLarge,
-        initialValue: price,
-        onChanged: (value) {
-          bloc.setPriceNum(int.parse(value));
-        },
+        initialValue: initialValue,
+        onChanged: onChange,
       ),
     );
   }
 }
 
 class PaymentMethodPickerRow extends StatelessWidget {
+  final Stream<PaymentMethod> stream;
+  final List<PaymentMethod> methods;
+  final Function(PaymentMethod) onCanged;
+
+  PaymentMethodPickerRow({
+    required this.stream,
+    required this.methods,
+    required this.onCanged,
+  });
+
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<PaymentMethodBLoC>(context);
-
     return StreamBuilder(
-      stream: bloc.methodStream,
+      stream: stream,
       builder: (BuildContext ctx, AsyncSnapshot<PaymentMethod> ss) {
         switch (ss.connectionState) {
           case ConnectionState.waiting:
@@ -125,7 +129,6 @@ class PaymentMethodPickerRow extends StatelessWidget {
           default:
             return _NormarizeFormItem(
               onTap: () async {
-                final pms = await bloc.getAllPaymentMethods();
                 _DialogHelper.show(
                   context,
                   CupertinoPicker(
@@ -134,9 +137,9 @@ class PaymentMethodPickerRow extends StatelessWidget {
                         FixedExtentScrollController(initialItem: ss.data!.id),
                     itemExtent: 36,
                     onSelectedItemChanged: (int selected) {
-                      bloc.setPaymentMethod(pms[selected]);
+                      onCanged(methods[selected]);
                     },
-                    children: pms.map((m) {
+                    children: methods.map((m) {
                       return Container(
                         // [TODO]
                         height: 36,
@@ -176,11 +179,15 @@ class PaymentMethodPickerRow extends StatelessWidget {
 }
 
 class PaymentCyclePickerRow extends StatelessWidget {
+  final Stream<PaymentInterval> stream;
+  final Function(int) onChange;
+
+  PaymentCyclePickerRow({required this.stream, required this.onChange});
+
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<EditScreenBLoC>(context);
     return StreamBuilder(
-      stream: bloc.onChangeInterval,
+      stream: stream,
       builder: (BuildContext ctx, AsyncSnapshot<PaymentInterval> ss) {
         switch (ss.connectionState) {
           case ConnectionState.waiting:
@@ -195,9 +202,7 @@ class PaymentCyclePickerRow extends StatelessWidget {
                     scrollController: FixedExtentScrollController(
                         initialItem: ss.data!.intervalID),
                     itemExtent: 36,
-                    onSelectedItemChanged: (int selected) {
-                      bloc.setInterval(getPaymentInterval(selected));
-                    },
+                    onSelectedItemChanged: onChange,
                     children: [
                       PaymentInterval.Daily,
                       PaymentInterval.Weekly,
@@ -241,11 +246,15 @@ class PaymentCyclePickerRow extends StatelessWidget {
 }
 
 class PaymentNextDatePickerRow extends StatelessWidget {
+  final Stream<DateTime> stream;
+  final Function(DateTime) onChange;
+
+  PaymentNextDatePickerRow({required this.stream, required this.onChange});
+
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<EditScreenBLoC>(context);
     return StreamBuilder(
-      stream: bloc.onChangeNextTime,
+      stream: stream,
       builder: (BuildContext ctx, AsyncSnapshot<DateTime> ss) {
         switch (ss.connectionState) {
           case ConnectionState.waiting:
@@ -264,9 +273,7 @@ class PaymentNextDatePickerRow extends StatelessWidget {
                       child: CupertinoDatePicker(
                         mode: CupertinoDatePickerMode.date,
                         initialDateTime: ss.data ?? DateTime.now(),
-                        onDateTimeChanged: (DateTime dt) {
-                          bloc.setNextTime(dt);
-                        },
+                        onDateTimeChanged: onChange,
                       ),
                     ),
                   ),
@@ -292,11 +299,15 @@ class PaymentNextDatePickerRow extends StatelessWidget {
 }
 
 class PaymentReminderPickerRow extends StatelessWidget {
+  final Stream<NotificationBefore> stream;
+  final Function(int) onChange;
+
+  PaymentReminderPickerRow({required this.stream, required this.onChange});
+
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<EditScreenBLoC>(context);
     return StreamBuilder(
-      stream: bloc.onChangeNotificationBefore,
+      stream: stream,
       builder: (BuildContext ctx, AsyncSnapshot<NotificationBefore> ss) {
         switch (ss.connectionState) {
           case ConnectionState.waiting:
@@ -329,10 +340,7 @@ class PaymentReminderPickerRow extends StatelessWidget {
                           scrollController:
                               FixedExtentScrollController(initialItem: 0),
                           itemExtent: 36,
-                          onSelectedItemChanged: (int selected) {
-                            bloc.setNotificationBefore(
-                                NotificationBefore.values[selected]);
-                          },
+                          onSelectedItemChanged: onChange,
                           children: NotificationBefore.values
                               .map((e) => Center(child: Text(e.text)))
                               .toList(),
@@ -350,6 +358,10 @@ class PaymentReminderPickerRow extends StatelessWidget {
 }
 
 class TrialButtonRow extends StatelessWidget {
+  final Function(String) onChange;
+
+  TrialButtonRow({required this.onChange});
+
   @override
   Widget build(BuildContext context) {
     return _NormarizeFormItem(

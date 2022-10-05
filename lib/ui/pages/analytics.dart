@@ -6,6 +6,7 @@ import 'package:subsuke/ui/components/templates/price_carousel.dart';
 
 import 'package:subsuke/models/subsc.dart';
 
+@deprecated
 class AnalyticsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
