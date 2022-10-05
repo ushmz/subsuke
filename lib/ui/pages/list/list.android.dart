@@ -7,6 +7,7 @@ import 'package:subsuke/ui/pages/list/list_item.dart';
 import 'package:subsuke/ui/pages/list/sort_icon_button.dart';
 import 'package:subsuke/ui/components/templates/price_carousel.dart';
 
+
 class ListPageAndroid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

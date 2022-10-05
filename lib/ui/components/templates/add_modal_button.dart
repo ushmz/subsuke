@@ -20,10 +20,10 @@ class AddModelButtonIOS extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final item = Provider.of<SubscriptionItemBLoC>(context);
     return CupertinoButton(
       padding: EdgeInsets.zero,
-      child: Icon(CupertinoIcons.plus, size: 28, color: Theme.of(context).iconTheme.color),
+      child: Icon(CupertinoIcons.plus,
+          size: 28, color: Theme.of(context).iconTheme.color),
       onPressed: () {
         showCupertinoModalBottomSheet(
           context: context,
@@ -40,7 +40,7 @@ class AddModelButtonIOS extends StatelessWidget {
                 dispose: (context, bloc) => bloc.dispose(),
               ),
             ],
-            child: AddPage(() => item.getItems()),
+            child: AddPage(),
           ),
         );
       },
@@ -51,7 +51,6 @@ class AddModelButtonIOS extends StatelessWidget {
 class AddModelButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final item = Provider.of<SubscriptionItemBLoC>(context);
     return IconButton(
       icon: Icon(Icons.add, size: 28),
       splashRadius: 22,
@@ -71,7 +70,7 @@ class AddModelButton extends StatelessWidget {
                 dispose: (context, bloc) => bloc.dispose(),
               ),
             ],
-            child: AddPage(() => item.getItems()),
+            child: AddPage(),
           ),
         );
       },

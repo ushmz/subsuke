@@ -32,9 +32,9 @@ class ListPageIOS extends StatelessWidget {
                     border: null,
                     brightness: Theme.of(context).brightness,
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    leading: Material(
-                      type: MaterialType.transparency,
-                      child: SortIconButtonIOS(),
+                    leading: SortIconButtonIOS(
+                      stream: bloc.sortConditionStream,
+                      onPressed: (cond) => bloc.setSortCondition(cond),
                     ),
                     largeTitle: Text(
                       "subsuke",
@@ -95,8 +95,7 @@ class ListPageIOS extends StatelessWidget {
                                                   bloc.dispose(),
                                             ),
                                           ],
-                                          child: EditPage(
-                                              item, () => bloc.getItems()),
+                                          child: EditPage(item),
                                         );
                                       },
                                     );

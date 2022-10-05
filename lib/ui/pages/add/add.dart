@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import 'add.ios.dart';
-import 'add.android.dart';
 
 class AddPage extends StatelessWidget {
   @override

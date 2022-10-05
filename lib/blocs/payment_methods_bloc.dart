@@ -5,7 +5,8 @@ import 'package:subsuke/models/subsc.dart';
 class PaymentMethodBLoC {
   final _paymentMethodsController = BehaviorSubject<List<PaymentMethod>>();
 
-  Stream<List<PaymentMethod>> get methodsStream => _paymentMethodsController.stream;
+  Stream<List<PaymentMethod>> get methodsStream =>
+      _paymentMethodsController.stream;
 
   Future<void> fetchAllPaymentMethods() async {
     final list = await DBProvider.instance.getAllPaymentMethods();
