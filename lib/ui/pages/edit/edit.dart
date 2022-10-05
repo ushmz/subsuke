@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/ui/pages/edit/edit.android.dart';
 import 'package:subsuke/ui/pages/edit/edit.ios.dart';
 
 class EditPage extends StatelessWidget {
   final SubscriptionItem item;
-  // final Function() refreshListItems;
   EditPage(this.item);
 
   @override
@@ -14,7 +14,7 @@ class EditPage extends StatelessWidget {
     if (Platform.isIOS) {
       return EditPageIOS(item);
     } else {
-      return Center();
+      return EditPageAndroid();
     }
   }
 }
