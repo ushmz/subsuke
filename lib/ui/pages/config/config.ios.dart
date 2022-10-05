@@ -2,40 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/settings_bloc.dart';
+import 'package:subsuke/ui/components/ui_parts/modal_picker.dart';
 import 'package:subsuke/ui/pages/config/payment_method.ios.dart';
 
-extension DateTimeExtention on DateTime {
-  DateTime applied(TimeOfDay time) {
-    return DateTime(year, month, day, time.hour, time.minute);
-  }
-}
-
 class ConfigPageIOS extends StatelessWidget {
-  void _showDialog(BuildContext context, Widget child) {
-    showCupertinoModalPopup<void>(
-        context: context,
-        builder: (BuildContext context) => Container(
-              height: 216,
-              padding: const EdgeInsets.only(top: 6.0),
-              margin: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              color: CupertinoColors.systemBackground.resolveFrom(context),
-              child: SafeArea(
-                top: false,
-                child: child,
-              ),
-            ));
-  }
-
-  String getTimeString(TimeOfDay time) {
-    if (time.minute < 10) {
-      return "${time.hour}:0${time.minute}";
-    } else {
-      return "${time.hour}:${time.minute}";
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<SettingsBLoC>(context);
@@ -67,100 +37,23 @@ class ConfigPageIOS extends StatelessWidget {
                       return Padding(
                         padding: EdgeInsets.symmetric(vertical: 16),
                         child: CupertinoFormSection.insetGrouped(
-                          /* header: Text("通知"), */
                           children: [
-                            NormarizeFormItem(
-                              onTap: null,
-                              child: CupertinoFormRow(
-                                prefix: Text(
-                                  "支払日のリマインダー",
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge!
-                                        .color,
-                                  ),
-                                ),
-                                child: CupertinoSwitch(
-                                  value: bloc.isNotificationEnabled(),
-                                  onChanged: (bool value) {
-                                    bloc.setNotificationEnabled(value);
-                                  },
-                                ),
-                              ),
+                            PaymentReminderSwitchRow(
+                              value: bloc.isNotificationEnabled(),
+                              onChange: (val) {
+                                bloc.setNotificationEnabled(val);
+                              },
                             ),
-                            NormarizeFormItem(
-                              onTap: () {
-                                final time = bloc.getNotificationSchedule();
-                                _showDialog(
-                                  ctx,
-                                  CupertinoTheme(
-                                    data: CupertinoThemeData(
-                                        brightness:
-                                            Theme.of(context).brightness),
-                                    child: CupertinoDatePicker(
-                                      initialDateTime:
-                                          DateTime(2022).applied(time),
-                                      mode: CupertinoDatePickerMode.time,
-                                      use24hFormat: true,
-                                      onDateTimeChanged: (DateTime newTime) {
-                                        bloc.setNotificationSchedule(
-                                          TimeOfDay(
-                                              hour: newTime.hour,
-                                              minute: newTime.minute),
-                                        );
-                                      },
-                                    ),
-                                  ),
+                            PaymentReminderSchedulePickerRow(
+                              pickedValue: bloc.getNotificationSchedule(),
+                              onChange: ((val) {
+                                bloc.setNotificationSchedule(
+                                  TimeOfDay(hour: val.hour, minute: val.hour),
                                 );
-                              },
-                              child: CupertinoFormRow(
-                                prefix: Text(
-                                  "リマインダーの時刻",
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge!
-                                        .color,
-                                  ),
-                                ),
-                                child: Text(
-                                  getTimeString(bloc.getNotificationSchedule()),
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge!
-                                        .color,
-                                  ),
-                                ),
-                              ),
+                              }),
                             ),
-                            NormarizeFormItem(
-                              onTap: () {
-                                Navigator.of(context)
-                                    .push(PaymentMethodPageIOS.route());
-                              },
-                              child: CupertinoFormRow(
-                                prefix: Text(
-                                  "デフォルトの支払い方法",
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge!
-                                        .color,
-                                  ),
-                                ),
-                                child: Text(
-                                  "クレジットカード",
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge!
-                                        .color,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            DefaultPaymentMethodSelectRow(),
+                            DefaultCarouselIndex(),
                           ],
                         ),
                       );
@@ -198,6 +91,154 @@ class NormarizeFormItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [child],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PaymentReminderSwitchRow extends StatelessWidget {
+  final bool value;
+  final Function(bool) onChange;
+
+  PaymentReminderSwitchRow({
+    required this.value,
+    required this.onChange,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return NormarizeFormItem(
+      onTap: null,
+      child: CupertinoFormRow(
+        prefix: Text(
+          "支払日のリマインダー",
+          style: TextStyle(
+            color: Theme.of(context).textTheme.titleLarge!.color,
+          ),
+        ),
+        child: CupertinoSwitch(
+          value: value,
+          onChanged: onChange,
+        ),
+      ),
+    );
+  }
+}
+
+extension DateTimeExtention on DateTime {
+  DateTime applied(TimeOfDay time) {
+    return DateTime(year, month, day, time.hour, time.minute);
+  }
+}
+
+class PaymentReminderSchedulePickerRow extends StatelessWidget {
+  final TimeOfDay pickedValue;
+  final Function(DateTime) onChange;
+
+  PaymentReminderSchedulePickerRow({
+    required this.pickedValue,
+    required this.onChange,
+  });
+
+  String getTimeString(TimeOfDay time) {
+    if (time.minute < 10) {
+      return "${time.hour}:0${time.minute}";
+    } else {
+      return "${time.hour}:${time.minute}";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return NormarizeFormItem(
+      onTap: () {
+        ModalPickerIOS.showModal(
+          context,
+          CupertinoTheme(
+            data: CupertinoThemeData(brightness: Theme.of(context).brightness),
+            child: CupertinoDatePicker(
+              initialDateTime: DateTime(2022).applied(pickedValue),
+              mode: CupertinoDatePickerMode.time,
+              use24hFormat: true,
+              onDateTimeChanged: onChange,
+            ),
+          ),
+        );
+      },
+      child: CupertinoFormRow(
+        prefix: Text(
+          "リマインダーの時刻",
+          style: TextStyle(
+            color: Theme.of(context).textTheme.titleLarge!.color,
+          ),
+        ),
+        child: Text(
+          getTimeString(pickedValue),
+          style: TextStyle(
+            color: Theme.of(context).textTheme.titleLarge!.color,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DefaultPaymentMethodSelectRow extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return NormarizeFormItem(
+      onTap: () {
+        Navigator.of(context).push(PaymentMethodPageIOS.route());
+      },
+      child: CupertinoFormRow(
+        prefix: Text(
+          "デフォルトの支払い方法",
+          style: TextStyle(
+            color: Theme.of(context).textTheme.titleLarge!.color,
+          ),
+        ),
+        child: Text(
+          "クレジットカード",
+          style: TextStyle(
+            color: Theme.of(context).textTheme.titleLarge!.color,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DefaultCarouselIndex extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return NormarizeFormItem(
+      onTap: () {
+        ModalPickerIOS.showModal(
+          context,
+          ExtendedCupertinoPicker(
+            children: [
+              PickerItemText(context, "1日あたり"),
+              PickerItemText(context, "1週間あたり"),
+              PickerItemText(context, "1月あたり"),
+              PickerItemText(context, "1年あたり"),
+            ],
+            onSelectedItemChanged: (int selected) => print(selected),
+          ),
+        );
+      },
+      child: CupertinoFormRow(
+        prefix: Text(
+          "合計金額のデフォルト表示",
+          style: TextStyle(
+            color: Theme.of(context).textTheme.titleLarge!.color,
+          ),
+        ),
+        child: Text(
+          "",
+          style: TextStyle(
+            color: Theme.of(context).textTheme.titleLarge!.color,
           ),
         ),
       ),
