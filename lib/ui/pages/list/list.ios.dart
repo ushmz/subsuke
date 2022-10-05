@@ -39,9 +39,9 @@ class ListPageIOS extends StatelessWidget {
                       style: TextStyle(
                           color: Theme.of(context).textTheme.titleLarge!.color),
                     ),
-                    trailing: Material(
-                      type: MaterialType.transparency,
-                      child: AddModelButtonIOS(),
+                    trailing: GestureDetector(
+                      onTap: () {},
+                      child: AddModelButton(),
                     ),
                   ),
                   SliverGrid.count(
