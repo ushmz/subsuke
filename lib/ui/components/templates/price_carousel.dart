@@ -5,7 +5,7 @@ import 'package:subsuke/ui/components/ui_parts/price_card.dart';
 class PriceCarousel extends StatelessWidget {
   final List<SubscriptionItem> items;
 
-  PriceCarousel(this.items);
+  PriceCarousel({required this.items});
 
   List<Widget> priceInfoBuilder(
       BuildContext context, List<SubscriptionItem> items) {

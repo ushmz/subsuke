@@ -1,14 +1,27 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:subsuke/models/subsc.dart';
 import 'package:subsuke/ui/pages/list/sort_condition_option.dart';
 import 'package:subsuke/ui/pages/list/sort_condition_bottom_sheet.dart';
 
-class SortIconButtonIOS extends StatelessWidget {
-  final Stream<ItemSortCondition> stream;
-  final Function(ItemSortCondition) onPressed;
+IconData getPlatformSortIcon() {
+  if (Platform.isIOS) {
+    return CupertinoIcons.sort_down;
+  } else {
+    return Icons.sort;
+  }
+}
 
-  SortIconButtonIOS({required this.stream, required this.onPressed});
+class SortIconButton extends StatelessWidget {
+  final Function(ItemSortCondition) onChange;
+  final Stream<ItemSortCondition> stream;
+
+  SortIconButton({
+    required this.onChange,
+    required this.stream,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +31,7 @@ class SortIconButtonIOS extends StatelessWidget {
         return CupertinoButton(
           padding: EdgeInsets.zero,
           child: Icon(
-            CupertinoIcons.sort_down,
+            getPlatformSortIcon(),
             size: 28,
             color: Theme.of(context).iconTheme.color,
           ),
@@ -28,7 +41,7 @@ class SortIconButtonIOS extends StatelessWidget {
               builder: (BuildContext ctx) {
                 return SortConditionBottomSheet(
                   onPressClear: () {
-                    onPressed(ItemSortCondition.None);
+                    onChange(ItemSortCondition.None);
                     Navigator.pop(ctx);
                   },
                   children: [
@@ -36,7 +49,7 @@ class SortIconButtonIOS extends StatelessWidget {
                       selected: ss.data == ItemSortCondition.PriceASC,
                       option: ItemSortCondition.PriceASC.sortConditionName,
                       onTap: () {
-                        onPressed(ItemSortCondition.PriceASC);
+                        onChange(ItemSortCondition.PriceASC);
                         Navigator.pop(ctx);
                       },
                     ),
@@ -44,7 +57,7 @@ class SortIconButtonIOS extends StatelessWidget {
                       selected: ss.data == ItemSortCondition.PriceDESC,
                       option: ItemSortCondition.PriceDESC.sortConditionName,
                       onTap: () {
-                        onPressed(ItemSortCondition.PriceDESC);
+                        onChange(ItemSortCondition.PriceDESC);
                         Navigator.pop(ctx);
                       },
                     ),
@@ -52,7 +65,7 @@ class SortIconButtonIOS extends StatelessWidget {
                       selected: ss.data == ItemSortCondition.NextASC,
                       option: ItemSortCondition.NextASC.sortConditionName,
                       onTap: () {
-                        onPressed(ItemSortCondition.NextASC);
+                        onChange(ItemSortCondition.NextASC);
                         Navigator.pop(ctx);
                       },
                     ),
@@ -60,7 +73,7 @@ class SortIconButtonIOS extends StatelessWidget {
                       selected: ss.data == ItemSortCondition.NextDESC,
                       option: ItemSortCondition.NextDESC.sortConditionName,
                       onTap: () {
-                        onPressed(ItemSortCondition.NextDESC);
+                        onChange(ItemSortCondition.NextDESC);
                         Navigator.pop(ctx);
                       },
                     ),
