@@ -7,7 +7,8 @@ class EditScreenBLoC {
   final _nextTimeController = BehaviorSubject.seeded(DateTime.now());
   final _intervalController = BehaviorSubject.seeded(PaymentInterval.Monthly);
   final _paymentController = BehaviorSubject.seeded('');
-  final _nofiticationBeforeController = BehaviorSubject.seeded(NotificationBefore.NONE);
+  final _nofiticationBeforeController =
+      BehaviorSubject.seeded(NotificationBefore.NONE);
   final _noteController = BehaviorSubject.seeded('');
 
   Function(String) get setNameText => _nameTextController.sink.add;
@@ -30,9 +31,12 @@ class EditScreenBLoC {
   Stream<String> get onChangePayment => _paymentController.stream;
   String get getPaymentMethod => _paymentController.value;
 
-  Function(NotificationBefore) get setNotificationBefore => _nofiticationBeforeController.sink.add;
-  Stream<NotificationBefore> get onChangeNotificationBefore => _nofiticationBeforeController.stream;
-  NotificationBefore get getNotificationBefore => _nofiticationBeforeController.value;
+  Function(NotificationBefore) get setNotificationBefore =>
+      _nofiticationBeforeController.sink.add;
+  Stream<NotificationBefore> get onChangeNotificationBefore =>
+      _nofiticationBeforeController.stream;
+  NotificationBefore get getNotificationBefore =>
+      _nofiticationBeforeController.value;
 
   Function(String) get setNote => _noteController.sink.add;
   Stream<String> get onChangeNote => _noteController.stream;
@@ -52,7 +56,7 @@ class EditScreenBLoC {
       'next': _nextTimeController.value,
       'interval': _intervalController.value,
       'payment_methods': _paymentController.value,
-      '_noteController': _noteController.value,
+      'note': _noteController.value,
     });
   }
 

@@ -4,6 +4,11 @@ import 'package:rxdart/rxdart.dart';
 import 'package:subsuke/db/db_provider.dart';
 import 'package:subsuke/models/subsc.dart';
 
+typedef ItemSinkAdd = Function(List<SubscriptionItem>);
+typedef ItemStream = Stream<List<SubscriptionItem>>;
+typedef ItemStreamTransformer
+    = StreamTransformer<List<SubscriptionItem>, List<SubscriptionItem>>;
+
 class SubscriptionItemBLoC {
   final _selectedIntervals = BehaviorSubject<List<int>>.seeded(<int>[]);
   Stream<List<int>> get selectedIntervalsStream => _selectedIntervals.stream;
@@ -27,8 +32,7 @@ class SubscriptionItemBLoC {
     getItems();
   }
 
-  final _sortCondition =
-      BehaviorSubject<ItemSortCondition>.seeded(ItemSortCondition.None);
+  final _sortCondition = BehaviorSubject.seeded(ItemSortCondition.None);
   Stream<ItemSortCondition> get sortConditionStream => _sortCondition.stream;
   Function(ItemSortCondition) get setSortCondition => _sortCondition.sink.add;
 
@@ -40,10 +44,8 @@ class SubscriptionItemBLoC {
   Stream<List<SubscriptionItem>> get itemStream =>
       _itemController.stream.transform(itemFilter()).transform(itemSort());
 
-  StreamTransformer<List<SubscriptionItem>, List<SubscriptionItem>>
-      itemFilter() {
-    return StreamTransformer<List<SubscriptionItem>,
-        List<SubscriptionItem>>.fromHandlers(
+  ItemStreamTransformer itemFilter() {
+    return ItemStreamTransformer.fromHandlers(
       handleData: ((data, sink) {
         final selected = _selectedIntervals.value;
         final filtered = data.where((item) {
@@ -57,7 +59,7 @@ class SubscriptionItemBLoC {
     );
   }
 
-  StreamTransformer<List<SubscriptionItem>, List<SubscriptionItem>> itemSort() {
+  ItemStreamTransformer itemSort() {
     return StreamTransformer.fromHandlers(handleData: ((data, sink) {
       final sortCondition = _sortCondition.value;
       data.sort(((a, b) {
@@ -78,10 +80,8 @@ class SubscriptionItemBLoC {
     }));
   }
 
-  Function(List<SubscriptionItem>) get setSubscriptionItems =>
-      _itemController.sink.add;
-  Stream<List<SubscriptionItem>> get onChangeSubscriptionItems =>
-      _itemController.stream;
+  ItemSinkAdd get setSubscriptionItems => _itemController.sink.add;
+  ItemStream get onChangeSubscriptionItems => _itemController.stream;
 
   getItems() async {
     final items = await DBProvider.instance.getAllSubscriptions();
@@ -93,8 +93,8 @@ class SubscriptionItemBLoC {
     getItems();
   }
 
-  update(SubscriptionItem item) {
-    DBProvider.instance.updateSubscriptionItem(item);
+  update(int id, SubscriptionItem item) {
+    DBProvider.instance.updateSubscriptionItem(id, item);
     getItems();
   }
 

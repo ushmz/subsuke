@@ -27,18 +27,18 @@ class SubscriptionItem {
   final int price;
   final DateTime next;
   final PaymentInterval interval;
-  final PaymentMethod paymentMethod;
+  final String paymentMethod;
   final String note;
 
-  const SubscriptionItem(
-    this.id,
-    this.name,
-    this.price,
-    this.next,
-    this.interval,
-    this.note,
-    this.paymentMethod,
-  );
+  const SubscriptionItem({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.next,
+    required this.interval,
+    required this.note,
+    required this.paymentMethod,
+  });
 
   int get getID => id;
 
@@ -52,86 +52,73 @@ class SubscriptionItem {
         DBConsts.subscriptionsIDColumnName: id,
         DBConsts.subscriptionsNameColumnName: name,
         DBConsts.subscriptionsPriceColumnName: price,
-        DBConsts.subscriptionsNextColumnName: next.toUtc().toIso8601String(),
+        DBConsts.subscriptionsNextColumnName: next.toIso8601String(),
         DBConsts.subscriptionsIntervalColumnName: interval.intervalID,
         DBConsts.subscriptionsNoteColumnName: note,
-        DBConsts.subscriptionsPaymentColumnName: paymentMethod.name,
+        DBConsts.subscriptionsPaymentColumnName: paymentMethod,
       };
 
   Map<String, dynamic> toInsertMap() => {
         DBConsts.subscriptionsNameColumnName: name,
         DBConsts.subscriptionsPriceColumnName: price,
-        DBConsts.subscriptionsNextColumnName: next.toUtc().toIso8601String(),
+        DBConsts.subscriptionsNextColumnName: next.toIso8601String(),
         DBConsts.subscriptionsIntervalColumnName: interval.intervalID,
-        DBConsts.subscriptionsPaymentColumnName: paymentMethod.id,
         DBConsts.subscriptionsNoteColumnName: note,
+        DBConsts.subscriptionsPaymentColumnName: paymentMethod,
       };
 
   factory SubscriptionItem.fromMap(Map<String, dynamic> json) =>
       SubscriptionItem(
-        json[DBConsts.subscriptionsIDColumnName],
-        json[DBConsts.subscriptionsNameColumnName],
-        json[DBConsts.subscriptionsPriceColumnName],
-        DateTime.parse(json[DBConsts.subscriptionsNextColumnName]).toLocal(),
-        getPaymentInterval(json[DBConsts.subscriptionsIntervalColumnName]),
-        json[DBConsts.subscriptionsNoteColumnName],
-        PaymentMethod(json[DBConsts.paymentMethodIDColumnName],
-            json[DBConsts.paymentMethodNameColumnName]),
+        id: 0,
+        name: json['name'],
+        price: json['price'],
+        next: json['next'],
+        interval: json['interval'],
+        note: json['note'],
+        paymentMethod: json['payment_methods'],
       );
 
+  factory SubscriptionItem.fromSQLResultRow(Map<String, dynamic> json) =>
+      SubscriptionItem(
+        id: json[DBConsts.subscriptionsIDColumnName],
+        name: json[DBConsts.subscriptionsNameColumnName],
+        price: json[DBConsts.subscriptionsPriceColumnName],
+        next: DateTime.parse(json[DBConsts.subscriptionsNextColumnName]),
+        interval:
+            getPaymentInterval(json[DBConsts.subscriptionsIntervalColumnName]),
+        note: json[DBConsts.subscriptionsNoteColumnName],
+        paymentMethod: json[DBConsts.subscriptionsPaymentColumnName],
+      );
+
+  // TODO : Avoid new object?
   SubscriptionItem updateNextPayment() {
+    DateTime updated;
     switch (interval) {
       case PaymentInterval.Daily:
-        return SubscriptionItem(
-          id,
-          name,
-          price,
-          DateTime(next.year, next.month, next.day + 1),
-          interval,
-          note,
-          paymentMethod,
-        );
+        updated = DateTime(next.year, next.month, next.day + 1);
+        break;
       case PaymentInterval.Weekly:
-        return SubscriptionItem(
-          id,
-          name,
-          price,
-          DateTime(next.year, next.month, next.day + 7),
-          interval,
-          note,
-          paymentMethod,
-        );
+        updated = DateTime(next.year, next.month, next.day + 7);
+        break;
       case PaymentInterval.Fortnightly:
-        return SubscriptionItem(
-          id,
-          name,
-          price,
-          DateTime(next.year, next.month, next.day + 14),
-          interval,
-          note,
-          paymentMethod,
-        );
+        updated = DateTime(next.year, next.month, next.day + 14);
+        break;
       case PaymentInterval.Monthly:
-        return SubscriptionItem(
-          id,
-          name,
-          price,
-          DateTime(next.year, next.month + 1, next.day),
-          interval,
-          note,
-          paymentMethod,
-        );
+        updated = DateTime(next.year, next.month + 1, next.day);
+        break;
       case PaymentInterval.Yearly:
-        return SubscriptionItem(
-          id,
-          name,
-          price,
-          DateTime(next.year + 1, next.month, next.day),
-          interval,
-          note,
-          paymentMethod,
-        );
+        updated = DateTime(next.year + 1, next.month, next.day);
+        break;
     }
+    return SubscriptionItem(
+      id: id,
+      name: name,
+      price: price,
+      next: updated,
+      interval: interval,
+      note: note,
+      paymentMethod: paymentMethod,
+    );
   }
 }
 

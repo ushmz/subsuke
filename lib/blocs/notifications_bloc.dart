@@ -42,7 +42,7 @@ class NotificationsBLoC {
   }
 
   deleteAll() async {
-    DBProvider.instance.archiveAllNotification();
+    DBProvider.instance.deleteAllNotification();
     getMessages();
   }
 
