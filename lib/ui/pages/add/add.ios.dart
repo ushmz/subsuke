@@ -7,6 +7,11 @@ import 'package:subsuke/models/subsc.dart';
 import 'package:subsuke/ui/components/form/row.dart';
 
 class AddPageIOS extends StatelessWidget {
+  final Function(SubscriptionItem) onAdd;
+  AddPageIOS({
+    required this.onAdd,
+  });
+
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<EditScreenBLoC>(context);
@@ -37,7 +42,9 @@ class AddPageIOS extends StatelessWidget {
                 style: TextStyle(color: Theme.of(context).primaryColor),
               ),
               onPressed: () {
-                print(bloc.getValues());
+                final i = bloc.getValues();
+                onAdd(i);
+                Navigator.pop(context);
               },
             ),
           ),
@@ -52,10 +59,23 @@ class AddPageIOS extends StatelessWidget {
                   ),
                   children: [
                     ServiceNameInputRow(
-                      onChange: (val) => bloc.setNameText(val),
+                      onChange: (val) {
+                         // TODO : If you change focus before press 'enter' key,
+                         // the empty character is passed to `val`.
+                        if (val == "") {
+                          return;
+                        }
+                        bloc.setNameText(val);
+                      },
                     ),
                     ServicePriceInputRow(
-                      onChange: (val) => bloc.setPriceNum(int.parse(val)),
+                      onChange: (val) {
+                        var p = int.tryParse(val);
+                        if (p == null) {
+                          return;
+                        }
+                        bloc.setPriceNum(p);
+                      },
                     ),
                     FutureBuilder<List<PaymentMethod>>(
                       future: payment.getAllPaymentMethods(),
@@ -63,7 +83,12 @@ class AddPageIOS extends StatelessWidget {
                         return PaymentMethodPickerRow(
                           stream: payment.methodStream,
                           methods: snapshot.data ?? [],
-                          onCanged: (val) {
+                          initialItem: "",
+                          onChange: (val) {
+                            payment.setPaymentMethodString(val);
+                            bloc.setPaymentMethod(val);
+                          },
+                          onChangePaymentMethod: (val) {
                             payment.setPaymentMethod(val);
                             bloc.setPaymentMethod(val.name);
                           },

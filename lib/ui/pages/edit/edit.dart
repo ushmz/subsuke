@@ -7,12 +7,17 @@ import 'package:subsuke/ui/pages/edit/edit.ios.dart';
 
 class EditPage extends StatelessWidget {
   final SubscriptionItem item;
-  EditPage(this.item);
+  final Function(int, SubscriptionItem) onUpdate;
+
+  EditPage({
+    required this.item,
+    required this.onUpdate,
+  });
 
   @override
   Widget build(BuildContext context) {
     if (Platform.isIOS) {
-      return EditPageIOS(item);
+      return EditPageIOS(item: item, onUpdate: onUpdate);
     } else {
       return EditPageAndroid();
     }

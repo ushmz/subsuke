@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:subsuke/blocs/settings_bloc.dart';
 import 'package:subsuke/blocs/subscription_item_bloc.dart';
 import 'package:subsuke/models/subsc.dart';
-import 'package:subsuke/ui/components/templates/add_modal_button.dart';
 import 'package:subsuke/ui/components/templates/price_carousel.dart';
+import 'package:subsuke/ui/components/templates/add_modal_button.dart';
 import 'package:subsuke/ui/pages/list/list_item.dart';
 import 'package:subsuke/ui/pages/list/sort_icon_button.dart';
 
@@ -12,6 +13,9 @@ class ListPageIOS extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<SubscriptionItemBLoC>(context);
+    final pref = Provider.of<SettingsBLoC>(context);
+
+    final resolvedColor = Theme.of(context).textTheme.titleLarge!.color;
 
     return StreamBuilder(
       stream: bloc.itemStream,
@@ -39,34 +43,40 @@ class ListPageIOS extends StatelessWidget {
                     ),
                     largeTitle: Text(
                       "subsuke",
-                      style: TextStyle(
-                          color: Theme.of(context).textTheme.titleLarge!.color),
+                      style: TextStyle(color: resolvedColor),
                     ),
                     trailing: GestureDetector(
-                      onTap: () {},
-                      child: AddModelButton(),
+                      child: AddModalButton(
+                        onItemAdd: (item) {
+                          bloc.create(item);
+                        },
+                      ),
                     ),
                   ),
                   SliverGrid.count(
                     childAspectRatio: 1.6,
                     crossAxisCount: 1,
-                    children: [PriceCarousel(items: ss.data ?? [])],
+                    children: [
+                      PriceCarousel(
+                        items: ss.data ?? [],
+                        defaultTab: pref.getDefaultCarousel(),
+                      )
+                    ],
                   ),
                   SliverFixedExtentList(
-                    itemExtent: 180,
+                    itemExtent: MediaQuery.of(context).size.height * 0.075,
                     delegate: SliverChildListDelegate(
-                      [
-                        Column(
-                          children: ss.data!.map((item) {
-                            return ListItem(
-                              item: item,
-                              onSlidableActionPressed: (BuildContext c) {
-                                bloc.delete(item.id);
-                              },
-                            );
-                          }).toList(),
-                        )
-                      ],
+                      ss.data!.map((item) {
+                        return ListItem(
+                          item: item,
+                          onSlidableActionPressed: (BuildContext c) {
+                            bloc.delete(item.id);
+                          },
+                          onItemUpdated: (int id, SubscriptionItem i) {
+                            bloc.update(id, i);
+                          },
+                        );
+                      }).toList(),
                     ),
                   )
                 ],

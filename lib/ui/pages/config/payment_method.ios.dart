@@ -20,6 +20,7 @@ class PaymentMethodPageIOS extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<PaymentMethodBLoC>(context);
+    final resolvedColor = Theme.of(context).textTheme.titleLarge!.color;
 
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
@@ -58,12 +59,7 @@ class PaymentMethodPageIOS extends StatelessWidget {
                       .map((m) => CupertinoFormRow(
                             prefix: Text(
                               m.name,
-                              style: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .color,
-                              ),
+                              style: TextStyle(color: resolvedColor),
                             ),
                             child: Icon(CupertinoIcons.check_mark),
                           ))

@@ -72,7 +72,7 @@ class HomeScreenAndroid extends StatelessWidget {
                   builder: (BuildContext context) => Provider<EditScreenBLoC>(
                     create: (context) => EditScreenBLoC(),
                     dispose: (context, bloc) => bloc.dispose(),
-                    child: AddPage(),
+                    child: AddPage(onAdd: (p0) {}),
                   ),
                 );
               },

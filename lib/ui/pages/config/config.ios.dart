@@ -52,8 +52,18 @@ class ConfigPageIOS extends StatelessWidget {
                                 );
                               }),
                             ),
-                            DefaultPaymentMethodSelectRow(),
-                            DefaultCarouselIndex(),
+                            DefaultPaymentMethodSelectRow(
+                              stream: bloc.onPaymentMethodChanged,
+                              onChange: (id) {
+                                bloc.setDefaultPaymentMethod(id);
+                              },
+                            ),
+                            DefaultCarouselIndexRow(
+                              stream: bloc.onCarouselIndexChanged,
+                              onChange: (idx) {
+                                bloc.setDefaultCarousel(idx);
+                              },
+                            ),
                           ],
                         ),
                       );
@@ -186,6 +196,14 @@ class PaymentReminderSchedulePickerRow extends StatelessWidget {
 }
 
 class DefaultPaymentMethodSelectRow extends StatelessWidget {
+  final Stream<int> stream;
+  final Function(int) onChange;
+
+  DefaultPaymentMethodSelectRow({
+    required this.stream,
+    required this.onChange,
+  });
+
   @override
   Widget build(BuildContext context) {
     return NormarizeFormItem(
@@ -199,49 +217,85 @@ class DefaultPaymentMethodSelectRow extends StatelessWidget {
             color: Theme.of(context).textTheme.titleLarge!.color,
           ),
         ),
-        child: Text(
-          "クレジットカード",
-          style: TextStyle(
-            color: Theme.of(context).textTheme.titleLarge!.color,
-          ),
+        child: StreamBuilder(
+          stream: stream,
+          builder: (BuildContext ctx, AsyncSnapshot<int> ss) {
+            final resolvedColor = Theme.of(ctx).textTheme.titleLarge!.color;
+            switch (ss.connectionState) {
+              case ConnectionState.waiting:
+                return Text("", style: TextStyle(color: resolvedColor));
+              default:
+            }
+            return Text(
+              ss.data.toString(),
+              style: TextStyle(color: resolvedColor),
+            );
+          },
         ),
       ),
     );
   }
 }
 
-class DefaultCarouselIndex extends StatelessWidget {
+class DefaultCarouselIndexRow extends StatelessWidget {
+  final Stream<int> stream;
+  final Function(int) onChange;
+
+  DefaultCarouselIndexRow({
+    required this.stream,
+    required this.onChange,
+  });
+
+  String getCarouselText(int idx) {
+    return [
+      "1日あたり",
+      "1週間あたり",
+      "1月あたり",
+      "1年あたり",
+    ][idx];
+  }
+
   @override
   Widget build(BuildContext context) {
-    return NormarizeFormItem(
-      onTap: () {
-        ModalPickerIOS.showModal(
-          context,
-          ExtendedCupertinoPicker(
-            children: [
-              PickerItemText(context, "1日あたり"),
-              PickerItemText(context, "1週間あたり"),
-              PickerItemText(context, "1月あたり"),
-              PickerItemText(context, "1年あたり"),
-            ],
-            onSelectedItemChanged: (int selected) => print(selected),
-          ),
-        );
+    return StreamBuilder(
+      stream: stream,
+      builder: (BuildContext ctx, AsyncSnapshot<int> ss) {
+        final resolvedColor = Theme.of(ctx).textTheme.titleLarge!.color;
+        switch (ss.connectionState) {
+          case ConnectionState.waiting:
+            return Text("", style: TextStyle(color: resolvedColor));
+          default:
+            return NormarizeFormItem(
+              onTap: () {
+                ModalPickerIOS.showModal(
+                  context,
+                  ExtendedCupertinoPicker(
+                    children: [
+                      PickerItemText(context, "1日あたり"),
+                      PickerItemText(context, "1週間あたり"),
+                      PickerItemText(context, "1月あたり"),
+                      PickerItemText(context, "1年あたり"),
+                    ],
+                    initial: ss.data ?? 2,
+                    onSelectedItemChanged: (int selected) => onChange(selected),
+                  ),
+                );
+              },
+              child: CupertinoFormRow(
+                prefix: Text(
+                  "合計金額のデフォルト表示",
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.titleLarge!.color,
+                  ),
+                ),
+                child: Text(
+                  getCarouselText(ss.data ?? 2),
+                  style: TextStyle(color: resolvedColor),
+                ),
+              ),
+            );
+        }
       },
-      child: CupertinoFormRow(
-        prefix: Text(
-          "合計金額のデフォルト表示",
-          style: TextStyle(
-            color: Theme.of(context).textTheme.titleLarge!.color,
-          ),
-        ),
-        child: Text(
-          "",
-          style: TextStyle(
-            color: Theme.of(context).textTheme.titleLarge!.color,
-          ),
-        ),
-      ),
     );
   }
 }

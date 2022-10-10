@@ -11,9 +11,12 @@ import 'package:subsuke/ui/pages/edit/edit.ios.dart';
 class ListItem extends StatelessWidget {
   final SubscriptionItem item;
   final Function(BuildContext) onSlidableActionPressed;
+  final Function(int, SubscriptionItem) onItemUpdated;
+
   ListItem({
     required this.item,
     required this.onSlidableActionPressed,
+    required this.onItemUpdated,
   });
 
   @override
@@ -51,7 +54,7 @@ class ListItem extends StatelessWidget {
                         dispose: (ctx, bloc) => bloc.dispose(),
                       ),
                     ],
-                    child: EditPageIOS(item),
+                    child: EditPageIOS(item: item, onUpdate: onItemUpdated),
                   );
                 },
               ),

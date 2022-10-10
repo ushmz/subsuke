@@ -34,7 +34,7 @@ class ListPageAndroid extends StatelessWidget {
                         bloc.getItems();
                       },
                     ),
-                    actions: [AddModelButton()],
+                    actions: [AddModalButton(onItemAdd: (item) {})],
                     expandedHeight: 100,
                     pinned: true,
                     flexibleSpace: FlexibleSpaceBar(
@@ -60,8 +60,11 @@ class ListPageAndroid extends StatelessWidget {
                           children: ss.data!.map((item) {
                             return ListItem(
                               item: item,
-                              onSlidableActionPressed: (BuildContext c) {
+                              onSlidableActionPressed: (c) {
                                 bloc.delete(item.id);
+                              },
+                              onItemUpdated: (id, i) {
+                                bloc.update(id, i);
                               },
                             );
                           }).toList(),
