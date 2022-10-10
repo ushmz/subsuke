@@ -6,9 +6,15 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
 import 'package:subsuke/blocs/payment_methods_bloc.dart';
+import 'package:subsuke/models/subsc.dart';
 import 'package:subsuke/ui/pages/add/add.dart';
 
-class AddModelButton extends StatelessWidget {
+class AddModalButton extends StatelessWidget {
+  final Function(SubscriptionItem) onItemAdd;
+  AddModalButton({
+    required this.onItemAdd,
+  });
+
   IconData getPlatformIconData() {
     if (Platform.isIOS) {
       return CupertinoIcons.plus;
@@ -28,6 +34,7 @@ class AddModelButton extends StatelessWidget {
       ),
       onPressed: () {
         showCupertinoModalBottomSheet(
+          backgroundColor: Theme.of(context).backgroundColor,
           context: context,
           expand: true,
           useRootNavigator: true,
@@ -42,7 +49,7 @@ class AddModelButton extends StatelessWidget {
                 dispose: (context, bloc) => bloc.dispose(),
               ),
             ],
-            child: AddPage(),
+            child: AddPage(onAdd: onItemAdd),
           ),
         );
       },
