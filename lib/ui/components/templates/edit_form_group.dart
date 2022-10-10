@@ -248,15 +248,15 @@ class SubscriptionFormGroup extends StatelessWidget {
               ),
               onPressed: () {
                 final i = SubscriptionItem(
-                  item?.id ?? 0,
-                  bloc.getName,
-                  bloc.getPrice,
-                  bloc.getNextTime,
-                  bloc.getInterval,
-                  bloc.getNote,
-                  PaymentMethod(0, "Visa *1234"),
+                  id: item?.id ?? 0,
+                  name: bloc.getName,
+                  price: bloc.getPrice,
+                  next: bloc.getNextTime,
+                  interval: bloc.getInterval,
+                  note: bloc.getNote,
+                  paymentMethod: "Visa *1234",
                 );
-                DBProvider.instance.upsertSubscriptionItem(i);
+                DBProvider.instance.upsertSubscriptionItem(item?.id ?? 0, i);
                 refreshItems();
                 Navigator.pop(context);
               },
