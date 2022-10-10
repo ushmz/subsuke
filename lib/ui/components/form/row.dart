@@ -61,6 +61,7 @@ class ServiceNameInputRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    onChange(initialValue);
     return _NormarizeFormItem(
       child: CupertinoTextFormFieldRow(
         prefix: Text(
@@ -86,6 +87,7 @@ class ServicePriceInputRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    onChange(initialValue);
     return _NormarizeFormItem(
       child: CupertinoTextFormFieldRow(
         prefix: Text(
@@ -107,16 +109,30 @@ class ServicePriceInputRow extends StatelessWidget {
 class PaymentMethodPickerRow extends StatelessWidget {
   final Stream<PaymentMethod> stream;
   final List<PaymentMethod> methods;
-  final Function(PaymentMethod) onCanged;
+  final Function(String) onChange;
+  final Function(PaymentMethod)? onChangePaymentMethod;
+
+  final String? initialItem;
 
   PaymentMethodPickerRow({
     required this.stream,
     required this.methods,
-    required this.onCanged,
+    required this.onChange,
+    this.initialItem,
+    this.onChangePaymentMethod,
   });
+
+  String initValue() {
+    if (initialItem == null) {
+      return methods[0].name;
+    } else {
+      return initialItem!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    onChange(initValue());
     return StreamBuilder(
       stream: stream,
       builder: (BuildContext ctx, AsyncSnapshot<PaymentMethod> ss) {
@@ -134,7 +150,11 @@ class PaymentMethodPickerRow extends StatelessWidget {
                         FixedExtentScrollController(initialItem: ss.data!.id),
                     itemExtent: 36,
                     onSelectedItemChanged: (int selected) {
-                      onCanged(methods[selected]);
+                      if (onChangePaymentMethod != null) {
+                        onChangePaymentMethod!(methods[selected]);
+                        return;
+                      }
+                      onChange(methods[selected].name);
                     },
                     children: methods.map((m) {
                       return Container(
@@ -162,7 +182,8 @@ class PaymentMethodPickerRow extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  ss.data!.name,
+                  // TODO : Stinky code
+                  ss.data?.name != "" ? ss.data!.name : initValue(),
                   style: TextStyle(
                     color: Theme.of(context).textTheme.titleLarge!.color,
                   ),
