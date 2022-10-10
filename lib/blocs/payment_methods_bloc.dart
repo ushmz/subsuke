@@ -25,6 +25,12 @@ class PaymentMethodBLoC {
   Function(PaymentMethod) get setPaymentMethod =>
       _selectedMethodController.sink.add;
 
+  void setPaymentMethodString(String method) async {
+    final methods = await getAllPaymentMethods();
+    final m = methods.firstWhere((m) => m.name == method, orElse: () => methods[0]);
+    _selectedMethodController.sink.add(m);
+  }
+
   PaymentMethod get getMethod => _selectedMethodController.value;
   int get getMethodID => _selectedMethodController.value.id;
   String get getMethodName => _selectedMethodController.value.name;

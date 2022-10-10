@@ -49,7 +49,7 @@ class DBProvider {
                 ${DBConsts.subscriptionsPriceColumnName} INTEGER NOT NULL,
                 ${DBConsts.subscriptionsNextColumnName} TEXT NOT NULL,
                 ${DBConsts.subscriptionsIntervalColumnName} INTEGER NOT NULL,
-                ${DBConsts.subscriptionsPaymentColumnName} INTEGER,
+                ${DBConsts.subscriptionsPaymentColumnName} TEXT,
                 ${DBConsts.subscriptionsNoteColumnName} TEXT
             )
         ''');
@@ -71,32 +71,33 @@ class DBProvider {
         await batch.commit();
 
         batch = db.batch();
-        batch.insert(DBConsts.paymentMethodTableName, {DBConsts.paymentMethodNameColumnName: "Visa *1234"});
-        batch.insert(
-            DBConsts.paymentMethodTableName, {DBConsts.paymentMethodNameColumnName: "MasterCard *1234"});
         // Test data
-        batch.insert(
-            DBConsts.subscriptionsTablename,
-            SubscriptionItem(
-              0,
-              "Youtube premium",
-              1180,
-              DateTime(2022, 6, 11),
-              PaymentInterval.Monthly,
-              "",
-              PaymentMethod(1, "MasterCard *1234"),
-            ).toInsertMap());
-        batch.insert(
-            DBConsts.subscriptionsTablename,
-            SubscriptionItem(
-              0,
-              "Daylio",
-              1180,
-              DateTime(2023, 3, 11),
-              PaymentInterval.Yearly,
-              "",
-              PaymentMethod(1, "MasterCard *1234"),
-            ).toInsertMap());
+        batch.insert(DBConsts.paymentMethodTableName,
+            {DBConsts.paymentMethodNameColumnName: "Visa *1234"});
+        batch.insert(DBConsts.paymentMethodTableName,
+            {DBConsts.paymentMethodNameColumnName: "MasterCard *1234"});
+        // batch.insert(
+        //     DBConsts.subscriptionsTablename,
+        //     SubscriptionItem(
+        //       id: 0,
+        //       name: "Youtube premium",
+        //       price: 1180,
+        //       next: DateTime(2022, 6, 11),
+        //       interval: PaymentInterval.Monthly,
+        //       note: "",
+        //       paymentMethod: "MasterCard *1234",
+        //     ).toInsertMap());
+        // batch.insert(
+        //     DBConsts.subscriptionsTablename,
+        //     SubscriptionItem(
+        //       id: 0,
+        //       name: "Daylio",
+        //       price: 1180,
+        //       next: DateTime(2023, 3, 11),
+        //       interval: PaymentInterval.Yearly,
+        //       note: "",
+        //       paymentMethod: "MasterCard *1234",
+        //     ).toInsertMap());
         await batch.commit();
       },
       onUpgrade: (db, oldVersion, newVersion) async {
@@ -134,53 +135,35 @@ class DBProvider {
 
   Future<void> createSubscriptionItem(SubscriptionItem item) async {
     final db = await database;
-    final _ =
-        await db?.insert(DBConsts.subscriptionsTablename, item.toInsertMap());
+    await db?.insert(DBConsts.subscriptionsTablename, item.toInsertMap());
   }
 
   Future<List<SubscriptionItem>> getAllSubscriptions() async {
     final db = await database;
-    /* final res = await db?.query(DBConsts.subscriptionsTablename); */
-    final res = await db?.rawQuery("""
-      SELECT
-        ${DBConsts.subscriptionsTablename}.${DBConsts.subscriptionsIDColumnName},
-        ${DBConsts.subscriptionsTablename}.${DBConsts.subscriptionsNameColumnName},
-        ${DBConsts.subscriptionsTablename}.${DBConsts.subscriptionsPriceColumnName},
-        ${DBConsts.subscriptionsTablename}.${DBConsts.subscriptionsNextColumnName},
-        ${DBConsts.subscriptionsTablename}.${DBConsts.subscriptionsIntervalColumnName},
-        ${DBConsts.paymentMethodTableName}.${DBConsts.paymentMethodIDColumnName},
-        ${DBConsts.paymentMethodTableName}.${DBConsts.paymentMethodNameColumnName},
-        ${DBConsts.subscriptionsTablename}.${DBConsts.subscriptionsNoteColumnName}
-      FROM
-        ${DBConsts.subscriptionsTablename}
-      LEFT JOIN
-        ${DBConsts.paymentMethodTableName}
-      ON
-        ${DBConsts.subscriptionsTablename}.${DBConsts.subscriptionsPaymentColumnName} = 
-        ${DBConsts.paymentMethodTableName}.${DBConsts.paymentMethodIDColumnName}
-      """);
+    final res = await db?.query(DBConsts.subscriptionsTablename);
+    // final res = await db ?.rawQuery(""" SELECT * FROM ${DBConsts.subscriptionsTablename} """);
     if (res == null) {
       return [];
     }
     List<SubscriptionItem> list = res.isNotEmpty
-        ? res.map((e) => SubscriptionItem.fromMap(e)).toList()
+        ? res.map((e) => SubscriptionItem.fromSQLResultRow(e)).toList()
         : [];
     return list;
   }
 
-  Future<int> updateSubscriptionItem(SubscriptionItem item) async {
+  Future<int> updateSubscriptionItem(int id, SubscriptionItem item) async {
     final db = await database;
     final rowAffected = await db?.update(
       DBConsts.subscriptionsTablename,
       item.toInsertMap(),
       where: "${DBConsts.subscriptionsIDColumnName} = ?",
-      whereArgs: [item.id],
+      whereArgs: [id],
     );
     return rowAffected ?? 0;
   }
 
-  Future<void> upsertSubscriptionItem(SubscriptionItem item) async {
-    final ra = await updateSubscriptionItem(item);
+  Future<void> upsertSubscriptionItem(int id, SubscriptionItem item) async {
+    final ra = await updateSubscriptionItem(id, item);
     if (ra == 0) {
       await createSubscriptionItem(item);
     }
@@ -247,7 +230,7 @@ class DBProvider {
     await batch.commit();
   }
 
-  Future<void> archiveNotification(int id) async {
+  Future<void> deleteNotification(int id) async {
     final db = await database;
     final _ = await db?.delete(
       DBConsts.notificationsTableName,
@@ -256,9 +239,47 @@ class DBProvider {
     );
   }
 
-  Future<void> archiveAllNotification() async {
+  Future<void> deleteAllNotification() async {
     final db = await database;
     final _ = await db?.delete(DBConsts.notificationsTableName);
+  }
+
+  Future<PaymentMethod?> getPaymentMethodByID(int id) async {
+    final db = await database;
+    final res = await db?.query(
+      DBConsts.paymentMethodTableName,
+      where: "${DBConsts.paymentMethodIDColumnName} = ?",
+      whereArgs: [id],
+    );
+
+    if (res == null) {
+      return null;
+    }
+
+    if (res.isEmpty) {
+      return null;
+    }
+
+    return PaymentMethod.fromMap(res[0]);
+  }
+
+  Future<PaymentMethod?> getPaymentMethodByName(String name) async {
+    final db = await database;
+    final res = await db?.query(
+      DBConsts.paymentMethodTableName,
+      where: "${DBConsts.paymentMethodNameColumnName} = ?",
+      whereArgs: [name],
+    );
+
+    if (res == null) {
+      return null;
+    }
+
+    if (res.isEmpty) {
+      return null;
+    }
+
+    return PaymentMethod.fromMap(res[0]);
   }
 
   Future<List<PaymentMethod>> getAllPaymentMethods() async {
@@ -267,9 +288,8 @@ class DBProvider {
     if (res == null) {
       return [];
     }
-    List<PaymentMethod> list = res.isNotEmpty
-        ? res.map((e) => PaymentMethod.fromMap(e)).toList()
-        : [PaymentMethod(0, "koko")];
+    List<PaymentMethod> list =
+        res.isNotEmpty ? res.map((e) => PaymentMethod.fromMap(e)).toList() : [];
     return list;
   }
 }
