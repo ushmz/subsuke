@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/settings_bloc.dart';
 import 'package:subsuke/blocs/subscription_item_bloc.dart';
 import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/notifications/notifications.dart';
 import 'package:subsuke/ui/components/templates/price_carousel.dart';
 import 'package:subsuke/ui/components/templates/add_modal_button.dart';
 import 'package:subsuke/ui/pages/list/list_item.dart';
@@ -14,6 +15,7 @@ class ListPageIOS extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Provider.of<SubscriptionItemBLoC>(context);
     final pref = Provider.of<SettingsBLoC>(context);
+    final nf = Provider.of<NotificationRepository>(context);
 
     final resolvedColor = Theme.of(context).textTheme.titleLarge!.color;
 
@@ -49,6 +51,7 @@ class ListPageIOS extends StatelessWidget {
                       child: AddModalButton(
                         onItemAdd: (item) {
                           bloc.create(item);
+                          nf.scheduleNotification(item);
                         },
                       ),
                     ),
@@ -74,6 +77,7 @@ class ListPageIOS extends StatelessWidget {
                           },
                           onItemUpdated: (int id, SubscriptionItem i) {
                             bloc.update(id, i);
+                            nf.scheduleNotification(i);
                           },
                         );
                       }).toList(),
