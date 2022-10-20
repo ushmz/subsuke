@@ -26,6 +26,7 @@ class SubscriptionItem {
   final String name;
   final int price;
   final DateTime next;
+  final int? remindBefore;
   final PaymentInterval interval;
   final String paymentMethod;
   final String note;
@@ -35,6 +36,7 @@ class SubscriptionItem {
     required this.name,
     required this.price,
     required this.next,
+    required this.remindBefore,
     required this.interval,
     required this.note,
     required this.paymentMethod,
@@ -52,19 +54,21 @@ class SubscriptionItem {
         DBConsts.subscriptionsIDColumnName: id,
         DBConsts.subscriptionsNameColumnName: name,
         DBConsts.subscriptionsPriceColumnName: price,
-        DBConsts.subscriptionsNextColumnName: next.toIso8601String(),
-        DBConsts.subscriptionsIntervalColumnName: interval.intervalID,
-        DBConsts.subscriptionsNoteColumnName: note,
         DBConsts.subscriptionsPaymentColumnName: paymentMethod,
+        DBConsts.subscriptionsIntervalColumnName: interval.getID,
+        DBConsts.subscriptionsNextColumnName: next.toIso8601String(),
+        DBConsts.subscriptionsRemindBeforeColumnName: remindBefore,
+        DBConsts.subscriptionsNoteColumnName: note,
       };
 
   Map<String, dynamic> toInsertMap() => {
         DBConsts.subscriptionsNameColumnName: name,
         DBConsts.subscriptionsPriceColumnName: price,
-        DBConsts.subscriptionsNextColumnName: next.toIso8601String(),
-        DBConsts.subscriptionsIntervalColumnName: interval.intervalID,
-        DBConsts.subscriptionsNoteColumnName: note,
         DBConsts.subscriptionsPaymentColumnName: paymentMethod,
+        DBConsts.subscriptionsIntervalColumnName: interval.getID,
+        DBConsts.subscriptionsNextColumnName: next.toIso8601String(),
+        DBConsts.subscriptionsRemindBeforeColumnName: remindBefore,
+        DBConsts.subscriptionsNoteColumnName: note,
       };
 
   factory SubscriptionItem.fromMap(Map<String, dynamic> json) =>
@@ -72,10 +76,11 @@ class SubscriptionItem {
         id: 0,
         name: json['name'],
         price: json['price'],
-        next: json['next'],
-        interval: json['interval'],
-        note: json['note'],
         paymentMethod: json['payment_methods'],
+        interval: json['interval'],
+        next: json['next'],
+        remindBefore: json['remind_before'],
+        note: json['note'],
       );
 
   factory SubscriptionItem.fromSQLResultRow(Map<String, dynamic> json) =>
@@ -83,11 +88,12 @@ class SubscriptionItem {
         id: json[DBConsts.subscriptionsIDColumnName],
         name: json[DBConsts.subscriptionsNameColumnName],
         price: json[DBConsts.subscriptionsPriceColumnName],
-        next: DateTime.parse(json[DBConsts.subscriptionsNextColumnName]),
+        paymentMethod: json[DBConsts.subscriptionsPaymentColumnName],
         interval:
             getPaymentInterval(json[DBConsts.subscriptionsIntervalColumnName]),
+        next: DateTime.parse(json[DBConsts.subscriptionsNextColumnName]),
+        remindBefore: json[DBConsts.subscriptionsRemindBeforeColumnName],
         note: json[DBConsts.subscriptionsNoteColumnName],
-        paymentMethod: json[DBConsts.subscriptionsPaymentColumnName],
       );
 
   // TODO : Avoid new object?
@@ -114,10 +120,11 @@ class SubscriptionItem {
       id: id,
       name: name,
       price: price,
-      next: updated,
-      interval: interval,
-      note: note,
       paymentMethod: paymentMethod,
+      interval: interval,
+      next: updated,
+      remindBefore: remindBefore,
+      note: note,
     );
   }
 }
@@ -172,8 +179,8 @@ enum PaymentInterval {
   Yearly,
 }
 
-extension PaymentIntervalIDExt on PaymentInterval {
-  int get intervalID {
+extension PaymentIntervalExt on PaymentInterval {
+  int get getID {
     switch (this) {
       case PaymentInterval.Daily:
         return 0;
@@ -185,6 +192,35 @@ extension PaymentIntervalIDExt on PaymentInterval {
         return 3;
       case PaymentInterval.Yearly:
         return 4;
+    }
+  }
+
+  String get getUnitName {
+    switch (this) {
+      case PaymentInterval.Daily:
+        return "日";
+      case PaymentInterval.Weekly:
+      case PaymentInterval.Fortnightly:
+        return "週";
+      case PaymentInterval.Monthly:
+        return "月";
+      case PaymentInterval.Yearly:
+        return "年";
+    }
+  }
+
+  String get getText {
+    switch (this) {
+      case PaymentInterval.Daily:
+        return "1日";
+      case PaymentInterval.Weekly:
+        return "1週間";
+      case PaymentInterval.Fortnightly:
+        return "2週間";
+      case PaymentInterval.Monthly:
+        return "1ヶ月";
+      case PaymentInterval.Yearly:
+        return "1年";
     }
   }
 }
@@ -203,23 +239,6 @@ PaymentInterval getPaymentInterval(int id) {
       return PaymentInterval.Yearly;
     default:
       return PaymentInterval.Monthly;
-  }
-}
-
-extension PaymentIntervalUnitTimeTextExt on PaymentInterval {
-  String get intervalText {
-    switch (this) {
-      case PaymentInterval.Daily:
-        return "1日";
-      case PaymentInterval.Weekly:
-        return "1週間";
-      case PaymentInterval.Fortnightly:
-        return "2週間";
-      case PaymentInterval.Monthly:
-        return "1ヶ月";
-      case PaymentInterval.Yearly:
-        return "1年";
-    }
   }
 }
 
