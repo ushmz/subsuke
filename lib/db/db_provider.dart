@@ -47,9 +47,10 @@ class DBProvider {
                 ${DBConsts.subscriptionsIDColumnName} INTEGER PRIMARY KEY AUTOINCREMENT,
                 ${DBConsts.subscriptionsNameColumnName} TEXT NOT NULL,
                 ${DBConsts.subscriptionsPriceColumnName} INTEGER NOT NULL,
-                ${DBConsts.subscriptionsNextColumnName} TEXT NOT NULL,
-                ${DBConsts.subscriptionsIntervalColumnName} INTEGER NOT NULL,
                 ${DBConsts.subscriptionsPaymentColumnName} TEXT,
+                ${DBConsts.subscriptionsIntervalColumnName} INTEGER NOT NULL,
+                ${DBConsts.subscriptionsNextColumnName} TEXT NOT NULL,
+                ${DBConsts.subscriptionsRemindBeforeColumnName} INTEGER,
                 ${DBConsts.subscriptionsNoteColumnName} TEXT
             )
         ''');
@@ -76,28 +77,6 @@ class DBProvider {
             {DBConsts.paymentMethodNameColumnName: "Visa *1234"});
         batch.insert(DBConsts.paymentMethodTableName,
             {DBConsts.paymentMethodNameColumnName: "MasterCard *1234"});
-        // batch.insert(
-        //     DBConsts.subscriptionsTablename,
-        //     SubscriptionItem(
-        //       id: 0,
-        //       name: "Youtube premium",
-        //       price: 1180,
-        //       next: DateTime(2022, 6, 11),
-        //       interval: PaymentInterval.Monthly,
-        //       note: "",
-        //       paymentMethod: "MasterCard *1234",
-        //     ).toInsertMap());
-        // batch.insert(
-        //     DBConsts.subscriptionsTablename,
-        //     SubscriptionItem(
-        //       id: 0,
-        //       name: "Daylio",
-        //       price: 1180,
-        //       next: DateTime(2023, 3, 11),
-        //       interval: PaymentInterval.Yearly,
-        //       note: "",
-        //       paymentMethod: "MasterCard *1234",
-        //     ).toInsertMap());
         await batch.commit();
       },
       onUpgrade: (db, oldVersion, newVersion) async {

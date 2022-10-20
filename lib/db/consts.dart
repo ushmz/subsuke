@@ -6,9 +6,10 @@ class DBConsts {
   static const subscriptionsIDColumnName = 'id';
   static const subscriptionsNameColumnName = 'name';
   static const subscriptionsPriceColumnName = 'price';
-  static const subscriptionsNextColumnName = 'next';
-  static const subscriptionsIntervalColumnName = 'interval';
   static const subscriptionsPaymentColumnName = 'payment_method';
+  static const subscriptionsIntervalColumnName = 'interval';
+  static const subscriptionsNextColumnName = 'next';
+  static const subscriptionsRemindBeforeColumnName = 'remind_before';
   static const subscriptionsNoteColumnName = 'note';
 
   static const notificationsTableName = 'notifications';

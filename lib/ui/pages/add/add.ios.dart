@@ -16,6 +16,7 @@ class AddPageIOS extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Provider.of<EditScreenBLoC>(context);
     final payment = Provider.of<PaymentMethodBLoC>(context);
+
     return CupertinoPageScaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       child: CustomScrollView(
