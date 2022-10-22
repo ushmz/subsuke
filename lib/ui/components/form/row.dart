@@ -218,7 +218,7 @@ class PaymentCyclePickerRow extends StatelessWidget {
                   CupertinoPicker(
                     // If default value is set.
                     scrollController: FixedExtentScrollController(
-                        initialItem: ss.data!.intervalID),
+                        initialItem: ss.data!.getID),
                     itemExtent: 36,
                     onSelectedItemChanged: onChange,
                     children: [
@@ -232,7 +232,7 @@ class PaymentCyclePickerRow extends StatelessWidget {
                         height: 36,
                         child: Center(
                           child: Text(
-                            m.intervalText,
+                            m.getText,
                             style: TextStyle(
                               color:
                                   Theme.of(context).textTheme.titleLarge!.color,
@@ -252,7 +252,7 @@ class PaymentCyclePickerRow extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  ss.data!.intervalText,
+                  ss.data!.getText,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),

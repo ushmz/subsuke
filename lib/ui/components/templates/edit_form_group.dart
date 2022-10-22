@@ -146,7 +146,7 @@ class SubscriptionFormGroup extends StatelessWidget {
           initial = ss.data!;
           break;
       }
-      ctrl.text = initial.intervalText;
+      ctrl.text = initial.getText;
       return TextField(
         keyboardType: TextInputType.text,
         /* inputFormatters: [FilteringTextInputFormatter.digitsOnly], */
@@ -167,11 +167,11 @@ class SubscriptionFormGroup extends StatelessWidget {
                         child: CupertinoPicker(
                           itemExtent: 40,
                           children: [
-                            Text(PaymentInterval.Daily.intervalText),
-                            Text(PaymentInterval.Weekly.intervalText),
-                            Text(PaymentInterval.Fortnightly.intervalText),
-                            Text(PaymentInterval.Monthly.intervalText),
-                            Text(PaymentInterval.Yearly.intervalText),
+                            Text(PaymentInterval.Daily.getText),
+                            Text(PaymentInterval.Weekly.getText),
+                            Text(PaymentInterval.Fortnightly.getText),
+                            Text(PaymentInterval.Monthly.getText),
+                            Text(PaymentInterval.Yearly.getText),
                           ],
                           onSelectedItemChanged: (int index) {
                             final interval = getPaymentInterval(index + 1);
@@ -188,23 +188,23 @@ class SubscriptionFormGroup extends StatelessWidget {
                     title: Text('支払い周期'),
                     children: [
                       SimpleDialogOption(
-                        child: Text(PaymentInterval.Daily.intervalText),
+                        child: Text(PaymentInterval.Daily.getText),
                         onPressed: () => onChanged(PaymentInterval.Daily),
                       ),
                       SimpleDialogOption(
-                        child: Text(PaymentInterval.Weekly.intervalText),
+                        child: Text(PaymentInterval.Weekly.getText),
                         onPressed: () => onChanged(PaymentInterval.Weekly),
                       ),
                       SimpleDialogOption(
-                        child: Text(PaymentInterval.Fortnightly.intervalText),
+                        child: Text(PaymentInterval.Fortnightly.getText),
                         onPressed: () => onChanged(PaymentInterval.Fortnightly),
                       ),
                       SimpleDialogOption(
-                        child: Text(PaymentInterval.Monthly.intervalText),
+                        child: Text(PaymentInterval.Monthly.getText),
                         onPressed: () => onChanged(PaymentInterval.Monthly),
                       ),
                       SimpleDialogOption(
-                        child: Text(PaymentInterval.Yearly.intervalText),
+                        child: Text(PaymentInterval.Yearly.getText),
                         onPressed: () => onChanged(PaymentInterval.Yearly),
                       ),
                     ],

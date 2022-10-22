@@ -36,10 +36,10 @@ class SubscriptionItem {
     required this.name,
     required this.price,
     required this.next,
-    required this.remindBefore,
     required this.interval,
     required this.note,
     required this.paymentMethod,
+    this.remindBefore,
   });
 
   int get getID => id;
