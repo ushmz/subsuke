@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/settings_bloc.dart';
+import 'package:subsuke/notifications/notifications.dart';
 import 'package:subsuke/ui/components/ui_parts/modal_picker.dart';
 import 'package:subsuke/ui/pages/config/payment_method.ios.dart';
 
@@ -9,6 +10,8 @@ class ConfigPageIOS extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<SettingsBLoC>(context);
+    final nf = Provider.of<NotificationRepository>(context);
+
     return CupertinoPageScaffold(
       child: CustomScrollView(
         slivers: [
@@ -48,9 +51,12 @@ class ConfigPageIOS extends StatelessWidget {
                               pickedValue: bloc.getNotificationSchedule(),
                               onChange: ((val) {
                                 bloc.setNotificationSchedule(
-                                  TimeOfDay(hour: val.hour, minute: val.hour),
+                                  TimeOfDay(hour: val.hour, minute: val.minute),
                                 );
                               }),
+                            ),
+                            ReminderTestButtonRow(
+                              send: nf.testNotification,
                             ),
                             DefaultPaymentMethodSelectRow(
                               stream: bloc.onPaymentMethodChanged,
@@ -191,6 +197,25 @@ class PaymentReminderSchedulePickerRow extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+typedef Future<void> SendTestFunc();
+
+class ReminderTestButtonRow extends StatelessWidget {
+  final SendTestFunc send;
+  ReminderTestButtonRow({
+    required this.send,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return NormarizeFormItem(
+      onTap: () {
+        send();
+      },
+      child: CupertinoFormRow(prefix: Text("通知のテスト"), child: Center()),
     );
   }
 }

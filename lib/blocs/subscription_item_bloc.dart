@@ -6,8 +6,7 @@ import 'package:subsuke/models/subsc.dart';
 
 typedef ItemSinkAdd = Function(List<SubscriptionItem>);
 typedef ItemStream = Stream<List<SubscriptionItem>>;
-typedef ItemStreamTransformer
-    = StreamTransformer<List<SubscriptionItem>, List<SubscriptionItem>>;
+typedef ItemStreamTransformer = StreamTransformer<List<SubscriptionItem>, List<SubscriptionItem>>;
 
 class SubscriptionItemBLoC {
   final _selectedIntervals = BehaviorSubject<List<int>>.seeded(<int>[]);
@@ -52,7 +51,7 @@ class SubscriptionItemBLoC {
           if (selected.isEmpty) {
             return true;
           }
-          return selected.contains(item.interval.intervalID);
+          return selected.contains(item.interval.getID);
         });
         sink.add(filtered.toList());
       }),
