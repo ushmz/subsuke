@@ -24,7 +24,7 @@ class NotificationRepository {
 
   Future<void> testNotification() {
     final schedule =
-        timezone.TZDateTime.now(timezone.local).add(Duration(seconds: 3));
+        timezone.TZDateTime.now(timezone.local).add(Duration(seconds: 1));
     return _plugin.zonedSchedule(
       schedule.hashCode,
       "テスト通知です",
@@ -53,12 +53,19 @@ class NotificationRepository {
   }
 
   Future<void> scheduleNotification(SubscriptionItem item) async {
-    final prefs = await SharedPreferences.getInstance();
-    final timestr = prefs.getString("schedule.hour");
-    final daystr = prefs.getString("schedule.daybefore");
+    if (item.remindBefore == null) {
+      return;
+    }
 
-    DateTime scheduled =
-        item.next.add(Duration(days: -int.parse(daystr ?? "3")));
+    final prefs = await SharedPreferences.getInstance();
+    // TODO : Wrap shared_preferences API to return default value if value is Null
+    final timestr = prefs.getString("schedule");
+
+    DateTime scheduled = item.next.add(Duration(days: item.remindBefore! * -1));
+    if (scheduled.isBefore(DateTime.now())) {
+      final nxt = item.updateNextPayment();
+      scheduled = nxt.next.add(Duration(days: item.remindBefore! * -1));
+    }
 
     final schedule = timezone.TZDateTime.local(
       scheduled.year,
@@ -70,11 +77,12 @@ class NotificationRepository {
 
     return _plugin.zonedSchedule(
       item.id,
-      "もうすぐ${item.name}のお支払日です",
-      "${item.paymentMethod}で${item.price}円のお支払いです",
+      "もうすぐ ${item.name} のお支払日です",
+      "${item.price}円のお支払いです。今${item.interval.getUnitName}はどれぐらい使いましたか？",
       schedule,
       NotificationDetails(
-        android: AndroidNotificationDetails("", ""),
+        android:
+            AndroidNotificationDetails("payment_reminder", "Payment Reminder"),
         iOS: IOSNotificationDetails(presentBadge: true),
       ),
       androidAllowWhileIdle: true,
@@ -83,7 +91,11 @@ class NotificationRepository {
     );
   }
 
-    // Future<void> cancelNotificationSchedule(int itemID) {
-    //     
-    // }
+  Future<void> updateNotification(int itemID) async {
+    
+  }
+
+  // Future<void> cancelNotificationSchedule(int itemID) {
+  //
+  // }
 }

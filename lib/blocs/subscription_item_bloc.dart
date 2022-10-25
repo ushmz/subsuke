@@ -6,8 +6,7 @@ import 'package:subsuke/models/subsc.dart';
 
 typedef ItemSinkAdd = Function(List<SubscriptionItem>);
 typedef ItemStream = Stream<List<SubscriptionItem>>;
-typedef ItemTransformer
-    = StreamTransformer<List<SubscriptionItem>, List<SubscriptionItem>>;
+typedef ItemTransformer = StreamTransformer<List<SubscriptionItem>, List<SubscriptionItem>>;
 typedef ItemSubscription = StreamSubscription<List<SubscriptionItem>>;
 typedef ProratedPrice = Map<PaymentInterval, int>;
 
@@ -148,7 +147,7 @@ class SubscriptionItemBLoC {
           if (selected.isEmpty) {
             return true;
           }
-          return selected.contains(item.interval.intervalID);
+          return selected.contains(item.interval.getID);
         });
         sink.add(filtered.toList());
       }),

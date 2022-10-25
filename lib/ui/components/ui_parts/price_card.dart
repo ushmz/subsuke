@@ -27,7 +27,7 @@ class PriceCard extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text('${interval.intervalText}あたり',
+                    Text('${interval.getText}あたり',
                         style: resolvedTheme.textTheme.headlineMedium)
                   ],
                 ),

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/pagination_bloc.dart';
 import 'package:subsuke/blocs/settings_bloc.dart';
 import 'package:subsuke/blocs/subscription_item_bloc.dart';
+import 'package:subsuke/notifications/notifications.dart';
 import 'package:subsuke/ui/home.dart';
 
 void main() {
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final nf = NotificationRepository();
     return MaterialApp(
       supportedLocales: [Locale('en', ''), Locale('ja', 'JP')],
       localizationsDelegates: [
@@ -94,6 +96,9 @@ class MyApp extends StatelessWidget {
                   create: (context) => SettingsBLoC(),
                   dispose: (context, bloc) => bloc.dispose(),
                 ),
+                Provider<NotificationRepository>(
+                  create: (context) => nf,
+                )
               ],
               child: HomeScreen(),
             ),

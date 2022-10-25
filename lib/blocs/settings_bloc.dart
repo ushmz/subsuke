@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:subsuke/models/settings.dart';
 
 class SettingsBLoC {
   final _preferenceController = BehaviorSubject();
@@ -25,12 +24,11 @@ class SettingsBLoC {
       _notificationScheduleEnabled.sink
           .add(prefs.getBool('notification') ?? false);
 
-      final timeStr = prefs.getString('schedule.hour');
+      final timeStr = prefs.getString('schedule');
       if (timeStr != null) {
-        final time = TimeOfDay(
-            hour: int.parse(timeStr.split(':')[0]),
-            minute: int.parse(timeStr.split(':')[1]));
-        _notificationScheduleController.sink.add(time);
+        final hm = timeStr.split(':');
+        final t = TimeOfDay(hour: int.parse(hm[0]), minute: int.parse(hm[1]));
+        _notificationScheduleController.sink.add(t);
       } else {
         _notificationScheduleController.sink.add(TimeOfDay.now());
       }
@@ -64,9 +62,9 @@ class SettingsBLoC {
 
   Future<void> setNotificationSchedule(TimeOfDay val) async {
     final prefs = await SharedPreferences.getInstance();
-    final success =
-        await prefs.setString('schedule.hour', '${val.hour}:${val.minute}');
-    if (success) {
+    final ok = await prefs.setString('schedule', '${val.hour}:${val.minute}');
+
+    if (ok) {
       _notificationScheduleController.sink.add(val);
       _preferenceController.sink.add(null);
     } else {

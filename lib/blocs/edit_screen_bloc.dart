@@ -53,9 +53,10 @@ class EditScreenBLoC {
     return SubscriptionItem.fromMap({
       'name': _nameTextController.value,
       'price': _priceNumberController.value,
-      'next': _nextTimeController.value,
-      'interval': _intervalController.value,
       'payment_methods': _paymentController.value,
+      'interval': _intervalController.value,
+      'next': _nextTimeController.value,
+      'remind_before': 1,
       'note': _noteController.value,
     });
   }

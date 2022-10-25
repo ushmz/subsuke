@@ -13,16 +13,6 @@ class NotificationsBLoC {
     int get messagesCount => _messagesController.value.length;
 
   NotificationsBLoC() {
-    /* [ */
-    /*   NotificationMessage(1, "通知タイトル", "通知本文", DateTime.now(), true), */
-    /*   NotificationMessage(2, "通知タイトル", "通知本文", DateTime.now(), true), */
-    /*   NotificationMessage(3, "通知タイトル", "通知本文", DateTime.now(), true), */
-    /*   NotificationMessage(4, "通知タイトル", "通知本文", DateTime.now(), true), */
-    /*   NotificationMessage(5, "通知タイトル", "通知本文", DateTime.now(), true), */
-    /*   NotificationMessage(6, "通知タイトル", "通知本文", DateTime.now(), true), */
-    /* ].forEach((element) { */
-    /*   DBProvider.instance?.insertNewNotification(element); */
-    /* }); */
     getMessages();
   }
 
