@@ -58,7 +58,7 @@ class ListPageIOS extends StatelessWidget {
                     crossAxisCount: 1,
                     children: [
                       PriceCarousel(
-                        items: ss.data ?? [],
+                        prices: bloc.proratedPrice,
                         defaultTab: pref.getDefaultCarousel(),
                       )
                     ],
