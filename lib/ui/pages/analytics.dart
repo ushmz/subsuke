@@ -24,7 +24,7 @@ class AnalyticsPage extends StatelessWidget {
                   case ConnectionState.waiting:
                     return Center(child: CircularProgressIndicator());
                   default:
-                    return PriceCarousel(items: ss.data!);
+                    return PriceCarousel(prices: bloc.proratedPrice);
                 }
               },
             ),
