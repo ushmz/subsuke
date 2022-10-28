@@ -1,0 +1,168 @@
+{
+  "tests": [
+    {
+      "description": "Single item",
+      "prorated": {
+        "0": 32,
+        "1": 224,
+        "3": 980,
+        "4": 11760
+      },
+      "actual": {
+        "1": 980,
+        "2": 980,
+        "3": 980,
+        "4": 980,
+        "5": 980,
+        "6": 980,
+        "7": 980,
+        "8": 980,
+        "9": 980,
+        "10": 980,
+        "11": 980,
+        "12": 980
+      },
+      "items": [
+        {
+          "id": 0,
+          "name": "jarate",
+          "price": 980,
+          "next": "2006-01-02T15:04:05",
+          "remind_before": 3,
+          "interval": 3,
+          "note": "",
+          "payment_methods": ""
+        }
+      ]
+    },
+    {
+      "description": "Multiple items",
+      "prorated": {
+        "0": 397,
+        "1": 2779,
+        "3": 12206,
+        "4": 146480
+      },
+      "actual": {
+        "1": 18960,
+        "2": 11120,
+        "3": 11720,
+        "4": 11520,
+        "5": 11720,
+        "6": 11520,
+        "7": 11720,
+        "8": 11720,
+        "9": 11520,
+        "10": 11720,
+        "11": 11520,
+        "12": 11720
+      },
+      "items": [
+        {
+          "id": 0,
+          "name": "mygol",
+          "price": 980,
+          "next": "2006-01-02T15:04:05",
+          "remind_before": 3,
+          "interval": 3,
+          "note": "",
+          "payment_methods": ""
+        },
+        {
+          "id": 1,
+          "name": "kappo",
+          "price": 1080,
+          "next": "2006-01-02T15:04:05",
+          "remind_before": 3,
+          "interval": 3,
+          "note": "",
+          "payment_methods": ""
+        },
+        {
+          "id": 2,
+          "name": "demaritanarian",
+          "price": 1440,
+          "next": "2006-01-02T15:04:05",
+          "remind_before": 3,
+          "interval": 4,
+          "note": "",
+          "payment_methods": ""
+        },
+        {
+          "id": 3,
+          "name": "infinium",
+          "price": 200,
+          "next": "2006-01-02T15:04:05",
+          "remind_before": 3,
+          "interval": 0,
+          "note": "",
+          "payment_methods": ""
+        },
+        {
+          "id": 4,
+          "name": "prosopagnol",
+          "price": 1800,
+          "next": "2006-01-02T15:04:05",
+          "remind_before": 3,
+          "interval": 3,
+          "note": "",
+          "payment_methods": ""
+        },
+        {
+          "id": 5,
+          "name": "wristhead",
+          "price": 5800,
+          "next": "2006-01-02T15:04:05",
+          "remind_before": 3,
+          "interval": 4,
+          "note": "",
+          "payment_methods": ""
+        },
+        {
+          "id": 6,
+          "name": "wurl",
+          "price": 1180,
+          "next": "2006-01-02T15:04:05",
+          "remind_before": 3,
+          "interval": 3,
+          "note": "",
+          "payment_methods": ""
+        },
+        {
+          "id": 7,
+          "name": "cheerilee",
+          "price": 480,
+          "next": "2006-01-02T15:04:05",
+          "remind_before": 3,
+          "interval": 3,
+          "note": "",
+          "payment_methods": ""
+        }
+      ]
+    },
+    {
+      "description": "Empty item",
+      "prorated": {
+        "0": 0,
+        "1": 0,
+        "3": 0,
+        "4": 0
+      },
+      "actual": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0
+      },
+      "items": []
+    }
+  ]
+}
