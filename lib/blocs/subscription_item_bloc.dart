@@ -205,7 +205,6 @@ class SubscriptionItemBLoC {
   }
 
   SubscriptionItemBLoC() {
-    getItems();
     actualMonthlyPriceListener();
     proratedPriceListener();
   }
