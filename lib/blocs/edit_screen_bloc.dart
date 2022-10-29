@@ -50,7 +50,7 @@ class EditScreenBLoC {
   }
 
   SubscriptionItem getValues() {
-    return SubscriptionItem.fromMap({
+    return SubscriptionItem.fromJson({
       'name': _nameTextController.value,
       'price': _priceNumberController.value,
       'payment_methods': _paymentController.value,

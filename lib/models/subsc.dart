@@ -50,7 +50,7 @@ class SubscriptionItem {
   /*     id = Ulid(); */
   /* } */
 
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         DBConsts.subscriptionsIDColumnName: id,
         DBConsts.subscriptionsNameColumnName: name,
         DBConsts.subscriptionsPriceColumnName: price,
@@ -71,14 +71,14 @@ class SubscriptionItem {
         DBConsts.subscriptionsNoteColumnName: note,
       };
 
-  factory SubscriptionItem.fromMap(Map<String, dynamic> json) =>
+  factory SubscriptionItem.fromJson(Map<String, dynamic> json) =>
       SubscriptionItem(
-        id: 0,
+        id: json['id'],
         name: json['name'],
         price: json['price'],
         paymentMethod: json['payment_methods'],
-        interval: json['interval'],
-        next: json['next'],
+        interval: getPaymentInterval(json['interval']),
+        next: DateTime.parse(json['next']),
         remindBefore: json['remind_before'],
         note: json['note'],
       );
