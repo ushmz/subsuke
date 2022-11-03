@@ -1,5 +1,7 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/models/notification_before.dart';
+import 'package:subsuke/models/payment_interval.dart';
+import 'package:subsuke/models/subscription_item.dart';
 
 class EditScreenBLoC {
   final _nameTextController = BehaviorSubject.seeded('');

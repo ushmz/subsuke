@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/models/payment_interval.dart';
+import 'package:subsuke/models/prorated_price.dart';
 import 'package:subsuke/ui/components/ui_parts/price_card.dart';
 
 class CarouselContent extends StatelessWidget {
@@ -34,7 +35,7 @@ class CarouselContent extends StatelessWidget {
 }
 
 class PriceCarousel extends StatelessWidget {
-  final Map<PaymentInterval, int> prices;
+  final ProratedPrice prices;
   final int defaultTab;
 
   PriceCarousel({required this.prices, this.defaultTab = 0});
@@ -51,22 +52,10 @@ class PriceCarousel extends StatelessWidget {
             Expanded(
               flex: 5,
               child: CarouselContent(children: [
-                PriceCard(
-                  prices[PaymentInterval.Daily] ?? 0,
-                  PaymentInterval.Daily,
-                ),
-                PriceCard(
-                  prices[PaymentInterval.Weekly] ?? 0,
-                  PaymentInterval.Weekly,
-                ),
-                PriceCard(
-                  prices[PaymentInterval.Monthly] ?? 0,
-                  PaymentInterval.Monthly,
-                ),
-                PriceCard(
-                  prices[PaymentInterval.Yearly] ?? 0,
-                  PaymentInterval.Yearly,
-                ),
+                PriceCard(prices.daily, PaymentInterval.Daily),
+                PriceCard(prices.weekly, PaymentInterval.Weekly),
+                PriceCard(prices.monthly, PaymentInterval.Monthly),
+                PriceCard(prices.yearly, PaymentInterval.Yearly),
               ]),
             ),
             Expanded(

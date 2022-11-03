@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:subsuke/db/db_provider.dart';
-import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/models/actual_price.dart';
+import 'package:subsuke/models/item_sort_condition.dart';
+import 'package:subsuke/models/payment_interval.dart';
+import 'package:subsuke/models/prorated_price.dart';
+import 'package:subsuke/models/subscription_item.dart';
 
-typedef ItemSinkAdd = Function(List<SubscriptionItem>);
-typedef ItemStream = Stream<List<SubscriptionItem>>;
-typedef ItemTransformer
-    = StreamTransformer<List<SubscriptionItem>, List<SubscriptionItem>>;
-typedef ItemSubscription = StreamSubscription<List<SubscriptionItem>>;
+typedef SubscriptionItems = List<SubscriptionItem>;
 
 class SubscriptionItemBLoC {
   final _selectedIntervals = BehaviorSubject<List<int>>.seeded(<int>[]);
@@ -36,21 +36,10 @@ class SubscriptionItemBLoC {
   final _sortCondition = BehaviorSubject.seeded(ItemSortCondition.None);
   Stream<ItemSortCondition> get sortConditionStream => _sortCondition.stream;
   Function(ItemSortCondition) get setSortCondition => _sortCondition.sink.add;
+  ItemSortCondition get getSortCondition => _sortCondition.stream.value;
 
-  ItemSortCondition getSortCondition() {
-    return _sortCondition.stream.value;
-  }
-
-  final _items = BehaviorSubject<List<SubscriptionItem>>();
-
-  Stream<int> get actualPriceStream =>
-      _items.stream.map<int>((event) => calcActualMonthlyPrice(event));
-
-  Stream<ProratedPrice> get proratedPriceStream =>
-      _items.stream.map<ProratedPrice>((event) => calcProratedPrice(event));
-
-  ItemTransformer itemFilter() {
-    return ItemTransformer.fromHandlers(
+  StreamTransformer<SubscriptionItems, SubscriptionItems> itemFilter() {
+    return StreamTransformer.fromHandlers(
       handleData: ((data, sink) {
         final selected = _selectedIntervals.value;
         final filtered = data.where((item) {
@@ -64,7 +53,7 @@ class SubscriptionItemBLoC {
     );
   }
 
-  ItemTransformer itemSort() {
+  StreamTransformer<SubscriptionItems, SubscriptionItems> itemSort() {
     return StreamTransformer.fromHandlers(
       handleData: ((data, sink) {
         final sortCondition = _sortCondition.value;
@@ -87,10 +76,18 @@ class SubscriptionItemBLoC {
     );
   }
 
-  ItemSinkAdd get setSubscriptionItems => _items.sink.add;
-  // ItemStream get onChangeSubscriptionItems => _items.stream;
-  ItemStream get itemStream {
+  final _items = BehaviorSubject<List<SubscriptionItem>>();
+  Function(List<SubscriptionItem>) get setSubscriptionItems => _items.sink.add;
+  Stream<List<SubscriptionItem>> get itemStream {
     return _items.stream.transform(itemFilter()).transform(itemSort());
+  }
+
+  Stream<ActualPrice> get actualPriceStream {
+    return _items.stream.map((items) => ActualPrice.fromItems(items));
+  }
+
+  Stream<ProratedPrice> get proratedPriceStream {
+    return _items.stream.map((items) => ProratedPrice.fromItems(items));
   }
 
   getItems() async {
@@ -110,10 +107,6 @@ class SubscriptionItemBLoC {
 
   delete(int id) {
     DBProvider.instance.deleteSubscriptionItem(id);
-    getItems();
-  }
-
-  SubscriptionItemBLoC() {
     getItems();
   }
 

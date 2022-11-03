@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/payment_methods_bloc.dart';
-import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/models/payment_method.dart';
 
 class PaymentMethodPageIOS extends StatelessWidget {
   static Route<dynamic> route() {

@@ -1,6 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/models/payment_interval.dart';
+import 'package:subsuke/models/subscription_item.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as timezone;
 
@@ -91,9 +92,7 @@ class NotificationRepository {
     );
   }
 
-  Future<void> updateNotification(int itemID) async {
-    
-  }
+  Future<void> updateNotification(int itemID) async {}
 
   // Future<void> cancelNotificationSchedule(int itemID) {
   //

@@ -1,5 +1,6 @@
 import 'package:subsuke/db/consts.dart';
 
+@Deprecated('Use PaymentMethod(/lib/models/payment_method) instead')
 class PaymentMethod {
   final int id;
   final String name;
@@ -21,6 +22,7 @@ class PaymentMethod {
       );
 }
 
+@Deprecated('Use SubscriptionItem(/lib/models/subsucription_item) instead')
 class SubscriptionItem {
   final int id;
   final String name;
@@ -43,12 +45,6 @@ class SubscriptionItem {
   });
 
   int get getID => id;
-
-  // [TODO] Ulid is String value
-  // See : https://pub.dev/packages/ulid
-  /* static assignUUID() { */
-  /*     id = Ulid(); */
-  /* } */
 
   Map<String, dynamic> toJson() => {
         DBConsts.subscriptionsIDColumnName: id,
@@ -129,9 +125,10 @@ class SubscriptionItem {
   }
 }
 
+@Deprecated('Use ActualPrice.fromItems() instead')
 int calcActualMonthlyPrice(List<SubscriptionItem> items) {
   final n = DateTime.now();
-  final days = new DateTime(n.year, n.month, 0).day;
+  final days = new DateTime(n.year, n.month + 1, 0).day;
 
   int actual = 0;
   items.forEach((v) {
@@ -158,7 +155,11 @@ int calcActualMonthlyPrice(List<SubscriptionItem> items) {
   return actual;
 }
 
+@Deprecated('Use ProratedPrice(/lib/models/prorated_price) instead')
 typedef ProratedPrice = Map<PaymentInterval, int>;
+
+@Deprecated(
+    'Use ProratedPrice.fromItems() (/lib/models/prorated_price) instead')
 ProratedPrice calcProratedPrice(List<SubscriptionItem> items) {
   int daily = 0;
   int weekly = 0;
@@ -214,6 +215,7 @@ ProratedPrice calcProratedPrice(List<SubscriptionItem> items) {
   };
 }
 
+@Deprecated('Use ItemSortCondition(/lib/models/item_sort_condition) instead')
 enum ItemSortCondition {
   None,
   PriceASC,
@@ -256,6 +258,7 @@ extension ItemSortConditionNameExt on ItemSortCondition {
   }
 }
 
+@Deprecated('Use PaymentInterval(/lib/models/payment_interval) instead')
 enum PaymentInterval {
   Daily,
   Weekly,
@@ -310,6 +313,7 @@ extension PaymentIntervalExt on PaymentInterval {
   }
 }
 
+@Deprecated('Use PaymentInterval(/lib/models/payment_interval) instead')
 PaymentInterval getPaymentInterval(int id) {
   switch (id) {
     case 0:
@@ -327,6 +331,7 @@ PaymentInterval getPaymentInterval(int id) {
   }
 }
 
+@Deprecated('Use NotificationBefore(/lib/models/notification_before) instead')
 enum NotificationBefore {
   NONE,
   SAMEDAY,
