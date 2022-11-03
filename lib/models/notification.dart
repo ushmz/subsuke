@@ -15,13 +15,7 @@ class NotificationMessage {
 
   int get getID => id;
 
-  // [TODO] Ulid is String value
-  // See : https://pub.dev/packages/ulid
-  /* static assignUUID() { */
-  /*     id = Ulid(); */
-  /* } */
-
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
         "body": body,
@@ -36,7 +30,7 @@ class NotificationMessage {
         "unread": isUnread ? 1 : 0,
       };
 
-  factory NotificationMessage.fromMap(Map<String, dynamic> json) =>
+  factory NotificationMessage.fromJson(Map<String, dynamic> json) =>
       NotificationMessage(
         json['id'],
         json['title'],
@@ -45,4 +39,3 @@ class NotificationMessage {
         json['unread'] == 1,
       );
 }
-
