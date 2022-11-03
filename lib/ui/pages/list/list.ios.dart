@@ -65,9 +65,14 @@ class ListPageIOS extends StatelessWidget {
                         childAspectRatio: 1.6,
                         crossAxisCount: 1,
                         children: [
-                          PriceCarousel(
-                            prices: bloc.proratedPrice,
-                            defaultTab: pref.getDefaultCarousel(),
+                          StreamBuilder<ProratedPrice>(
+                            stream: bloc.proratedPriceStream,
+                            builder: (ctx, ss) {
+                              return PriceCarousel(
+                                prices: ss.data!,
+                                defaultTab: pref.getDefaultCarousel(),
+                              );
+                            },
                           )
                         ],
                       ),

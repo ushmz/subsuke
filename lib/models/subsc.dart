@@ -129,6 +129,91 @@ class SubscriptionItem {
   }
 }
 
+int calcActualMonthlyPrice(List<SubscriptionItem> items) {
+  final n = DateTime.now();
+  final days = new DateTime(n.year, n.month, 0).day;
+
+  int actual = 0;
+  items.forEach((v) {
+    switch (v.interval) {
+      case PaymentInterval.Daily:
+        actual += v.price * days;
+        break;
+      case PaymentInterval.Weekly:
+        actual += v.price * (days ~/ 7);
+        break;
+      case PaymentInterval.Fortnightly:
+        actual += v.price * (days ~/ 14);
+        break;
+      case PaymentInterval.Monthly:
+        actual += v.price;
+        break;
+      case PaymentInterval.Yearly:
+        if (v.next.month == n.month) {
+          actual += v.price;
+        }
+        break;
+    }
+  });
+  return actual;
+}
+
+typedef ProratedPrice = Map<PaymentInterval, int>;
+ProratedPrice calcProratedPrice(List<SubscriptionItem> items) {
+  int daily = 0;
+  int weekly = 0;
+  int monthly = 0;
+  int yearly = 0;
+
+  items.forEach(
+    (data) {
+      switch (data.interval) {
+        case PaymentInterval.Daily:
+          final y = data.price * 365;
+          daily += data.price;
+          weekly += data.price * 7;
+          monthly += y ~/ 12;
+          yearly += y;
+          break;
+        case PaymentInterval.Weekly:
+          final y = data.price ~/ 7 * 365;
+          daily += data.price ~/ 7;
+          weekly += data.price;
+          monthly += y ~/ 12;
+          yearly += y;
+          break;
+        case PaymentInterval.Fortnightly:
+          final y = data.price ~/ 14 * 365;
+          daily += data.price ~/ 14;
+          weekly += data.price ~/ 2;
+          monthly += y ~/ 12;
+          yearly += y;
+          break;
+        case PaymentInterval.Monthly:
+          final d = data.price * 12 ~/ 365;
+          daily += d;
+          weekly += d * 7;
+          monthly += data.price;
+          yearly += data.price * 12;
+          break;
+        case PaymentInterval.Yearly:
+          final d = data.price ~/ 365;
+          daily += d;
+          weekly += d * 7;
+          monthly += data.price ~/ 12;
+          yearly += data.price;
+          break;
+      }
+    },
+  );
+  return {
+    PaymentInterval.Daily: daily,
+    PaymentInterval.Weekly: weekly,
+    PaymentInterval.Monthly: monthly,
+    PaymentInterval.Yearly: yearly
+  };
+}
+
 enum ItemSortCondition {
   None,
   PriceASC,

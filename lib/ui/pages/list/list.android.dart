@@ -50,7 +50,15 @@ class ListPageAndroid extends StatelessWidget {
                   SliverGrid.count(
                     childAspectRatio: 1.6,
                     crossAxisCount: 1,
-                    children: [PriceCarousel(prices: bloc.proratedPrice)],
+                    children: [
+                      StreamBuilder<ProratedPrice>(
+                        stream: bloc.proratedPriceStream,
+                        builder: (BuildContext ctx,
+                            AsyncSnapshot<ProratedPrice> ss) {
+                          return PriceCarousel(prices: ss.data!);
+                        },
+                      )
+                    ],
                   ),
                   SliverFixedExtentList(
                     itemExtent: 180,
