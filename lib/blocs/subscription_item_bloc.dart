@@ -9,7 +9,6 @@ typedef ItemStream = Stream<List<SubscriptionItem>>;
 typedef ItemTransformer
     = StreamTransformer<List<SubscriptionItem>, List<SubscriptionItem>>;
 typedef ItemSubscription = StreamSubscription<List<SubscriptionItem>>;
-typedef ProratedPrice = Map<PaymentInterval, int>;
 
 class SubscriptionItemBLoC {
   final _selectedIntervals = BehaviorSubject<List<int>>.seeded(<int>[]);
@@ -44,101 +43,11 @@ class SubscriptionItemBLoC {
 
   final _items = BehaviorSubject<List<SubscriptionItem>>();
 
-  final _actual = BehaviorSubject<int>();
-  Stream<int> get actualPriceStream => _actual.stream;
-  int get actualPrice => _actual.stream.value;
+  Stream<int> get actualPriceStream =>
+      _items.stream.map<int>((event) => calcActualMonthlyPrice(event));
 
-  final _total = BehaviorSubject<ProratedPrice>();
-  Stream<ProratedPrice> get proratedPriceStream => _total.stream;
-  ProratedPrice get proratedPrice => _total.stream.value;
-
-  ItemSubscription actualMonthlyPriceListener() {
-    return _items.stream.listen((value) {
-      final n = DateTime.now();
-      final days = new DateTime(n.year, n.month + 1, 0).day;
-
-      int actual = 0;
-      value.forEach((v) {
-        switch (v.interval) {
-          case PaymentInterval.Daily:
-            actual += v.price * days;
-            break;
-          case PaymentInterval.Weekly:
-            actual += v.price * (days ~/ 7);
-            break;
-          case PaymentInterval.Fortnightly:
-            actual += v.price * (days ~/ 14);
-            break;
-          case PaymentInterval.Monthly:
-            actual += v.price;
-            break;
-          case PaymentInterval.Yearly:
-            if (v.next.month == n.month) {
-              actual += v.price;
-            }
-            break;
-        }
-      });
-      _actual.sink.add(actual);
-    });
-  }
-
-  ItemSubscription proratedPriceListener() {
-    return _items.stream.listen((value) {
-      int daily = 0;
-      int weekly = 0;
-      int monthly = 0;
-      int yearly = 0;
-
-      value.forEach(
-        (data) {
-          switch (data.interval) {
-            case PaymentInterval.Daily:
-              final y = data.price * 365;
-              daily += data.price;
-              weekly += data.price * 7;
-              monthly += y ~/ 12;
-              yearly += y;
-              break;
-            case PaymentInterval.Weekly:
-              final y = data.price ~/ 7 * 365;
-              daily += data.price ~/ 7;
-              weekly += data.price;
-              monthly += y ~/ 12;
-              yearly += y;
-              break;
-            case PaymentInterval.Fortnightly:
-              final y = data.price ~/ 14 * 365;
-              daily += data.price ~/ 14;
-              weekly += data.price ~/ 2;
-              monthly += y ~/ 12;
-              yearly += y;
-              break;
-            case PaymentInterval.Monthly:
-              final d = data.price * 12 ~/ 365;
-              daily += d;
-              weekly += d * 7;
-              monthly += data.price;
-              yearly += data.price * 12;
-              break;
-            case PaymentInterval.Yearly:
-              final d = data.price ~/ 365;
-              daily += d;
-              weekly += d * 7;
-              monthly += data.price ~/ 12;
-              yearly += data.price;
-              break;
-          }
-        },
-      );
-      _total.sink.add({
-        PaymentInterval.Daily: daily,
-        PaymentInterval.Weekly: weekly,
-        PaymentInterval.Monthly: monthly,
-        PaymentInterval.Yearly: yearly
-      });
-    });
-  }
+  Stream<ProratedPrice> get proratedPriceStream =>
+      _items.stream.map<ProratedPrice>((event) => calcProratedPrice(event));
 
   ItemTransformer itemFilter() {
     return ItemTransformer.fromHandlers(
@@ -205,15 +114,12 @@ class SubscriptionItemBLoC {
   }
 
   SubscriptionItemBLoC() {
-    actualMonthlyPriceListener();
-    proratedPriceListener();
+    getItems();
   }
 
   void dispose() {
     _items.close();
     _selectedIntervals.close();
     _sortCondition.close();
-    _total.close();
-    _actual.close();
   }
 }
