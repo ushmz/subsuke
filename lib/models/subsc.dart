@@ -152,9 +152,7 @@ extension ItemSortConditionIDExt on ItemSortCondition {
         return 4;
     }
   }
-}
 
-extension ItemSortConditionNameExt on ItemSortCondition {
   String get sortConditionName {
     switch (this) {
       case ItemSortCondition.None:
@@ -168,6 +166,23 @@ extension ItemSortConditionNameExt on ItemSortCondition {
       case ItemSortCondition.NextDESC:
         return "お支払日が遠い順";
     }
+  }
+}
+
+ItemSortCondition getSortCondition(int id) {
+  switch (id) {
+    case 0:
+      return ItemSortCondition.None;
+    case 1:
+      return ItemSortCondition.PriceASC;
+    case 2:
+      return ItemSortCondition.PriceDESC;
+    case 3:
+      return ItemSortCondition.NextASC;
+    case 4:
+      return ItemSortCondition.NextDESC;
+    default:
+      return ItemSortCondition.None;
   }
 }
 
