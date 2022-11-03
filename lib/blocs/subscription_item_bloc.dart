@@ -38,14 +38,6 @@ class SubscriptionItemBLoC {
   Function(ItemSortCondition) get setSortCondition => _sortCondition.sink.add;
   ItemSortCondition get getSortCondition => _sortCondition.stream.value;
 
-  final _items = BehaviorSubject<List<SubscriptionItem>>();
-
-  Stream<int> get actualPriceStream =>
-      _items.stream.map<int>((event) => calcActualMonthlyPrice(event));
-
-  Stream<ProratedPrice> get proratedPriceStream =>
-      _items.stream.map<ProratedPrice>((event) => calcProratedPrice(event));
-
   StreamTransformer<SubscriptionItems, SubscriptionItems> itemFilter() {
     return StreamTransformer.fromHandlers(
       handleData: ((data, sink) {
@@ -84,9 +76,18 @@ class SubscriptionItemBLoC {
     );
   }
 
+  final _items = BehaviorSubject<List<SubscriptionItem>>();
   Function(List<SubscriptionItem>) get setSubscriptionItems => _items.sink.add;
   Stream<List<SubscriptionItem>> get itemStream {
     return _items.stream.transform(itemFilter()).transform(itemSort());
+  }
+
+  Stream<ActualPrice> get actualPriceStream {
+    return _items.stream.map((items) => ActualPrice.fromItems(items));
+  }
+
+  Stream<ProratedPrice> get proratedPriceStream {
+    return _items.stream.map((items) => ProratedPrice.fromItems(items));
   }
 
   getItems() async {
