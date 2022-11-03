@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:subsuke/blocs/subscription_item_bloc.dart';
-import 'package:subsuke/ui/components/templates/price_carousel.dart';
 
 import 'package:subsuke/models/subsc.dart';
 
@@ -24,7 +23,7 @@ class AnalyticsPage extends StatelessWidget {
                   case ConnectionState.waiting:
                     return Center(child: CircularProgressIndicator());
                   default:
-                    return PriceCarousel(prices: bloc.proratedPrice);
+                    return Center(child: Text("AnalyticsPage"));
                 }
               },
             ),
