@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/subscription_item_bloc.dart';
-import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/models/prorated_price.dart';
+import 'package:subsuke/models/subscription_item.dart';
 import 'package:subsuke/ui/components/templates/add_modal_button.dart';
 import 'package:subsuke/ui/pages/list/list_item.dart';
 import 'package:subsuke/ui/pages/list/sort_icon_button.dart';

@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
 import 'package:subsuke/blocs/payment_methods_bloc.dart';
-import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/models/notification_before.dart';
+import 'package:subsuke/models/payment_interval.dart';
+import 'package:subsuke/models/payment_method.dart';
+import 'package:subsuke/models/subscription_item.dart';
 import 'package:subsuke/ui/components/form/row.dart';
 
 class EditPageIOS extends StatelessWidget {

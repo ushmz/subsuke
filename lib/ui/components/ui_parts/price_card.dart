@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:subsuke/models/subsc.dart';
 import 'package:intl/intl.dart';
+import 'package:subsuke/models/payment_interval.dart';
 
 class PriceCard extends StatelessWidget {
   final int price;

@@ -1,7 +1,9 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/models/notification_before.dart';
+import 'package:subsuke/models/payment_interval.dart';
+import 'package:subsuke/models/payment_method.dart';
 
 class _DialogHelper {
   static void show(BuildContext context, Widget child) {

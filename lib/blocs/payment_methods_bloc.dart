@@ -1,6 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:subsuke/db/db_provider.dart';
-import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/models/payment_method.dart';
 
 class PaymentMethodBLoC {
   final _paymentMethodsController = BehaviorSubject<List<PaymentMethod>>();
@@ -18,22 +18,22 @@ class PaymentMethodBLoC {
     return list;
   }
 
-  final _selectedMethodController =
-      BehaviorSubject<PaymentMethod>.seeded(PaymentMethod(0, ""));
-
-  Stream<PaymentMethod> get methodStream => _selectedMethodController.stream;
-  Function(PaymentMethod) get setPaymentMethod =>
-      _selectedMethodController.sink.add;
+  final _selectedMethod = BehaviorSubject<PaymentMethod>();
+  Stream<PaymentMethod> get methodStream => _selectedMethod.stream;
+  Function(PaymentMethod) get setPaymentMethod => _selectedMethod.sink.add;
 
   void setPaymentMethodString(String method) async {
     final methods = await getAllPaymentMethods();
-    final m = methods.firstWhere((m) => m.name == method, orElse: () => methods[0]);
-    _selectedMethodController.sink.add(m);
+    final m = methods.firstWhere(
+      (m) => m.name == method,
+      orElse: () => methods[0],
+    );
+    _selectedMethod.sink.add(m);
   }
 
-  PaymentMethod get getMethod => _selectedMethodController.value;
-  int get getMethodID => _selectedMethodController.value.id;
-  String get getMethodName => _selectedMethodController.value.name;
+  PaymentMethod get getMethod => _selectedMethod.value;
+  int get getMethodID => _selectedMethod.value.id;
+  String get getMethodName => _selectedMethod.value.name;
 
   PaymentMethodBLoC() {
     fetchAllPaymentMethods();
@@ -41,6 +41,6 @@ class PaymentMethodBLoC {
 
   void dispose() {
     _paymentMethodsController.close();
-    _selectedMethodController.close();
+    _selectedMethod.close();
   }
 }

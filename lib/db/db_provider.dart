@@ -4,8 +4,9 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:subsuke/models/notification.dart';
-import 'package:subsuke/models/subsc.dart';
 import 'package:subsuke/db/consts.dart';
+import 'package:subsuke/models/payment_method.dart';
+import 'package:subsuke/models/subscription_item.dart';
 
 class DBProvider {
   static final DBProvider instance = DBProvider._();
@@ -170,7 +171,7 @@ class DBProvider {
       return [];
     }
     List<NotificationMessage> list = res.isNotEmpty
-        ? res.map((e) => NotificationMessage.fromMap(e)).toList()
+        ? res.map((e) => NotificationMessage.fromJson(e)).toList()
         : [];
     return list;
   }

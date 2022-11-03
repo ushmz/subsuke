@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/models/subscription_item.dart';
 import 'package:subsuke/ui/pages/edit/edit.android.dart';
 import 'package:subsuke/ui/pages/edit/edit.ios.dart';
 

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/models/item_sort_condition.dart';
 import 'package:subsuke/ui/pages/list/sort_condition_option.dart';
 import 'package:subsuke/ui/pages/list/sort_condition_bottom_sheet.dart';
 

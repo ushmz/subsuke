@@ -5,7 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
 import 'package:subsuke/blocs/payment_methods_bloc.dart';
-import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/models/subscription_item.dart';
 import 'package:subsuke/ui/pages/edit/edit.ios.dart';
 
 class ListItem extends StatelessWidget {

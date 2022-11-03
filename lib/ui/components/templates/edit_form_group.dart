@@ -6,7 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:subsuke/blocs/edit_screen_bloc.dart';
 import 'package:subsuke/db/db_provider.dart';
-import 'package:subsuke/models/subsc.dart';
+import 'package:subsuke/models/payment_interval.dart';
+import 'package:subsuke/models/subscription_item.dart';
 import 'package:subsuke/ui/components/ui_parts/icon_header.dart';
 
 typedef TextFieldBuilder<T> = Widget Function(
