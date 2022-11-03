@@ -4,6 +4,10 @@ import 'package:subsuke/models/subsc.dart';
 
 import 'fixture.dart';
 
+void main() {
+  totalPriceTest();
+}
+
 void totalPriceTest() {
   final fixture = getSubscriptionItemsFixtures();
   final tt = fixture['tests'] as List<dynamic>;
